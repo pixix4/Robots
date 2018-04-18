@@ -1,0 +1,30 @@
+plugins {
+    id "org.jetbrains.dokka" version "0.9.16"
+}
+
+group 'de.westermann.robots'
+version '0.0.1-alpha'
+
+apply plugin: "base"
+apply plugin: "distribution"
+
+allprojects {
+    buildscript {
+        ext.kotlin_version = '1.2.31'
+    }
+
+    apply plugin: 'org.jetbrains.dokka'
+
+    dokka {
+        outputFormat = 'html'
+        outputDirectory = "$buildDir/javadoc"
+    }
+}
+
+task copyArtefacts(type: Copy) {
+    from tasks.getByPath(':server:jar')
+    from tasks.getByPath(':robot:jar')
+    into "$buildDir"
+}
+
+build.dependsOn copyArtefacts
