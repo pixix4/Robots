@@ -1,4 +1,4 @@
-package de.westermann.robots.robot
+package de.westermann.robots.lego
 
 class Main {
     companion object {
@@ -8,7 +8,7 @@ class Main {
          */
         @JvmStatic
         fun main(args: Array<String>) {
-            println("Hello from server")
+            println("Hello from lego")
         }
     }
 }

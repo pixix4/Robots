@@ -1,10 +1,7 @@
-import java.text.SimpleDateFormat
-
-group 'de.westermann.robots.robot'
-version '0.0.1-alpha'
+group = 'de.westermann.robots.robot'
+version = '0.0.1-alpha'
 
 apply plugin: "kotlin"
-apply plugin: "application"
 
 buildscript {
     repositories {
@@ -13,25 +10,6 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-mainClassName = 'de.westermann.robot.server.Main'
-
-static def buildTime() {
-    def df = new SimpleDateFormat("yyyy-MM-dd HH:mm z")
-    df.setTimeZone(TimeZone.getTimeZone("UTC"))
-    return df.format(new Date())
-}
-
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-
-    manifest {
-        manifest.attributes "Main-Class": mainClassName
-
-        manifest.attributes "Build-Date": buildTime()
-        manifest.attributes "Build-Version": version
     }
 }
 

@@ -1,5 +1,5 @@
-group 'de.westermann.robots.website'
-version '0.0.1-alpha'
+group = 'de.westermann.robots.website'
+version = '0.0.1-alpha'
 
 apply plugin: "kotlin2js"
 
@@ -25,23 +25,25 @@ dependencies {
 
 
 clean.doFirst() {
-    delete("${web_dir}")
+    delete("${web_dir}/website")
 }
 
-build.doLast() {
-    configurations.compile.each { File file ->
-        copy {
-            includeEmptyDirs = false
+jar {
+    includeEmptyDirs = false
 
-            from zipTree(file.absolutePath)
-            into "${projectDir}/${web_dir}/lib"
-            include { fileTreeElement ->
-                def path = fileTreeElement.path
-                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+    from {
+        configurations.compile.collect {
+            (it.isDirectory() ? it : zipTree(it)).getFiles().findAll {
+                it.name == "kotlin.js"
             }
         }
     }
 
+    exclude "**/*.kjsm", "**/META-INF/*", "META-INF/*", "**/*meta*"
+    into "website"
+}
+
+build.doLast() {
     copy {
         File artifact = new File("build/libs/${project.name}-${project.version}.jar")
         includeEmptyDirs = false
@@ -50,17 +52,7 @@ build.doLast() {
         into "${web_dir}"
         include { fileTreeElement ->
             def path = fileTreeElement.path
-            !(path.startsWith("META-INF/") || path.startsWith("${project.name}"))
-        }
-    }
-
-    copy {
-        includeEmptyDirs = false
-        from new File("build/classes/kotlin/main")
-        into "${web_dir}"
-        include { fileTreeElement ->
-            def path = fileTreeElement.path
-            !path.endsWith(".kjsm")
+            !path.contains("META-INF")
         }
     }
 }

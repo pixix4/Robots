@@ -1,0 +1,56 @@
+import java.text.SimpleDateFormat
+
+group = 'de.westermann.robots.lego'
+version = '0.0.1-alpha'
+
+apply plugin: "kotlin"
+apply plugin: "application"
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+mainClassName = 'de.westermann.robots.lego.Main'
+
+static def buildTime() {
+    def df = new SimpleDateFormat("yyyy-MM-dd:ss HH:mm z")
+    df.setTimeZone(TimeZone.getTimeZone("UTC"))
+    return df.format(new Date())
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
+    manifest {
+        manifest.attributes "Main-Class": mainClassName
+
+        manifest.attributes "Build-Date": buildTime()
+        manifest.attributes "Build-Version": version
+        manifest.attributes "Build-Tools": "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}, java-${System.getProperty('java.version')}"
+        manifest.attributes "Build-System": "${System.getProperty("os.name")} '${System.getProperty("os.version")}' (${System.getProperty("os.arch")})"
+
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
+
+    compile project(":robot")
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
