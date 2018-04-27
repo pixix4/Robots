@@ -2,6 +2,7 @@ package de.westermann.robots.server
 
 import de.westermann.robots.server.service.DiscoveryService
 import de.westermann.robots.server.service.ReplService
+import de.westermann.robots.server.service.WebService
 import de.westermann.robots.server.utils.Configuration
 import mu.KotlinLogging
 import kotlin.concurrent.thread
@@ -22,6 +23,7 @@ object Main {
         Configuration.load(args.toList())
 
         DiscoveryService.start(Configuration.properties.discoveryPort)
+        WebService.start(Configuration.properties.webPort)
         ReplService.start()
 
         Runtime.getRuntime().addShutdownHook(thread(start = false, name = "shutdown") {
@@ -29,8 +31,6 @@ object Main {
 
             DiscoveryService.stop()
             ReplService.stop()
-
-            logger.info { "Exit" }
         })
     }
 
