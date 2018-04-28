@@ -8,6 +8,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{20}) - %msg %n</pattern>
         </encoder>
     </appender>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>

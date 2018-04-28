@@ -13,7 +13,7 @@ class LogFilter : Filter<ILoggingEvent>() {
         FilterReply.NEUTRAL
     } else {
         if (event.loggerName.contains("javalin|jetty".toRegex())) {
-            if (event.level.toInt() >= Level.ERROR_INT) FilterReply.ACCEPT else FilterReply.DENY
+            if (event.level.toInt() > Level.ERROR_INT) FilterReply.ACCEPT else FilterReply.DENY
         } else {
             FilterReply.ACCEPT
         }

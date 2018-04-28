@@ -5,6 +5,7 @@ import de.westermann.robots.server.utils.WhoBlocks
 import java.net.BindException
 import java.net.DatagramSocket
 import java.net.SocketException
+import kotlin.jvm.Volatile
 
 /**
  * @author lars

@@ -1,5 +1,6 @@
 package de.westermann.robots.server.service
 
+import de.westermann.robots.server.ColorScheme
 import de.westermann.robots.server.Main
 import de.westermann.robots.server.utils.Configuration
 import de.westermann.robots.server.utils.Environment
@@ -33,6 +34,13 @@ object ReplService : Service() {
         command("env", "environment", description = "Print current environment specs") {
             action {
                 Environment.log {
+                    println(it)
+                }
+            }
+        }
+        command("color", description = "Print current color scheme") {
+            action {
+                ColorScheme.log {
                     println(it)
                 }
             }

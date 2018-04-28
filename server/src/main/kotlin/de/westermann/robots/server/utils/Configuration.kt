@@ -1,5 +1,7 @@
 package de.westermann.robots.server.utils
 
+import de.westermann.robots.server.Color
+import de.westermann.robots.server.ColorScheme
 import mu.KotlinLogging
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
@@ -39,6 +41,32 @@ object Configuration {
         @Description("Sets the passphrase according to the protection type")
         val passphrase: String?
             get() = throw UnsetPropertyException("No password provided")
+
+        @Description("Sets the default color scheme")
+        val colorScheme: ColorScheme.Defaults
+            get() = ColorScheme.Defaults.GREEN
+
+        val primaryColor: Color?
+            get() = null
+        val primaryColorText: ColorScheme.Brightness?
+            get() = null
+
+        val primaryColorDark: Color?
+            get() = null
+        val primaryColorDarkText: ColorScheme.Brightness?
+            get() = null
+
+        val primaryColorLight: Color?
+            get() = null
+        val primaryColorLightText: ColorScheme.Brightness?
+            get() = null
+
+        val backgroundColorPrimary: Color?
+            get() = null
+        val backgroundColorSecondary: Color?
+            get() = null
+        val textColor: ColorScheme.Brightness?
+            get() = null
     }
 
     annotation class Description(
@@ -85,12 +113,9 @@ object Configuration {
             }
     ).log(l)
 
-    private fun String.toProperty() =
-            replace("^get".toRegex(), "").replace("(.)([A-Z])".toRegex(), "$1-$2").toLowerCase()
-                    .split('-').joinToString("-") { it.capitalize() }
+    private fun String.toProperty() = replace("^get".toRegex(), "").toUpperDashCase()
 
-    private fun String.toMethod() =
-            "get" + split('-').joinToString("") { it.toLowerCase().capitalize() }
+    private fun String.toMethod() = "get-$this".toCamelCase()
 
     fun load(args: List<String>) {
         findFiles().forEach(this::loadFile)
@@ -171,6 +196,7 @@ object Configuration {
                             Float::class -> value.toFloatOrNull()
                             Boolean::class -> value.toBoolean()
                             String::class -> value
+                            Color::class -> Color.parse(value)
                             else -> if (type.jvmErasure.java.isEnum) {
                                 type.jvmErasure.java.enumConstants.find {
                                     it.toString().equals(value.replace("-", "_"), true)
