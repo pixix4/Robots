@@ -34,7 +34,7 @@ jar {
     from {
         configurations.compile.collect {
             (it.isDirectory() ? it : zipTree(it)).getFiles().findAll {
-                it.name == "kotlin.js"
+                it.name ==~ "^[a-z|-]+.js(.map)?\$"
             }
         }
     }

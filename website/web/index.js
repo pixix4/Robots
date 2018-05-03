@@ -7,7 +7,7 @@ app.use(require('node-sass-middleware')({
     dest: path.join(__dirname, "website/stylesheets"),
     prefix: "/public/stylesheets",
     indentedSyntax: true,
-    sourceMap: true
+    sourceMap: false
 }));
 
 app.get('/', function (req, res) {
