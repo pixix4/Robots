@@ -9,25 +9,41 @@ import kotlin.reflect.KProperty
 /**
  * @author lars
  */
-class ViewContainer<in Container : ViewGroup, Child : View>(containerClass: KClass<Container>, childClass: KClass<Child>) {
-    private var content: Child? = null
-    private val container: Element = document.createElement("div")
+class ViewContainer<in Container : View, Child : View?>(
+        parentClass: Container,
+        fieldName: String,
+        init: () -> Child
+) {
 
-    init {
-        container.addClass(containerClass.simpleName.toDashCase() + "-" + childClass.simpleName.toDashCase())
+    constructor(
+            containerClass: Container,
+            childClass: KClass<out View>,
+            init: () -> Child
+    ) : this(
+            containerClass,
+            childClass.simpleName.toDashCase(),
+            init
+    )
+
+    private val container: Element = document.createElement("div").also {
+        it.addClass(parentClass::class.simpleName.toDashCase() + "-$fieldName")
+    }
+    private var content: Child = init().also {
+        it?.element?.let { this.container.appendChild(it) }
     }
 
-    operator fun getValue(gToolbar: Container, property: KProperty<*>): Child? {
+    operator fun getValue(container: Container, property: KProperty<*>): Child {
         return content
     }
 
-    operator fun setValue(gToolbar: Container, property: KProperty<*>, value: Child?) {
-        content?.let { container.removeChild(it.element) }
+    operator fun setValue(container: Container, property: KProperty<*>, value: Child) {
+        content?.element?.let { this.container.removeChild(it) }
         content = value
-        content?.let { container.appendChild(it.element) }
+        content?.element?.let { this.container.appendChild(it) }
     }
 
-    fun putToElement(parent: Element) {
-        parent.appendChild(container)
+
+    init {
+        parentClass.element.appendChild(container)
     }
 }

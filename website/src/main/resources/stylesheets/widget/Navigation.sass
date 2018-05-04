@@ -2,7 +2,7 @@
 
 .navigation
   position: absolute
-  background: $background-primary
+  background: $background-secondary
   width: 100%
   height: 100%
   .navigation-toolbar
@@ -11,16 +11,20 @@
     left: 0
     width: 100%
     height: $toolbar-height
+    z-index: 2
   .navigation-navigation-drawer
     position: absolute
     top: $toolbar-height
     left: 0
-    width: 20rem
+    width: $navigation-drawer-width
     bottom: 0
+    border-right: solid 1px $main-divider
+    z-index: 1
   .navigation-content
     position: absolute
     top: $toolbar-height
-    left: 20rem
+    left: $navigation-drawer-width
     right: 0
     bottom: 0
     overflow-y: scroll
+    z-index: 0

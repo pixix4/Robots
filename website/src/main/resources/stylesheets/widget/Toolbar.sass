@@ -2,6 +2,26 @@
 
 .toolbar
   background: $primary-color
-  columns: $primary-color-text-primary
+  color: $primary-color-text-primary
   height: $toolbar-height
+  line-height: $toolbar-height
   width: 100%
+  border-bottom: solid 1px $primary-dark-color
+  box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28)
+  .toolbar-icon
+    position: absolute
+    left: 0.5rem
+    height: 100%
+    width: $navigation-bar-width - 1rem
+    text-align: center
+    font-size: 1.8rem
+    .icon-view
+      color: $primary-color-icon
+    &:hover
+      background: $primary-dark-color
+      color: $primary-dark-color-text-primary
+  .toolbar-title
+    position: absolute
+    top: 0
+    left: $navigation-bar-width + 0.5rem
+    font-size: 1.2rem

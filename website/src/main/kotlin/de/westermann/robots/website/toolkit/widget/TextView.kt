@@ -1,12 +1,13 @@
 package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.view.View
+import de.westermann.robots.website.toolkit.view.toDashCase
 
 /**
  * @author lars
  */
 
-class Text private constructor() : View() {
+class TextView private constructor() : View() {
 
     var text: String?
         get() = element.textContent
@@ -14,13 +15,10 @@ class Text private constructor() : View() {
             element.textContent = value
         }
 
-    override fun onCreate() {
-        //Nothing to do
-    }
-
+    override val cssClasses: List<String> = super.cssClasses + TextView::class.simpleName.toDashCase()
     companion object {
-        fun create(text: String? = null): Text =
-                View.create(Text(), {
+        fun create(text: String? = null): TextView =
+                View.create(TextView(), {
                     this.text = text
                 })
     }

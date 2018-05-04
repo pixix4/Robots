@@ -52,7 +52,7 @@ build.doLast() {
         into "${web_dir}"
         include { fileTreeElement ->
             def path = fileTreeElement.path
-            !path.contains("META-INF") && !path.endsWith("ss")
+            !path.contains("META-INF") && !path.endsWith("sass")
         }
     }
 }

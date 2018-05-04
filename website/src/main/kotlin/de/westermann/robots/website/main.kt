@@ -11,10 +11,11 @@ fun main(args: Array<String>) {
     window.onload = {
         render(document.body ?: throw IllegalStateException("Body is not available")) {
             navigation("Robots ${Date().getFullYear()}") {
-                route("", "Overview", MaterialIcon.DASHBOARD) {}
-                divider("Test")
+                route("", "Overview", MaterialIcon.DASHBOARD) {
+
+                }
                 route("robots", "Robots", MaterialIcon.BUG_REPORT) {}
-                route("robots", "Robots", MaterialIcon.BUG_REPORT) {}
+                route("controllers", "Controllers", MaterialIcon.GAMEPAD) {}
                 divider()
                 route("settings", "Settings", MaterialIcon.SETTINGS)
                 route("about", "About", MaterialIcon.INFO_OUTLINE)

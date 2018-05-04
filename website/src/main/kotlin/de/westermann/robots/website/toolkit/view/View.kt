@@ -13,31 +13,20 @@ abstract class View {
     val element = document.createElement("div")
     private val clickListeners = mutableListOf<(Event) -> Unit>()
 
-    protected abstract fun onCreate()
-
-    fun addOnClickListener(listener: (Event) -> Unit) {
+    fun action(listener: (Event) -> Unit) {
         clickListeners.add(listener)
-    }
-
-    fun action(listener: (Event) -> Unit) = addOnClickListener(listener)
-
-    fun removeOnClickListener(listener: (Event) -> Unit) {
-        clickListeners.remove(listener)
-    }
-
-    fun clearOnClickListener() {
-        clickListeners.clear()
     }
 
     fun click(event: Event = Event("click")) {
         clickListeners.forEach { it.invoke(event) }
     }
 
+    open val cssClasses: List<String> = listOf(View::class.simpleName.toDashCase())
+
     companion object {
         fun <T : View> create(view: T, postCreate: T.() -> Unit = {}): T {
-            view.element.addClass(view::class.simpleName.toDashCase())
+            view.element.addClass(*view.cssClasses.toTypedArray())
             view.element.addEventListener("click", view::click)
-            view.onCreate()
             postCreate(view)
             return view
         }

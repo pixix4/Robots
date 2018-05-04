@@ -4,17 +4,24 @@ import de.westermann.robots.website.toolkit.view.View
 import org.w3c.dom.Node
 import kotlin.dom.clear
 
-fun render(node: Node, init: Builder.() -> Unit) = init(Builder(node))
+fun render(node: Node, init: Builder.() -> Unit) {
+    node.clear()
+    val builder = Builder()
+    builder.init()
+    node.appendChild(builder.rootView.element)
+}
 
 
-class Builder internal constructor(
-        private val root: Node
-) {
-    internal fun root(element: View) {
-        root.appendChild(element.element)
-    }
+class Builder {
+    private val views = mutableListOf<View>()
 
-    init {
-        root.clear()
+    val viewList: List<View>
+        get() = views.toList()
+
+    val rootView: View
+        get() = views.first()
+
+    internal fun child(element: View) {
+        views.add(element)
     }
 }

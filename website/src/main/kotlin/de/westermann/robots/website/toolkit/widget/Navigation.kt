@@ -2,51 +2,50 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.Builder
 import de.westermann.robots.website.toolkit.icon.Icon
+import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
-import de.westermann.robots.website.toolkit.view.ViewGroup
+import de.westermann.robots.website.toolkit.view.toDashCase
 
 /**
  * @author lars
  */
 
-class Navigation private constructor() : ViewGroup() {
+class Navigation private constructor() : View() {
 
 
-    private val toolbarContainer = ViewContainer(Navigation::class, Toolbar::class)
-    var toolbar: Toolbar? by toolbarContainer
-
-    private val navigationDrawerContainer = ViewContainer(Navigation::class, NavigationDrawer::class)
-    var navigationDrawer: NavigationDrawer? by navigationDrawerContainer
-
-    private val contentContainer = ViewContainer(Navigation::class, ViewGroup::class)
-    var content: ViewGroup? by contentContainer
-
-    override fun onCreate() {
-        setupContainer(toolbarContainer)
-        setupContainer(navigationDrawerContainer)
-        setupContainer(contentContainer)
-
-        toolbar = Toolbar.create {
-
-        }
-
-        navigationDrawer = NavigationDrawer.create {
-
+    var toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
+        Toolbar.create {
+            icon = MaterialIcon.MENU
         }
     }
 
-    fun route(route: String, name: String, icon: Icon, init: ViewGroup.() -> Unit = {}) {
-        toolbar
+    var navigationDrawer: NavigationDrawer by ViewContainer(this, NavigationDrawer::class) {
+        NavigationDrawer.create { }
     }
 
-    fun divider(name: String = "") {
+    var content: View? by ViewContainer(this, "content") { null }
 
+    fun route(route: String, name: String, icon: Icon, init: Builder.() -> Unit = {}) {
+        navigationDrawer.entry(name, icon) {
+            val builder = Builder()
+            builder.init()
+            content = builder.rootView
+        }
     }
+
+    fun divider(title: String = "") {
+        navigationDrawer.divider(title)
+    }
+
+    override val cssClasses: List<String> = super.cssClasses + Navigation::class.simpleName.toDashCase()
 
     companion object {
-        fun create(postCreate: Navigation.() -> Unit): Navigation = View.create(Navigation(), postCreate)
+        fun create(title: String, postCreate: Navigation.() -> Unit): Navigation = View.create(Navigation(), {
+            toolbar.title = title
+            postCreate()
+        })
     }
 }
 
-fun Builder.navigation(title: String, init: Navigation.() -> Unit = {}) = root(Navigation.create(init))
+fun Builder.navigation(title: String, init: Navigation.() -> Unit = {}) = child(Navigation.create(title, init))

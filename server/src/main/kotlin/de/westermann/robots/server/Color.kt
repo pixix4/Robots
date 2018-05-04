@@ -9,7 +9,7 @@ data class Color(
         val red: Int = 0,
         val green: Int = 0,
         val blue: Int = 0,
-        val alpha: Double = 0.toDouble()
+        val alpha: Double = 1.0
 ) {
 
     fun lighten(percent: Double): Color = let {

@@ -1,0 +1,46 @@
+@import "../config"
+
+$line-height: 3.2rem
+
+.navigation-drawer
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  overflow-y: auto
+  background: $background-primary
+  padding-top: $line-height / 3
+  box-shadow: 0 0 3px rgba(0,0,0,.14), 0 3px 6px rgba(0,0,0,.28)
+  .option
+    height: $line-height
+    line-height: $line-height
+    position: relative
+    &:hover
+      background: $main-divider
+    .text-view
+      position: absolute
+      top: 0
+      left: $navigation-bar-width
+      line-height: $line-height
+    .icon-view
+      position: absolute
+      width: $navigation-bar-width
+      line-height: $line-height
+      text-align: center
+      font-size: 1.5rem
+  .active, .active .icon-view
+    color: $primary-color
+    font-weight: bold
+  .active
+    background: rgba($main-divider, .06)
+  & > div > div.text-view
+    border-top: solid 1px $main-divider
+    padding-left: ($navigation-bar-width / 2) - 0.7rem
+    color: $main-text-secondary
+    margin-top: $line-height / 6
+    &:not(:empty)
+      height: $line-height
+      line-height: $line-height
+    &:empty
+      margin-bottom: $line-height / 6
