@@ -30,6 +30,10 @@ class Toolbar private constructor() : View() {
             titleView.text = value
         }
 
+    fun iconAction(onAction: () -> Unit) {
+        iconView.click.on { onAction() }
+    }
+
     override val cssClasses: List<String> = super.cssClasses + Toolbar::class.simpleName.toDashCase()
 
     companion object {

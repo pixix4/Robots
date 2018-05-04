@@ -12,13 +12,13 @@ import kotlin.reflect.KProperty
 class ViewContainer<in Container : View, Child : View?>(
         parentClass: Container,
         fieldName: String,
-        init: () -> Child
+        init: (container: Element) -> Child
 ) {
 
     constructor(
             containerClass: Container,
             childClass: KClass<out View>,
-            init: () -> Child
+            init: (container: Element) -> Child
     ) : this(
             containerClass,
             childClass.simpleName.toDashCase(),
@@ -28,7 +28,7 @@ class ViewContainer<in Container : View, Child : View?>(
     private val container: Element = document.createElement("div").also {
         it.addClass(parentClass::class.simpleName.toDashCase() + "-$fieldName")
     }
-    private var content: Child = init().also {
+    private var content: Child = init(container).also {
         it?.element?.let { this.container.appendChild(it) }
     }
 

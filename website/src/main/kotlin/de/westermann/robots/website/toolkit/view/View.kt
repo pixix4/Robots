@@ -11,22 +11,15 @@ import kotlin.dom.addClass
 abstract class View {
 
     val element = document.createElement("div")
-    private val clickListeners = mutableListOf<(Event) -> Unit>()
 
-    fun action(listener: (Event) -> Unit) {
-        clickListeners.add(listener)
-    }
-
-    fun click(event: Event = Event("click")) {
-        clickListeners.forEach { it.invoke(event) }
-    }
+    val click = EventHandler<Event>()
 
     open val cssClasses: List<String> = listOf(View::class.simpleName.toDashCase())
 
     companion object {
         fun <T : View> create(view: T, postCreate: T.() -> Unit = {}): T {
             view.element.addClass(*view.cssClasses.toTypedArray())
-            view.element.addEventListener("click", view::click)
+            view.element.addEventListener("click", view.click::fire)
             postCreate(view)
             return view
         }

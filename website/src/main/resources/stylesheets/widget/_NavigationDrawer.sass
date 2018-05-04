@@ -8,16 +8,22 @@ $line-height: 3.2rem
   left: 0
   width: 100%
   height: 100%
-  overflow-y: auto
+  overflow: hidden
   background: $background-primary
   padding-top: $line-height / 3
-  box-shadow: 0 0 3px rgba(0,0,0,.14), 0 3px 6px rgba(0,0,0,.28)
+  box-shadow: 0 0 4px rgba(0,0,0,.4)
+  &::after
+    content: ''
+    height: $line-height / 6
+    display: block
+  &:hover
+    overflow-y: auto
   .option
     height: $line-height
     line-height: $line-height
     position: relative
     &:hover
-      background: $main-divider
+      background: $background-secondary
     .text-view
       position: absolute
       top: 0
@@ -33,7 +39,7 @@ $line-height: 3.2rem
     color: $primary-color
     font-weight: bold
   .active
-    background: rgba($main-divider, .06)
+    background: $background-secondary
   & > div > div.text-view
     border-top: solid 1px $main-divider
     padding-left: ($navigation-bar-width / 2) - 0.7rem

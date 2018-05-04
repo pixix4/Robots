@@ -1,0 +1,20 @@
+@import "config"
+
+@mixin no-select
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+
+
+@mixin mobil
+  @media (max-width: #{$device-tablet - 1px})
+    @content
+@mixin tablet
+  @media (min-width: #{$device-tablet}) and (max-width: #{$device-desktop - 1px})
+    @content
+
+@mixin desktop
+  @media (min-width: #{$device-desktop})
+    @content

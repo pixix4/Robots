@@ -3,6 +3,7 @@ package de.westermann.robots.website.toolkit.widget
 import de.westermann.robots.website.toolkit.Builder
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
+import de.westermann.robots.website.toolkit.view.EventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import de.westermann.robots.website.toolkit.view.toDashCase
@@ -13,7 +14,6 @@ import de.westermann.robots.website.toolkit.view.toDashCase
 
 class Navigation private constructor() : View() {
 
-
     var toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
         Toolbar.create {
             icon = MaterialIcon.MENU
@@ -21,7 +21,17 @@ class Navigation private constructor() : View() {
     }
 
     var navigationDrawer: NavigationDrawer by ViewContainer(this, NavigationDrawer::class) {
-        NavigationDrawer.create { }
+        NavigationDrawer.create {
+            toolbar.iconAction { toggle() }
+        }
+    }
+
+    val state = EventHandler<Boolean> {
+        element.classList.toggle("toggled", it)
+    }
+
+    fun toggle() {
+        state.fire(!element.classList.contains("toggled"))
     }
 
     var content: View? by ViewContainer(this, "content") { null }

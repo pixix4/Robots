@@ -1,6 +1,7 @@
 package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
+import de.westermann.robots.website.toolkit.view.EventHandler
 import de.westermann.robots.website.toolkit.view.SelectableViewList
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.toDashCase

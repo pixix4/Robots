@@ -1,4 +1,5 @@
 @import "config"
+@import "mixins"
 
 html
   -ms-overflow-style: scrollbar
@@ -25,11 +26,7 @@ body
   box-sizing: border-box
 
 .noselect, i
-  -webkit-touch-callout: none
-  -webkit-user-select: none
-  -moz-user-select: none
-  -ms-user-select: none
-  user-select: none
+  @include no-select
 
 #noscript
   position: fixed
