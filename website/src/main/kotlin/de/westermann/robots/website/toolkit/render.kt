@@ -1,6 +1,7 @@
 package de.westermann.robots.website.toolkit
 
 import de.westermann.robots.website.toolkit.view.View
+import de.westermann.robots.website.toolkit.widget.Box
 import org.w3c.dom.Node
 import kotlin.dom.clear
 
@@ -8,18 +9,24 @@ fun render(node: Node, init: Builder.() -> Unit) {
     node.clear()
     val builder = Builder()
     builder.init()
-    node.appendChild(builder.rootView.element)
+    builder.renderToNode(node)
 }
 
 
 class Builder {
     private val views = mutableListOf<View>()
 
-    val viewList: List<View>
-        get() = views.toList()
+    fun renderToNode(node: Node) {
+        node.clear()
+        views.forEach { node.appendChild(it.element) }
+    }
 
-    val rootView: View
-        get() = views.first()
+    fun renderView(): View = if (views.size == 1) {
+        views.first()
+    } else {
+        Box { views.forEach { this += it } }
+    }
+
 
     internal fun child(element: View) {
         views.add(element)

@@ -14,14 +14,15 @@ class NavigationDrawer(init: NavigationDrawer.() -> Unit) : SelectableViewList<V
 
     var first = true
 
-    fun entry(name: String, icon: Icon, onSelect: () -> Unit) {
-        val option = Action(name, icon)
-        this += option
-        bind(this, onSelect)
+    fun entry(name: String, icon: Icon, onSelect: () -> Unit): Action {
+        val action = Action(name, icon)
+        this += action
+        bind(action, onSelect)
         if (first) {
-            select(option)
+            select(action)
             first = false
         }
+        return action
     }
 
     val state = EventHandler<Boolean> {

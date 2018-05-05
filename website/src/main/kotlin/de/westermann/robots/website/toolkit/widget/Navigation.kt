@@ -16,6 +16,8 @@ class Navigation(
         init: Navigation.() -> Unit
 ) : View() {
 
+    val initRoute: String = window.location.pathname
+
     private val toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
         Toolbar {
             icon = MaterialIcon.MENU
@@ -40,7 +42,13 @@ class Navigation(
         navigationDrawer.entry(name, icon) {
             val builder = Builder()
             builder.init()
-            content = builder.rootView
+            content = builder.renderView()
+
+            window.history.replaceState(null, name, route)
+        }.also {
+            if (route == initRoute) {
+                navigationDrawer.select(it)
+            }
         }
     }
 

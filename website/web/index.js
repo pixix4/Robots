@@ -10,11 +10,12 @@ app.use(require('node-sass-middleware')({
     sourceMap: false
 }));
 
-app.get('/', function (req, res) {
+app.use('/public', express.static(path.join(__dirname, 'website')));
+
+app.use(function (req, res) {
+    res.status(200);
     res.sendFile(path.join(__dirname, 'website/index.html'));
 });
-
-app.use('/public', express.static(path.join(__dirname, 'website')));
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');

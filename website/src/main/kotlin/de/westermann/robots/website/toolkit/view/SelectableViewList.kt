@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  */
 
 abstract class SelectableViewList<T : View>(
-        val multiple: Boolean = false
+        private val multiple: Boolean = false
 ) : ViewList<T>() {
 
     private val selected = mutableListOf<T>()
