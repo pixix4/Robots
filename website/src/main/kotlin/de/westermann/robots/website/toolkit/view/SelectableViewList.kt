@@ -59,6 +59,4 @@ abstract class SelectableViewList<T : View>(
         private const val CSS: String = "active"
     }
 
-
-    override val cssClasses: List<String> = super.cssClasses + SelectableViewList::class.simpleName.toDashCase()
 }

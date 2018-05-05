@@ -3,36 +3,36 @@ package de.westermann.robots.website.toolkit.widget
 import de.westermann.robots.website.toolkit.Builder
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
-import de.westermann.robots.website.toolkit.view.EventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
-import de.westermann.robots.website.toolkit.view.toDashCase
+import kotlin.browser.window
 
 /**
  * @author lars
  */
 
-class Navigation private constructor() : View() {
+class Navigation(
+        title: String,
+        init: Navigation.() -> Unit
+) : View() {
 
-    var toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
-        Toolbar.create {
+    private val toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
+        Toolbar {
             icon = MaterialIcon.MENU
+            iconAction { toggle() }
         }
     }
 
-    var navigationDrawer: NavigationDrawer by ViewContainer(this, NavigationDrawer::class) {
-        NavigationDrawer.create {
-            toolbar.iconAction { toggle() }
+
+    private val navigationDrawer: NavigationDrawer by ViewContainer(this, NavigationDrawer::class) {
+        NavigationDrawer {
+            state.on {
+                this@Navigation.element.classList.toggle("toggled", it)
+            }
         }
     }
 
-    val state = EventHandler<Boolean> {
-        element.classList.toggle("toggled", it)
-    }
-
-    fun toggle() {
-        state.fire(!element.classList.contains("toggled"))
-    }
+    fun toggle() = navigationDrawer.toggle()
 
     var content: View? by ViewContainer(this, "content") { null }
 
@@ -48,14 +48,10 @@ class Navigation private constructor() : View() {
         navigationDrawer.divider(title)
     }
 
-    override val cssClasses: List<String> = super.cssClasses + Navigation::class.simpleName.toDashCase()
-
-    companion object {
-        fun create(title: String, postCreate: Navigation.() -> Unit): Navigation = View.create(Navigation(), {
-            toolbar.title = title
-            postCreate()
-        })
+    init {
+        toolbar.title = title
+        init()
     }
 }
 
-fun Builder.navigation(title: String, init: Navigation.() -> Unit = {}) = child(Navigation.create(title, init))
+fun Builder.navigation(title: String, init: Navigation.() -> Unit = {}) = child(Navigation(title, init))

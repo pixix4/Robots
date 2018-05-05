@@ -1,4 +1,5 @@
 @import "../config"
+@import "../mixins"
 
 .toolbar
   background: $primary-color
@@ -7,21 +8,93 @@
   line-height: $toolbar-height
   width: 100%
   border-bottom: solid 1px $primary-dark-color
-  box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28)
+  box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28)
+  display: flex
   .toolbar-icon
-    position: absolute
-    left: 0.5rem
+    margin-left: 0.5rem
     height: 100%
     width: $navigation-bar-width - 1rem
     text-align: center
     font-size: 1.8rem
+    margin-right: 0.5rem
     .icon-view
       color: $primary-color-icon
     &:hover
-      background: $primary-dark-color
-      color: $primary-dark-color-text-primary
+      @include hover-background($primary-color-text-primary)
   .toolbar-title
-    position: absolute
-    top: 0
-    left: $navigation-bar-width + 0.5rem
+    margin-left: 0.2rem
     font-size: 1.2rem
+  .toolbar-search
+    position: absolute
+    left: 100%
+    width: 100%
+    height: 100%
+    z-index: 1
+    top: -2px
+    .input
+      height: 100%
+      left: 0
+      transition: left $animation-time
+      &.active
+        left: -100%
+      .icon-view
+        color: $primary-color-icon-disabled
+      input
+        background: $primary-color
+        color: $primary-color-text-primary
+        box-shadow: none
+        border: none
+  .toolbar-search-icon
+    position: absolute
+    right: 1rem
+    height: 100%
+    width: $navigation-bar-width - 1rem
+    text-align: center
+    font-size: 1.4rem
+    .icon-view
+      color: $primary-color-icon
+    &:hover
+      @include hover-background($primary-color-text-primary)
+
+@include tablet
+  .toolbar
+    .toolbar-search
+      position: static
+      left: auto
+      right: auto
+      width: auto
+      height: 64%
+      margin-left: 1rem
+      flex-grow: 1
+      margin-right: 1rem
+      .input
+        .icon-view
+          color: $primary-dark-color-icon-disabled
+        input
+          left: 0
+          background: $primary-dark-color
+          color: $primary-dark-color-text-primary
+          box-shadow: inset 1px 1px 4px -2px rgba(0, 0, 0, .4)
+    .toolbar-search-icon
+      display: none
+
+@include desktop
+  .toolbar
+    .toolbar-search
+      position: absolute
+      left: 50%
+      right: auto
+      width: $device-tablet
+      height: 64%
+      margin-left: -$device-tablet / 2
+      margin-top: 0.1rem
+      .input
+        .icon-view
+          color: $primary-dark-color-icon-disabled
+        input
+          left: 0
+          background: $primary-dark-color
+          color: $primary-dark-color-text-primary
+          box-shadow: inset 1px 1px 4px -2px rgba(0, 0, 0, .4)
+    .toolbar-search-icon
+      display: none

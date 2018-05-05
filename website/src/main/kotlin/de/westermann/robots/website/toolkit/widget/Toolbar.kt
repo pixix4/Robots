@@ -1,17 +1,20 @@
 package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
+import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
-import de.westermann.robots.website.toolkit.view.toDashCase
 
 /**
  * @author lars
  */
 
-class Toolbar private constructor() : View() {
-    private var iconView: IconView by ViewContainer(this, "icon") {
-        IconView.create()
+class Toolbar(
+        init: Toolbar.() -> Unit
+) : View() {
+
+    private val iconView: IconView by ViewContainer(this, "icon") {
+        IconView()
     }
 
     var icon: Icon?
@@ -20,11 +23,11 @@ class Toolbar private constructor() : View() {
             iconView.icon = value
         }
 
-    private var titleView: TextView by ViewContainer(this, "title") {
-        TextView.create()
+    private val titleView: TextView by ViewContainer(this, "title") {
+        TextView()
     }
 
-    var title: String?
+    var title: String
         get() = titleView.text
         set(value) {
             titleView.text = value
@@ -34,9 +37,28 @@ class Toolbar private constructor() : View() {
         iconView.click.on { onAction() }
     }
 
-    override val cssClasses: List<String> = super.cssClasses + Toolbar::class.simpleName.toDashCase()
+    private val searchBar: Input by ViewContainer(this, "search") {
+        Input {
+            placeholder = "Search…"
+            icon = MaterialIcon.SEARCH
+        }
+    }
 
-    companion object {
-        fun create(postCreate: Toolbar.() -> Unit): Toolbar = View.create(Toolbar(), postCreate)
+    var enableSearchBar: Boolean
+        get() = searchBar.visible
+        set(value) {
+            searchBar.visible = value
+        }
+
+    private val searchIcon: IconView by ViewContainer(this, "search-icon") {
+        IconView(MaterialIcon.SEARCH) {
+            click.on {
+                searchBar.element.classList.add("active")
+            }
+        }
+    }
+
+    init {
+        init()
     }
 }

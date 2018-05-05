@@ -1,4 +1,5 @@
 @import "../config"
+@import "../mixins"
 
 $line-height: 3.2rem
 
@@ -18,12 +19,12 @@ $line-height: 3.2rem
     display: block
   &:hover
     overflow-y: auto
-  .option
+  .action
     height: $line-height
     line-height: $line-height
     position: relative
     &:hover
-      background: $background-secondary
+      @include hover-background($main-text-primary)
     .text-view
       position: absolute
       top: 0
@@ -39,14 +40,26 @@ $line-height: 3.2rem
     color: $primary-color
     font-weight: bold
   .active
-    background: $background-secondary
+    @include hover-background($main-text-primary)
   & > div > div.text-view
     border-top: solid 1px $main-divider
     padding-left: ($navigation-bar-width / 2) - 0.7rem
     color: $main-text-secondary
     margin-top: $line-height / 6
+    overflow: hidden
+    transition: height $animation-time, margin-bottom $animation-time
     &:not(:empty)
       height: $line-height
       line-height: $line-height
     &:empty
       margin-bottom: $line-height / 6
+
+@include tablet
+  .navigation-drawer:not(.toggled) > div > div.text-view
+    margin-bottom: $line-height / 6
+    height: 0
+
+@include desktop
+  .navigation-drawer.toggled > div > div.text-view
+    margin-bottom: $line-height / 6
+    height: 0

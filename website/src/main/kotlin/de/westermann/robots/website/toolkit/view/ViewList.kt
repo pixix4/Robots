@@ -41,5 +41,4 @@ abstract class ViewList<T : View> : View(), Iterable<T> {
 
     override fun iterator(): Iterator<T> = children.map { it.first }.iterator()
 
-    override val cssClasses: List<String> = super.cssClasses + ViewList::class.simpleName.toDashCase()
 }

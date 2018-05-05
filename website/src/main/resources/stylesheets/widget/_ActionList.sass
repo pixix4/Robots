@@ -1,0 +1,18 @@
+@import "../mixins"
+
+.action-list
+  position: relative
+  width: 10rem
+  background: $background-primary
+  box-shadow: 1px 1px 4px $shadow
+  line-height: 2.5rem
+  border: solid 1px $main-divider
+  border-radius: 0.1rem
+  .action
+    position: relative
+    &:hover
+      @include hover-background($main-text-primary)
+    .text-view
+      padding: 0 0.5rem
+    .icon-view
+      display: none

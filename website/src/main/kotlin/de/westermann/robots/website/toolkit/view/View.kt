@@ -1,5 +1,6 @@
 package de.westermann.robots.website.toolkit.view
 
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.dom.addClass
@@ -8,21 +9,25 @@ import kotlin.dom.addClass
  * @author lars
  */
 
-abstract class View {
-
-    val element = document.createElement("div")
+abstract class View(
+        init: () -> Unit = {}
+) {
 
     val click = EventHandler<Event>()
 
-    open val cssClasses: List<String> = listOf(View::class.simpleName.toDashCase())
+    val element: HTMLElement = (document.createElement("div") as HTMLElement).also {
+        it.addClass(this::class.simpleName.toDashCase())
+        it.addEventListener("click", click::fire)
+    }
 
-    companion object {
-        fun <T : View> create(view: T, postCreate: T.() -> Unit = {}): T {
-            view.element.addClass(*view.cssClasses.toTypedArray())
-            view.element.addEventListener("click", view.click::fire)
-            postCreate(view)
-            return view
+    var visible: Boolean
+        get() = element.style.display != "none"
+        set(value) {
+            element.style.display = if (value) "block" else "none"
         }
+
+    init {
+        init()
     }
 }
 
