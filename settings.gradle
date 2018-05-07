@@ -1,6 +1,6 @@
 rootProject.name = 'Robots'
 
-include 'frontend'
+include 'datamodel'
 include 'website'
 include 'server'
 include 'robot'

@@ -1,4 +1,4 @@
-group = 'de.westermann.robots.frontend'
+group = 'de.westermann.robots.datamodel'
 version = '0.0.1-alpha'
 
 apply plugin: "kotlin-platform-common"
