@@ -1,7 +1,5 @@
 package de.westermann.robots.server.utils
 
-import de.westermann.robots.server.Color
-import de.westermann.robots.server.ColorScheme
 import mu.KotlinLogging
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
@@ -113,7 +111,7 @@ object Configuration {
             }
     ).log(l)
 
-    private fun String.toProperty() = replace("^get".toRegex(), "").toUpperDashCase()
+    private fun String.toProperty() = replace("^([Gg])et".toRegex(), "").toUpperDashCase()
 
     private fun String.toMethod() = "get-$this".toCamelCase()
 

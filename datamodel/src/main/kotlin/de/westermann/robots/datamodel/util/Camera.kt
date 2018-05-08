@@ -9,6 +9,6 @@ data class Camera(
         val stream: String = ""
 ) {
     companion object {
-        val UNKNOWN = Camera(false)
+        val NONE = Camera(false)
     }
 }

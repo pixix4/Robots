@@ -31,8 +31,11 @@ class Robot : ObjectObservable() {
     val lineFollowerPropety = LineFollower.UNKNOWN.observable()
     var lineFollower by lineFollowerPropety.accessor()
 
-    val cameraProperty = Camera.UNKNOWN.observable()
+    val cameraProperty = Camera.NONE.observable()
     var camera by cameraProperty.accessor()
+
+    val kickerProperty = Kicker.NONE.observable()
+    var kicker by kickerProperty.accessor()
 
     val energyProperty = Energy.UNKNOWN.observable()
     var energy by energyProperty.accessor()

@@ -1,4 +1,4 @@
-package de.westermann.robots.server
+package de.westermann.robots.server.utils
 
 import java.util.LinkedList
 
@@ -63,7 +63,7 @@ data class Color(
         private fun parseRgba(param: List<String>): Color = when {
                 param.size == 4 -> Color(param[0].toInt(), param[1].toInt(), param[2].toInt(), param[3].toDouble())
                 param.size == 2 -> parse(param[0]).copy(alpha = param[1].toDouble())
-                param.size == 1 ->  parse(param[0])
+                param.size == 1 -> parse(param[0])
                 else -> throw IllegalArgumentException(ILLEGAL_PARAMETER_COUNT + FUNCTION_RGBA)
             }
 

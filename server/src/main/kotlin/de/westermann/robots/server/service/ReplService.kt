@@ -1,6 +1,6 @@
 package de.westermann.robots.server.service
 
-import de.westermann.robots.server.ColorScheme
+import de.westermann.robots.server.utils.ColorScheme
 import de.westermann.robots.server.Main
 import de.westermann.robots.server.utils.Configuration
 import de.westermann.robots.server.utils.Environment

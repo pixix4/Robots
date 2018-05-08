@@ -4,9 +4,11 @@ package de.westermann.robots.server.utils
  * @author lars
  */
 
-fun String.toCamelCase(): String = split("[-_]".toRegex()).joinToString("") {
+fun String.toPascalCase(): String = split("[-_]".toRegex()).joinToString("") {
     it.toLowerCase().capitalize()
 }
+
+fun String.toCamelCase(): String = toPascalCase().decapitalize()
 
 fun String.toDashCase(): String = replace("(.)([A-Z])".toRegex(), "$1-$2")
         .replace(" ", "-")

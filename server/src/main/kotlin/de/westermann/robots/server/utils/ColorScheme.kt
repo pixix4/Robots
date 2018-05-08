@@ -1,7 +1,5 @@
-package de.westermann.robots.server
+package de.westermann.robots.server.utils
 
-import de.westermann.robots.server.utils.Configuration
-import de.westermann.robots.server.utils.Printer
 import mu.KotlinLogging
 
 
@@ -62,26 +60,26 @@ object ColorScheme {
 
     init {
         var map = when (Configuration.properties.colorScheme) {
-            ColorScheme.Defaults.RED -> load("#F44336", Brightness.LIGHT, "#D32F2F", Brightness.LIGHT, "#FFCDD2", Brightness.DARK)
-            ColorScheme.Defaults.PINK -> load("#E91E63", Brightness.LIGHT, "#C2185B", Brightness.LIGHT, "#F8BBD0", Brightness.DARK)
-            ColorScheme.Defaults.PURPLE -> load("#9C27B0", Brightness.LIGHT, "#7B1FA2", Brightness.LIGHT, "#E1BEE7", Brightness.DARK)
-            ColorScheme.Defaults.DEEP_PURPLE -> load("#673AB7", Brightness.LIGHT, "#512DA8", Brightness.LIGHT, "#D1C4E9", Brightness.DARK)
-            ColorScheme.Defaults.INDIGO -> load("#3F51B5", Brightness.LIGHT, "#303F9F", Brightness.LIGHT, "#C5CAE9", Brightness.DARK)
-            ColorScheme.Defaults.BLUE -> load("#2196F3", Brightness.DARK, "#1976D2", Brightness.LIGHT, "#BBDEFB", Brightness.DARK)
-            ColorScheme.Defaults.LIGHT_BLUE -> load("#03A9F4", Brightness.DARK, "#0288D1", Brightness.LIGHT, "#B3E5FC", Brightness.DARK)
-            ColorScheme.Defaults.CYAN -> load("#00BCD4", Brightness.DARK, "#0097A7", Brightness.LIGHT, "#B2EBF2", Brightness.DARK)
-            ColorScheme.Defaults.TEAL -> load("#009688", Brightness.LIGHT, "#00796B", Brightness.LIGHT, "#B2DFDB", Brightness.DARK)
-            ColorScheme.Defaults.GREEN -> load("#4CAF50", Brightness.DARK, "#388E3C", Brightness.LIGHT, "#C8E6C9", Brightness.DARK)
-            ColorScheme.Defaults.LIGHT_GREEN -> load("#8BC34A", Brightness.DARK, "#689F38", Brightness.DARK, "#DCEDC8", Brightness.DARK)
-            ColorScheme.Defaults.LIME -> load("#CDDC39", Brightness.DARK, "#AFB42B", Brightness.DARK, "#F0F4C3", Brightness.DARK)
-            ColorScheme.Defaults.YELLOW -> load("#FFEB3B", Brightness.DARK, "#FBC02D", Brightness.DARK, "#FFF9C4", Brightness.DARK)
-            ColorScheme.Defaults.AMBER -> load("#FFC107", Brightness.DARK, "#FFA000", Brightness.DARK, "#FFECB3", Brightness.DARK)
-            ColorScheme.Defaults.ORANGE -> load("#FF9800", Brightness.DARK, "#F57C00", Brightness.DARK, "#FFE0B2", Brightness.DARK)
-            ColorScheme.Defaults.DEEP_ORANGE -> load("#FF5722", Brightness.DARK, "#E64A19", Brightness.LIGHT, "#FFCCBC", Brightness.DARK)
-            ColorScheme.Defaults.BROWN -> load("#795548", Brightness.LIGHT, "#5D4037", Brightness.LIGHT, "#D7CCC8", Brightness.DARK)
-            ColorScheme.Defaults.GREY -> load("#9E9E9E", Brightness.DARK, "#616161", Brightness.LIGHT, "#F5F5F5", Brightness.DARK)
-            ColorScheme.Defaults.BLUE_GREY -> load("#607D8B", Brightness.LIGHT, "#455A64", Brightness.LIGHT, "#CFD8DC", Brightness.DARK)
-            ColorScheme.Defaults.CUSTOM -> load(Color.WHITE, Brightness.DARK, Color.WHITE, Brightness.DARK, Color.WHITE, Brightness.DARK)
+            Defaults.RED -> load("#F44336", Brightness.LIGHT, "#D32F2F", Brightness.LIGHT, "#FFCDD2", Brightness.DARK)
+            Defaults.PINK -> load("#E91E63", Brightness.LIGHT, "#C2185B", Brightness.LIGHT, "#F8BBD0", Brightness.DARK)
+            Defaults.PURPLE -> load("#9C27B0", Brightness.LIGHT, "#7B1FA2", Brightness.LIGHT, "#E1BEE7", Brightness.DARK)
+            Defaults.DEEP_PURPLE -> load("#673AB7", Brightness.LIGHT, "#512DA8", Brightness.LIGHT, "#D1C4E9", Brightness.DARK)
+            Defaults.INDIGO -> load("#3F51B5", Brightness.LIGHT, "#303F9F", Brightness.LIGHT, "#C5CAE9", Brightness.DARK)
+            Defaults.BLUE -> load("#2196F3", Brightness.DARK, "#1976D2", Brightness.LIGHT, "#BBDEFB", Brightness.DARK)
+            Defaults.LIGHT_BLUE -> load("#03A9F4", Brightness.DARK, "#0288D1", Brightness.LIGHT, "#B3E5FC", Brightness.DARK)
+            Defaults.CYAN -> load("#00BCD4", Brightness.DARK, "#0097A7", Brightness.LIGHT, "#B2EBF2", Brightness.DARK)
+            Defaults.TEAL -> load("#009688", Brightness.LIGHT, "#00796B", Brightness.LIGHT, "#B2DFDB", Brightness.DARK)
+            Defaults.GREEN -> load("#4CAF50", Brightness.DARK, "#388E3C", Brightness.LIGHT, "#C8E6C9", Brightness.DARK)
+            Defaults.LIGHT_GREEN -> load("#8BC34A", Brightness.DARK, "#689F38", Brightness.DARK, "#DCEDC8", Brightness.DARK)
+            Defaults.LIME -> load("#CDDC39", Brightness.DARK, "#AFB42B", Brightness.DARK, "#F0F4C3", Brightness.DARK)
+            Defaults.YELLOW -> load("#FFEB3B", Brightness.DARK, "#FBC02D", Brightness.DARK, "#FFF9C4", Brightness.DARK)
+            Defaults.AMBER -> load("#FFC107", Brightness.DARK, "#FFA000", Brightness.DARK, "#FFECB3", Brightness.DARK)
+            Defaults.ORANGE -> load("#FF9800", Brightness.DARK, "#F57C00", Brightness.DARK, "#FFE0B2", Brightness.DARK)
+            Defaults.DEEP_ORANGE -> load("#FF5722", Brightness.DARK, "#E64A19", Brightness.LIGHT, "#FFCCBC", Brightness.DARK)
+            Defaults.BROWN -> load("#795548", Brightness.LIGHT, "#5D4037", Brightness.LIGHT, "#D7CCC8", Brightness.DARK)
+            Defaults.GREY -> load("#9E9E9E", Brightness.DARK, "#616161", Brightness.LIGHT, "#F5F5F5", Brightness.DARK)
+            Defaults.BLUE_GREY -> load("#607D8B", Brightness.LIGHT, "#455A64", Brightness.LIGHT, "#CFD8DC", Brightness.DARK)
+            Defaults.CUSTOM -> load(Color.WHITE, Brightness.DARK, Color.WHITE, Brightness.DARK, Color.WHITE, Brightness.DARK)
         }
 
         Configuration.properties.primaryColor?.let {
@@ -179,12 +177,12 @@ object ColorScheme {
         Brightness.DARK -> {
             Color.BLACK.let {
                 when (level) {
-                    ColorScheme.ColorOpacityLevel.PRIMARY -> it.copy(alpha = 0.87)
-                    ColorScheme.ColorOpacityLevel.SECONDARY -> it.copy(alpha = 0.54)
-                    ColorScheme.ColorOpacityLevel.DISABLED -> it.copy(alpha = 0.38)
-                    ColorScheme.ColorOpacityLevel.DIVIDER -> it.copy(alpha = 0.12)
-                    ColorScheme.ColorOpacityLevel.ICON -> it.copy(alpha = 0.54)
-                    ColorScheme.ColorOpacityLevel.ICON_DISABLED -> it.copy(alpha = 0.38)
+                    ColorOpacityLevel.PRIMARY -> it.copy(alpha = 0.87)
+                    ColorOpacityLevel.SECONDARY -> it.copy(alpha = 0.54)
+                    ColorOpacityLevel.DISABLED -> it.copy(alpha = 0.38)
+                    ColorOpacityLevel.DIVIDER -> it.copy(alpha = 0.12)
+                    ColorOpacityLevel.ICON -> it.copy(alpha = 0.54)
+                    ColorOpacityLevel.ICON_DISABLED -> it.copy(alpha = 0.38)
                 }
             }
 
@@ -192,12 +190,12 @@ object ColorScheme {
         Brightness.LIGHT -> {
             Color.WHITE.let {
                 when (level) {
-                    ColorScheme.ColorOpacityLevel.PRIMARY -> it.copy(alpha = 1.0)
-                    ColorScheme.ColorOpacityLevel.SECONDARY -> it.copy(alpha = 0.7)
-                    ColorScheme.ColorOpacityLevel.DISABLED -> it.copy(alpha = 0.5)
-                    ColorScheme.ColorOpacityLevel.DIVIDER -> it.copy(alpha = 0.12)
-                    ColorScheme.ColorOpacityLevel.ICON -> it.copy(alpha = 1.0)
-                    ColorScheme.ColorOpacityLevel.ICON_DISABLED -> it.copy(alpha = 0.5)
+                    ColorOpacityLevel.PRIMARY -> it.copy(alpha = 1.0)
+                    ColorOpacityLevel.SECONDARY -> it.copy(alpha = 0.7)
+                    ColorOpacityLevel.DISABLED -> it.copy(alpha = 0.5)
+                    ColorOpacityLevel.DIVIDER -> it.copy(alpha = 0.12)
+                    ColorOpacityLevel.ICON -> it.copy(alpha = 1.0)
+                    ColorOpacityLevel.ICON_DISABLED -> it.copy(alpha = 0.5)
                 }
             }
         }

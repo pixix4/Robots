@@ -2,7 +2,6 @@ package de.westermann.robots.datamodel
 
 import de.westermann.robots.datamodel.observe.ObjectObservable
 import de.westermann.robots.datamodel.observe.accessor
-import de.westermann.robots.datamodel.util.Version
 
 /**
  * @author lars
