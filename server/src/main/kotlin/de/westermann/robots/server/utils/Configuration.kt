@@ -2,6 +2,8 @@ package de.westermann.robots.server.utils
 
 import de.westermann.robots.datamodel.util.Color
 import mu.KotlinLogging
+import org.apache.commons.io.FileUtils
+import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
 import java.nio.file.Files
@@ -9,6 +11,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.jvmErasure
@@ -43,7 +46,11 @@ object Configuration {
 
         @Description("Sets the default color scheme")
         val colorScheme: ColorScheme.Defaults
-            get() = ColorScheme.Defaults.GREEN
+            get() = ColorScheme.Defaults.DEFAULT
+
+        @Description("Sets the directory for temporary data")
+        val tmpDirectory: Path
+            get() = Paths.get("tmp")
 
         val primaryColor: Color?
             get() = null
@@ -194,14 +201,15 @@ object Configuration {
                             Double::class -> value.toDoubleOrNull()
                             Float::class -> value.toFloatOrNull()
                             Boolean::class -> value.toBoolean()
+                            Path::class -> Paths.get(value)
                             String::class -> value
                             Color::class -> Color.parse(value)
-                            else -> if (type.jvmErasure.java.isEnum) {
-                                type.jvmErasure.java.enumConstants.find {
+                            else -> when {
+                                type.jvmErasure.java.isEnum -> type.jvmErasure.java.enumConstants.find {
                                     it.toString().equals(value.replace("-", "_"), true)
                                 }
-                            } else {
-                                null
+                                type.jvmErasure.isSubclassOf(Path::class) -> Paths.get(value)
+                                else -> null
                             }
                         }?.let {
                             setValidValue(it)
@@ -227,7 +235,7 @@ object Configuration {
         fun valid(x: Any? = value): Boolean = if (x == null) {
             type.isMarkedNullable
         } else {
-            x::class == type.jvmErasure
+            x::class == type.jvmErasure || x::class.isSubclassOf(type.jvmErasure)
         }
     }
 
@@ -246,6 +254,22 @@ object Configuration {
             throw IllegalArgumentException("Cannot find property '$name'")
         }
     } as Properties
+
+    fun tmp(subFolder: String? = null): Path =
+            (subFolder?.let {
+                properties.tmpDirectory.resolve(subFolder)
+            } ?: properties.tmpDirectory)
+
+
+    fun tmpClear(subFolder: String? = null) {
+        try {
+            FileUtils.deleteDirectory(subFolder?.let {
+                properties.tmpDirectory.resolve(subFolder).toFile()
+            } ?: properties.tmpDirectory.toFile())
+        } catch (_:IOException) {
+
+        }
+    }
 
     init {
         Properties::class.memberProperties.forEach {

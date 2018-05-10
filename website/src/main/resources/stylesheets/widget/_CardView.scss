@@ -1,0 +1,18 @@
+@import "../config";
+
+.card-view {
+  margin: 1.5rem 1rem 1rem;
+
+  & > div {
+    background: $background-primary;
+    border: $main-divider;
+    border-radius: $border-radius;
+    box-shadow: 0 1px 2px $shadow;
+    margin: 0.5rem;
+    transition: box-shadow $animation-time;
+
+    &:hover {
+      box-shadow: 0 1px 4px 1px $shadow;
+    }
+  }
+}

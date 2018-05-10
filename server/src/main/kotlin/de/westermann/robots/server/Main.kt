@@ -22,6 +22,9 @@ object Main {
 
         Configuration.load(args.toList())
 
+        Configuration.tmpClear()
+        logger.info { "Temp folder is ${Configuration.properties.tmpDirectory.toAbsolutePath()}" }
+
         DiscoveryService.start(Configuration.properties.discoveryPort)
         WebService.start(Configuration.properties.webPort)
         ReplService.start()
@@ -29,6 +32,7 @@ object Main {
         Runtime.getRuntime().addShutdownHook(thread(start = false, name = "shutdown") {
             logger.info { "Stopping..." }
 
+            Configuration.tmpClear()
             DiscoveryService.stop()
             ReplService.stop()
         })

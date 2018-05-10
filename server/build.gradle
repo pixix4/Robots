@@ -64,6 +64,8 @@ dependencies {
     compile "org.fusesource.jansi:jansi:1.8" // Needed for windows logging colors
 
     compile "com.lambdaworks:scrypt:1.4.0"
+    compile "commons-io:commons-io:2.6"
+    compile "com.vaadin:vaadin-sass-compiler:0.9.13"
 
     expectedBy project(":datamodel")
     compile project(":robot")

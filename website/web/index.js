@@ -6,7 +6,7 @@ app.use(require('node-sass-middleware')({
     src: path.join(__dirname, '../src/main/resources/stylesheets'),
     dest: path.join(__dirname, "website/stylesheets"),
     prefix: "/public/stylesheets",
-    indentedSyntax: true,
+    indentedSyntax: false,
     sourceMap: false
 }));
 

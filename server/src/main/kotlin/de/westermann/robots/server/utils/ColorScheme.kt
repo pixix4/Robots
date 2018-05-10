@@ -80,7 +80,7 @@ object ColorScheme {
             Defaults.BROWN -> load("#795548", Brightness.LIGHT, "#5D4037", Brightness.LIGHT, "#D7CCC8", Brightness.DARK)
             Defaults.GREY -> load("#9E9E9E", Brightness.DARK, "#616161", Brightness.LIGHT, "#F5F5F5", Brightness.DARK)
             Defaults.BLUE_GREY -> load("#607D8B", Brightness.LIGHT, "#455A64", Brightness.LIGHT, "#CFD8DC", Brightness.DARK)
-            Defaults.CUSTOM -> load(Color.WHITE, Brightness.DARK, Color.WHITE, Brightness.DARK, Color.WHITE, Brightness.DARK)
+            Defaults.DEFAULT -> load("#274275", Brightness.LIGHT, "#002557", Brightness.LIGHT, "#CFD8DC", Brightness.DARK)
         }
 
         Configuration.properties.primaryColor?.let {
@@ -156,7 +156,7 @@ object ColorScheme {
         BROWN,
         GREY,
         BLUE_GREY,
-        CUSTOM
+        DEFAULT
     }
 
     private data class ColorMap(
