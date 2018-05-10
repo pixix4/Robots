@@ -35,8 +35,12 @@ jar {
 
     from {
         configurations.compile.collect {
-            (it.isDirectory() ? it : zipTree(it)).getFiles().findAll {
-                it.name ==~ "^[a-z|-]+.js(.map)?\$"
+            if (it.exists()) {
+                ((it.isDirectory() || !it.exists()) ? it : zipTree(it)).getFiles().findAll {
+                    it.name ==~ "^[a-z|-]+.js(.map)?\$"
+                }
+            } else {
+                ArrayList
             }
         }
     }
