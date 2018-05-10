@@ -23,3 +23,27 @@ $card-height: 10rem
     font-weight: bold
     line-height: 3rem
     font-size: 1.2rem
+  .controller-card-robots
+    position: absolute
+    top: 3.6rem
+    bottom: 1rem
+    left: $card-height
+    padding: 0 1rem
+    & > div
+      height: 100%
+      & > div
+        float: left
+        margin-right: 0.8rem
+        height: 100%
+      &:empty::before
+        color: $main-text-disabled
+        content: 'Add robot'
+        width: 10rem
+        display: block
+        height: 100%
+        min-width: 10rem
+        border: dashed 1px $main-divider
+        border-radius: $border-radius
+        text-align: center
+        line-height: 5.2rem
+

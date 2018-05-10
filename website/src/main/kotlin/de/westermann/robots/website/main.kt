@@ -100,14 +100,9 @@ fun demo() {
         name = "Test 3"
     }
 
-    window.setTimeout({
-        DeviceManager.robots[0]?.name = "Es funktioniert!"
-        DeviceManager.bindController(DeviceManager.controllers[1]!!, DeviceManager.robots[1]!!)
-    }, 1000)
+    DeviceManager.bindController(DeviceManager.controllers[1]!!, DeviceManager.robots[1]!!)
+    DeviceManager.bindController(DeviceManager.controllers[1]!!, DeviceManager.robots[2]!!)
     window.setTimeout({
         DeviceManager.bindController(DeviceManager.controllers[2]!!, DeviceManager.robots[1]!!)
     }, 2000)
-    window.setTimeout({
-        DeviceManager.bindController(DeviceManager.controllers[1]!!, DeviceManager.robots[2]!!)
-    }, 3000)
 }

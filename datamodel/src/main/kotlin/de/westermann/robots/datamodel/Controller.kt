@@ -64,4 +64,5 @@ class Controller(
     enum class Type {
         DESKTOP, MOBIL, PHYSICAL, UNKNOWN
     }
+    override fun toString(): String = "Controller($id: '$name')"
 }

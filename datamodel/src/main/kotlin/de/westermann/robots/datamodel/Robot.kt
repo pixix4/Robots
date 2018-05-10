@@ -92,4 +92,6 @@ class Robot(
         DeviceManager.getBoundControllers(this)
     }.observableFunction()
     val controllers by controllersProperty.accessor()
+
+    override fun toString(): String = "Robot($id: '$name')"
 }

@@ -36,6 +36,11 @@ class ControllerCardMinimal(controller: Controller) : View() {
                 Controller.Type.UNKNOWN -> MaterialIcon.HELP_OUTLINE
             }
         }
+
+        click.on {
+            it.stopPropagation()
+            println("Open controller context menu: $controller")
+        }
     }
 
 

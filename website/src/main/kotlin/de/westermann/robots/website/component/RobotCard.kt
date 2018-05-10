@@ -8,6 +8,7 @@ import de.westermann.robots.website.toolkit.view.ViewList
 import de.westermann.robots.website.toolkit.widget.IconView
 import de.westermann.robots.website.toolkit.widget.ImageView
 import de.westermann.robots.website.toolkit.widget.TextView
+import kotlin.browser.window
 
 /**
  * @author lars
@@ -28,7 +29,14 @@ class RobotCard(robot: Robot) : View() {
     }
 
     private val controllers: ViewList<ControllerCardMinimal> by ViewContainer(this, "controllers") {
-        ViewList<ControllerCardMinimal>()
+        ViewList<ControllerCardMinimal>().also { list ->
+            list.click.on {
+                if (list.isEmpty()) {
+                    it.stopPropagation()
+                    println("Add controller to robot: $robot")
+                }
+            }
+        }
     }
 
     init {
@@ -55,6 +63,10 @@ class RobotCard(robot: Robot) : View() {
             robot.kickerProperty.onChangeInit { newValue, _ ->
                 it.visible = !newValue.available
             }
+        }
+
+        click.on {
+            println("Open robot details: $robot")
         }
     }
 

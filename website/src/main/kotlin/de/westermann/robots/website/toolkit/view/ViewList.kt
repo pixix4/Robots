@@ -47,6 +47,8 @@ open class ViewList<T : View> : View(), Iterable<T> {
         }
     }
 
+    fun isEmpty() = children.isEmpty()
+
     protected open fun createContainer(): Element = document.createElement("div")
 
     override fun iterator(): Iterator<T> = children.map { it.first }.iterator()
