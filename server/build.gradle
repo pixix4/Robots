@@ -5,6 +5,7 @@ version = '0.0.1-alpha'
 
 apply plugin: "kotlin"
 apply plugin: "application"
+apply plugin: "kotlin-platform-jvm"
 
 buildscript {
     repositories {
@@ -64,6 +65,7 @@ dependencies {
 
     compile "com.lambdaworks:scrypt:1.4.0"
 
+    expectedBy project(":datamodel")
     compile project(":robot")
     compile project(":website")
 

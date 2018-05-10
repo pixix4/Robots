@@ -8,7 +8,7 @@ import kotlin.dom.clear
  * @author lars
  */
 
-abstract class ViewList<T : View> : View(), Iterable<T> {
+open class ViewList<T : View> : View(), Iterable<T> {
 
     protected val children = mutableListOf<Pair<T, Element>>()
 
@@ -22,18 +22,28 @@ abstract class ViewList<T : View> : View(), Iterable<T> {
         }
     }
 
-    operator fun plusAssign(child: T) {
+    fun add(child: T) {
         children.add(Pair(child, createContainer()).also {
             it.second.appendChild(child.element)
             element.appendChild(it.second)
         })
     }
 
-    operator fun minusAssign(child: T) {
+    operator fun plusAssign(child: T) = add(child)
+
+    fun remove(child: T) {
         children.find { it.first == child }?.also {
             children.remove(it)
             element.removeChild(it.second)
             it.second.clear()
+        }
+    }
+
+    operator fun minusAssign(child: T) = remove(child)
+
+    fun clear() {
+        children.forEach {
+            remove(it.first)
         }
     }
 

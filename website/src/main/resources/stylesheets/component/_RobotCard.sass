@@ -1,0 +1,46 @@
+@import "../config"
+
+$card-height: 10rem
+
+.robot-card
+  position: relative
+  height: $card-height
+  .robot-card-image
+    height: 100%
+    width: $card-height
+    background: $primary-light-color
+    padding: 1rem
+    div
+      height: 100%
+  .robot-card-name
+    position: absolute
+    top: 0
+    left: $card-height
+    right: 0
+    padding: 0 1rem
+    font-weight: bold
+    line-height: 3rem
+    font-size: 1.2rem
+  .robot-card-modules
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    line-height: 3rem
+    padding-right: 0.3rem
+    & > div > div
+      font-size: 1.4rem
+      float: right
+      padding: 0 0.3rem
+  .robot-card-controllers
+    position: absolute
+    top: 4rem
+    bottom: 1rem
+    left: $card-height
+    padding: 0 1rem
+    & > div
+      height: 100%
+      & > div
+        float: left
+        margin-right: 0.8rem
+        height: 100%

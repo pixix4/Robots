@@ -6,13 +6,29 @@ import de.westermann.robots.website.toolkit.view.View
  * @author lars
  */
 
-class TextView(text: String = "") : View() {
+class TextView(text: String = "", placeholder: String = "") : View() {
 
-    var text: String
-        get() = element.textContent ?: ""
+    var text: String = text
         set(value) {
-            element.textContent = value
+            field = value
+            update()
         }
+
+    var placeholder: String = placeholder
+        set(value) {
+            field = value
+            update()
+        }
+
+    private fun update() {
+        if (text.isEmpty()) {
+            element.textContent = placeholder
+            element.classList.add("placeholder")
+        } else {
+            element.textContent = text
+            element.classList.remove("placeholder")
+        }
+    }
 
     init {
         this.text = text

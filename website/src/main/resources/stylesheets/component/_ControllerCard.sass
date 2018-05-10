@@ -1,0 +1,25 @@
+@import "../config"
+
+$card-height: 10rem
+
+.controller-card
+  position: relative
+  height: $card-height
+  .controller-card-icon
+    height: $card-height
+    width: $card-height
+    font-size: 5rem
+    text-align: center
+    line-height: $card-height
+    background: $primary-light-color
+    div
+      height: 100%
+  .controller-card-name
+    position: absolute
+    top: 0
+    left: $card-height
+    right: 0
+    padding: 0 1rem
+    font-weight: bold
+    line-height: 3rem
+    font-size: 1.2rem

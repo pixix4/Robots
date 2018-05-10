@@ -1,5 +1,6 @@
 package de.westermann.robots.server.utils
 
+import de.westermann.robots.datamodel.util.Color
 import mu.KotlinLogging
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy

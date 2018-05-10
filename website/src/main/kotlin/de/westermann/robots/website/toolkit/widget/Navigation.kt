@@ -39,11 +39,14 @@ class Navigation(
     var content: View? by ViewContainer(this, "content") { null }
 
     fun route(route: String, name: String, icon: Icon, init: Builder.() -> Unit = {}) {
+        var view: View? = null
         navigationDrawer.entry(name, icon) {
-            val builder = Builder()
-            builder.init()
-            content = builder.renderView()
-
+            if (view == null) {
+                val builder = Builder()
+                builder.init()
+                view = builder.renderView()
+            }
+            content = view
             window.history.replaceState(null, name, route)
         }.also {
             if (route == initRoute) {

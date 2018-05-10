@@ -29,7 +29,7 @@ data class Version(
     }.find { it != 0 } ?: 0
 
     override fun toString(): String = if (unknown)
-        "NONE"
+        "TRANSPARENT"
     else
         "$major.$minor.$patch" + if (qualifier != Qualifier.NONE) {
             qualifier.name.toLowerCase() + if (qualifierNumber != 0) qualifierNumber else ""

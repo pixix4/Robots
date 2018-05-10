@@ -9,7 +9,7 @@ data class LineFollower(
         val right: Color
 ) {
     companion object {
-        val UNKNOWN = LineFollower(State.UNAVAILABLE, Color.NONE, Color.NONE)
+        val UNKNOWN = LineFollower(State.UNAVAILABLE, Color.TRANSPARENT, Color.TRANSPARENT)
     }
 
     enum class State {

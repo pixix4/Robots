@@ -12,13 +12,23 @@ object DeviceManager {
     private var controllerToRobots: Map<Controller, Set<Robot>> = emptyMap()
 
     fun bindController(controller: Controller, robot: Robot) {
+        val old = controllerToRobots
         controllerToRobots += controller to (controllerToRobots.getOrElse(controller, { emptySet() }) + robot)
+        if (old != controllerToRobots) {
+            controller.robotsProperty.update()
+            robot.controllersProperty.update()
+        }
     }
 
     fun unbindController(controller: Controller, robot: Robot) {
+        val old = controllerToRobots
         controllerToRobots += controller to (controllerToRobots.getOrElse(controller, { emptySet() }) - robot)
         if (controllerToRobots[controller]?.isEmpty() == true) {
             controllerToRobots -= controller
+        }
+        if (old != controllerToRobots) {
+            controller.robotsProperty.update()
+            robot.controllersProperty.update()
         }
     }
 

@@ -3,13 +3,42 @@ package de.westermann.robots.datamodel.observe
 /**
  * @author lars
  */
-class ObservableProperty<T>(
+open class ObservableProperty<T>(
         value: T
-) : ValueObservable<T>() {
-    var value = value
+) {
+    open var value = value
         set(value) {
-            val oldValue = value
+            if (value == field)
+                return
+
+            val oldValue = field
             field = value
-            notify(value, oldValue)
+            notifyObservers(value, oldValue)
         }
+
+    private var observers = listOf<Observer<T>>()
+
+    fun onChange(observer: Observer<T>) = addObserver(observer)
+
+    fun onChangeInit(observer: Observer<T>) {
+        addObserver(observer)
+        observer(value, value)
+    }
+
+    fun addObserver(observer: Observer<T>) {
+        observers += observer
+    }
+
+    fun removeObserver(observer: Observer<T>) {
+        observers -= observer
+    }
+
+    fun clearObservers() {
+        observers = emptyList()
+    }
+
+    private fun notifyObservers(newValue: T, oldValue: T) {
+        observers.forEach { it(newValue, oldValue) }
+    }
+
 }

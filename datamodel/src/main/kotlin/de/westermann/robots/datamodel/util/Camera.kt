@@ -5,9 +5,9 @@ package de.westermann.robots.datamodel.util
  */
 
 data class Camera(
-        val available: Boolean,
+        override val available: Boolean,
         val stream: String = ""
-) {
+): RobotModule {
     companion object {
         val NONE = Camera(false)
     }

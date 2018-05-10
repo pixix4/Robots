@@ -1,6 +1,6 @@
 package de.westermann.robots.website.toolkit.view
 
-import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import kotlin.browser.document
 import kotlin.dom.addClass
 import kotlin.reflect.KClass
@@ -12,20 +12,20 @@ import kotlin.reflect.KProperty
 class ViewContainer<in Container : View, Child : View?>(
         parentClass: Container,
         fieldName: String,
-        init: (container: Element) -> Child
+        init: (container: HTMLElement) -> Child
 ) {
 
     constructor(
             containerClass: Container,
             childClass: KClass<out View>,
-            init: (container: Element) -> Child
+            init: (container: HTMLElement) -> Child
     ) : this(
             containerClass,
             childClass.simpleName.toDashCase(),
             init
     )
 
-    private val container: Element = document.createElement("div").also {
+    private val container: HTMLElement = (document.createElement("div") as HTMLElement).also {
         it.addClass(parentClass::class.simpleName.toDashCase() + "-$fieldName")
     }
     private var content: Child = init(container).also {

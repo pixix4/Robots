@@ -4,7 +4,9 @@ package de.westermann.robots.datamodel.observe
  * @author lars
  */
 
-abstract class ObjectObservable {
+abstract class ObservableObject {
+
+    abstract val id: Int
 
     private var observers = listOf<() -> Unit>()
 
@@ -20,9 +22,18 @@ abstract class ObjectObservable {
         observers = emptyList()
     }
 
-    fun notify() {
+    fun notifyObservers() {
         observers.forEach { it() }
     }
 
-    fun <T> T.observable() = this.createObservable { _, _ -> notify() }
+    fun <T> T.observable() = ObservableProperty(this).apply {
+        addObserver({ _, _ -> notifyObservers() })
+    }
+
+
+    fun <T> (() -> T).observableFunction() = ObservableFunction(this).apply {
+        addObserver({ _, _ -> notifyObservers() })
+    }
+
+    abstract fun <T> update(element: T): Boolean
 }

@@ -5,8 +5,8 @@ package de.westermann.robots.datamodel.util
  */
 
 data class Kicker(
-        val available: Boolean
-) {
+        override val available: Boolean
+): RobotModule {
 
     companion object {
         val NONE = Kicker(false)
