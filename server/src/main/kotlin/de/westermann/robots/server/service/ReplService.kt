@@ -1,7 +1,8 @@
 package de.westermann.robots.server.service
 
-import de.westermann.robots.server.utils.ColorScheme
+import de.westermann.robots.datamodel.DeviceManager
 import de.westermann.robots.server.Main
+import de.westermann.robots.server.utils.ColorScheme
 import de.westermann.robots.server.utils.Configuration
 import de.westermann.robots.server.utils.Environment
 import de.westermann.robots.server.utils.Printer
@@ -45,6 +46,68 @@ object ReplService : Service() {
                 }
             }
         }
+        command("robots", description = "Print all robots") {
+            action {
+                Printer.Table(
+                        "Robots",
+                        DeviceManager.robots.map {
+                            Printer.Line(it.toString(), it.controllers.joinToString(", ") {
+                                it.toString()
+                            })
+                        }
+                ).log {
+                    println(it)
+                }
+            }
+        }
+        command("controllers", description = "Print all controllers") {
+            action {
+                Printer.Table(
+                        "Controllers",
+                        DeviceManager.controllers.map {
+                            Printer.Line(it.toString(), it.robots.joinToString(", ") {
+                                it.toString()
+                            })
+                        }
+                ).log {
+                    println(it)
+                }
+            }
+        }
+        command("bind", description = "Bind a controller to a robot") {
+            action {
+                if (it.size != 2) {
+                    throw IllegalArgumentException("$it does not match '[controllerId] [robotId]'")
+                } else {
+                    val controller = it[0].toIntOrNull()?.let {
+                        DeviceManager.controllers[it]
+                    }
+                    val robot = it[1].toIntOrNull()?.let {
+                        DeviceManager.robots[it]
+                    }
+                    if (robot != null && controller != null) {
+                        DeviceManager.bindController(controller, robot)
+                    }
+                }
+            }
+        }
+        command("unbind", description = "Unbind a controller from a robot") {
+            action {
+                if (it.size != 2) {
+                    throw IllegalArgumentException("$it does not match ['controllerId' 'robotId']")
+                } else {
+                    val controller = it[0].toIntOrNull()?.let {
+                        DeviceManager.controllers[it]
+                    }
+                    val robot = it[1].toIntOrNull()?.let {
+                        DeviceManager.robots[it]
+                    }
+                    if (robot != null && controller != null) {
+                        DeviceManager.unbindController(controller, robot)
+                    }
+                }
+            }
+        }
     }
 
     class Command private constructor(
@@ -75,21 +138,25 @@ object ReplService : Service() {
         }
 
         fun exec(params: List<String>) {
-            if (params.isEmpty()) {
-                execHandler(params)
-            } else {
-                val name = params[0]
-                subCommands.find { name in it.name }?.exec(params.drop(1)) ?: run {
-                    if (name == "help") {
-                        Printer.Table((commandName + (description?.let { ": $it" } ?: "").let {
-                            if (it.isEmpty()) "Robots help" else it
-                        }), subCommands.map {
-                            Printer.Line("${it.name.joinToString(", ") }:", it.description ?: "")
-                        }).log { println(it) }
-                    } else {
-                        execHandler(params)
+            try {
+                if (params.isEmpty()) {
+                    execHandler(params)
+                } else {
+                    val name = params[0]
+                    subCommands.find { name in it.name }?.exec(params.drop(1)) ?: run {
+                        if (name == "help") {
+                            Printer.Table((commandName + (description?.let { ": $it" } ?: "").let {
+                                if (it.isEmpty()) "Robots help" else it
+                            }), subCommands.map {
+                                Printer.Line("${it.name.joinToString(", ")}:", it.description ?: "")
+                            }).log { println(it) }
+                        } else {
+                            execHandler(params)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                println(e::class.simpleName+": "+e.message)
             }
         }
 

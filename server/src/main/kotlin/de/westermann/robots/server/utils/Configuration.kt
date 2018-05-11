@@ -52,6 +52,16 @@ object Configuration {
         val tmpDirectory: Path
             get() = Paths.get("tmp")
 
+        @Description("Enables demo modus to load dummy data for roobts and controllers")
+        val demo: Boolean
+            get() = true
+
+        val controllerCodeLength: Int
+            get() = 4
+
+        val controllerCodeCharset: String
+            get() = "0-9"
+
         val primaryColor: Color?
             get() = null
         val primaryColorText: ColorScheme.Brightness?
@@ -266,7 +276,7 @@ object Configuration {
             FileUtils.deleteDirectory(subFolder?.let {
                 properties.tmpDirectory.resolve(subFolder).toFile()
             } ?: properties.tmpDirectory.toFile())
-        } catch (_:IOException) {
+        } catch (_: IOException) {
 
         }
     }

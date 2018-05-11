@@ -3,6 +3,7 @@ package de.westermann.robots.datamodel
 import de.westermann.robots.datamodel.observe.ObservableObject
 import de.westermann.robots.datamodel.observe.accessor
 import de.westermann.robots.datamodel.util.Color
+import de.westermann.robots.datamodel.util.Random
 
 /**
  * @author lars
@@ -18,7 +19,7 @@ class Controller(
     val nameProperty = "".observable()
     var name by nameProperty.accessor()
 
-    val codeProperty = 0.observable()
+    val codeProperty = "".observable()
     var code by codeProperty.accessor()
 
     val typeProperty = Type.UNKNOWN.observable()
@@ -29,6 +30,10 @@ class Controller(
 
     val colorProperty = Color.TRANSPARENT.observable()
     var color by colorProperty.accessor()
+
+    fun generateCode(length: Int, chars: List<Char>) {
+        code = Random.ints(length.toLong(), chars.size).map { chars[it] }.joinToString("")
+    }
 
     override fun <T> update(element: T): Boolean =
             (element as? Controller)?.let {
@@ -64,5 +69,6 @@ class Controller(
     enum class Type {
         DESKTOP, MOBIL, PHYSICAL, UNKNOWN
     }
+
     override fun toString(): String = "Controller($id: '$name')"
 }

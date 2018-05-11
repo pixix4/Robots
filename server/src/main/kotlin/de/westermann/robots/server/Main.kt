@@ -25,6 +25,11 @@ object Main {
         Configuration.tmpClear()
         logger.info { "Temp folder is ${Configuration.properties.tmpDirectory.toAbsolutePath()}" }
 
+        if (Configuration.properties.demo) {
+            logger.info { "Enter demo modus" }
+            Demo.load()
+        }
+
         DiscoveryService.start(Configuration.properties.discoveryPort)
         WebService.start(Configuration.properties.webPort)
         ReplService.start()
