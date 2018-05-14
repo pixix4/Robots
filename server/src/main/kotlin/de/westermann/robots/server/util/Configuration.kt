@@ -1,6 +1,8 @@
-package de.westermann.robots.server.utils
+package de.westermann.robots.server.util
 
+import de.westermann.robots.datamodel.util.Brightness
 import de.westermann.robots.datamodel.util.Color
+import de.westermann.robots.datamodel.util.ColorDefaults
 import mu.KotlinLogging
 import org.apache.commons.io.FileUtils
 import java.io.IOException
@@ -45,8 +47,8 @@ object Configuration {
             get() = throw UnsetPropertyException("No password provided")
 
         @Description("Sets the default color scheme")
-        val colorScheme: ColorScheme.Defaults
-            get() = ColorScheme.Defaults.DEFAULT
+        val colorScheme: ColorDefaults
+            get() = ColorDefaults.DEFAULT
 
         @Description("Sets the directory for temporary data")
         val tmpDirectory: Path
@@ -64,24 +66,24 @@ object Configuration {
 
         val primaryColor: Color?
             get() = null
-        val primaryColorText: ColorScheme.Brightness?
+        val primaryColorText: Brightness?
             get() = null
 
         val primaryColorDark: Color?
             get() = null
-        val primaryColorDarkText: ColorScheme.Brightness?
+        val primaryColorDarkText: Brightness?
             get() = null
 
         val primaryColorLight: Color?
             get() = null
-        val primaryColorLightText: ColorScheme.Brightness?
+        val primaryColorLightText: Brightness?
             get() = null
 
         val backgroundColorPrimary: Color?
             get() = null
         val backgroundColorSecondary: Color?
             get() = null
-        val textColor: ColorScheme.Brightness?
+        val textColor: Brightness?
             get() = null
     }
 
@@ -138,16 +140,15 @@ object Configuration {
         loadArguments(args)
     }
 
-    private fun findFiles(): List<Path> {
-        val list = mutableListOf<Path>(Paths.get(CONF_NAME).toAbsolutePath())
-        while (list.last().root != list.last().parent) {
-            list.add(list.last().parent.parent.resolve(CONF_NAME))
-        }
-        return list.filter {
-            Files.exists(it)
-        }
-    }
+    private val Path.parentDirs: List<Path>
+        get() = (parent?.parentDirs ?: emptyList()) + this
 
+    private fun findFiles() =
+            Paths.get(CONF_NAME).parentDirs.map {
+                it.resolve(CONF_NAME)
+            }.filter {
+                Files.exists(it)
+            }
 
     private fun loadFile(file: Path) =
             loadMap(Files.readAllLines(file).map {

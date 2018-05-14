@@ -9,6 +9,19 @@ data class Energy(
 ) {
     companion object {
         val UNKNOWN = Energy(0.0, State.UNKNOWN)
+
+
+        fun fromJson(json: Json) = Energy(
+                json["value"]?.toString()?.toDoubleOrNull() ?: 0.0,
+                json["state"]?.toString()?.let { s ->
+                    State.values().find { it.name.equals(s, ignoreCase = true) }
+                } ?: State.UNKNOWN
+        )
+    }
+
+    fun toJson() = json {
+        value("value") { value }
+        value("state") { state.name }
     }
 
 

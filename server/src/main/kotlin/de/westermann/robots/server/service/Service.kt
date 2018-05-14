@@ -1,9 +1,10 @@
 package de.westermann.robots.server.service
 
-import de.westermann.robots.server.utils.ServiceAlreadyStartedException
-import de.westermann.robots.server.utils.toDashCase
+import de.westermann.robots.server.util.ServiceAlreadyStartedException
+import de.westermann.robots.server.util.toDashCase
 import mu.KotlinLogging
 import kotlin.concurrent.thread
+import kotlin.jvm.Volatile
 
 /**
  * @author lars

@@ -1,6 +1,9 @@
-package de.westermann.robots.server.utils
+package de.westermann.robots.server.util
 
+import de.westermann.robots.datamodel.util.Brightness
 import de.westermann.robots.datamodel.util.Color
+import de.westermann.robots.datamodel.util.ColorDefaults
+import de.westermann.robots.datamodel.util.ColorMap
 import mu.KotlinLogging
 
 
@@ -23,65 +26,8 @@ object ColorScheme {
     val backgroundColorSecondary: Color
     val textColor: Brightness
 
-    private fun load(
-            primaryColor: String,
-            primaryColorText: Brightness,
-            primaryColorDark: String,
-            primaryColorDarkText: Brightness,
-            primaryColorLight: String,
-            primaryColorLightText: Brightness
-    ): ColorMap = load(
-            Color.parse(primaryColor),
-            primaryColorText,
-            Color.parse(primaryColorDark),
-            primaryColorDarkText,
-            Color.parse(primaryColorLight),
-            primaryColorLightText
-    )
-
-    private fun load(
-            primaryColor: Color,
-            primaryColorText: Brightness,
-            primaryColorDark: Color,
-            primaryColorDarkText: Brightness,
-            primaryColorLight: Color,
-            primaryColorLightText: Brightness
-    ): ColorMap = ColorMap(
-            primaryColor,
-            primaryColorText,
-            primaryColorDark,
-            primaryColorDarkText,
-            primaryColorLight,
-            primaryColorLightText,
-            Color.WHITE,
-            Color.parse("#F4F4F4"),
-            Brightness.DARK
-    )
-
-
     init {
-        var map = when (Configuration.properties.colorScheme) {
-            Defaults.RED -> load("#F44336", Brightness.LIGHT, "#D32F2F", Brightness.LIGHT, "#FFCDD2", Brightness.DARK)
-            Defaults.PINK -> load("#E91E63", Brightness.LIGHT, "#C2185B", Brightness.LIGHT, "#F8BBD0", Brightness.DARK)
-            Defaults.PURPLE -> load("#9C27B0", Brightness.LIGHT, "#7B1FA2", Brightness.LIGHT, "#E1BEE7", Brightness.DARK)
-            Defaults.DEEP_PURPLE -> load("#673AB7", Brightness.LIGHT, "#512DA8", Brightness.LIGHT, "#D1C4E9", Brightness.DARK)
-            Defaults.INDIGO -> load("#3F51B5", Brightness.LIGHT, "#303F9F", Brightness.LIGHT, "#C5CAE9", Brightness.DARK)
-            Defaults.BLUE -> load("#2196F3", Brightness.DARK, "#1976D2", Brightness.LIGHT, "#BBDEFB", Brightness.DARK)
-            Defaults.LIGHT_BLUE -> load("#03A9F4", Brightness.DARK, "#0288D1", Brightness.LIGHT, "#B3E5FC", Brightness.DARK)
-            Defaults.CYAN -> load("#00BCD4", Brightness.DARK, "#0097A7", Brightness.LIGHT, "#B2EBF2", Brightness.DARK)
-            Defaults.TEAL -> load("#009688", Brightness.LIGHT, "#00796B", Brightness.LIGHT, "#B2DFDB", Brightness.DARK)
-            Defaults.GREEN -> load("#4CAF50", Brightness.DARK, "#388E3C", Brightness.LIGHT, "#C8E6C9", Brightness.DARK)
-            Defaults.LIGHT_GREEN -> load("#8BC34A", Brightness.DARK, "#689F38", Brightness.DARK, "#DCEDC8", Brightness.DARK)
-            Defaults.LIME -> load("#CDDC39", Brightness.DARK, "#AFB42B", Brightness.DARK, "#F0F4C3", Brightness.DARK)
-            Defaults.YELLOW -> load("#FFEB3B", Brightness.DARK, "#FBC02D", Brightness.DARK, "#FFF9C4", Brightness.DARK)
-            Defaults.AMBER -> load("#FFC107", Brightness.DARK, "#FFA000", Brightness.DARK, "#FFECB3", Brightness.DARK)
-            Defaults.ORANGE -> load("#FF9800", Brightness.DARK, "#F57C00", Brightness.DARK, "#FFE0B2", Brightness.DARK)
-            Defaults.DEEP_ORANGE -> load("#FF5722", Brightness.DARK, "#E64A19", Brightness.LIGHT, "#FFCCBC", Brightness.DARK)
-            Defaults.BROWN -> load("#795548", Brightness.LIGHT, "#5D4037", Brightness.LIGHT, "#D7CCC8", Brightness.DARK)
-            Defaults.GREY -> load("#9E9E9E", Brightness.DARK, "#616161", Brightness.LIGHT, "#F5F5F5", Brightness.DARK)
-            Defaults.BLUE_GREY -> load("#607D8B", Brightness.LIGHT, "#455A64", Brightness.LIGHT, "#CFD8DC", Brightness.DARK)
-            Defaults.DEFAULT -> load("#274275", Brightness.LIGHT, "#002557", Brightness.LIGHT, "#CFD8DC", Brightness.DARK)
-        }
+        var map = ColorDefaults[Configuration.properties.colorScheme]
 
         Configuration.properties.primaryColor?.let {
             map = map.copy(primaryColor = it)
@@ -131,48 +77,6 @@ object ColorScheme {
     private enum class ColorOpacityLevel {
         PRIMARY, SECONDARY, DISABLED, DIVIDER, ICON, ICON_DISABLED
     }
-
-    enum class Brightness {
-        LIGHT, DARK
-    }
-
-    enum class Defaults {
-        RED,
-        PINK,
-        PURPLE,
-        DEEP_PURPLE,
-        INDIGO,
-        BLUE,
-        LIGHT_BLUE,
-        CYAN,
-        TEAL,
-        GREEN,
-        LIGHT_GREEN,
-        LIME,
-        YELLOW,
-        AMBER,
-        ORANGE,
-        DEEP_ORANGE,
-        BROWN,
-        GREY,
-        BLUE_GREY,
-        DEFAULT
-    }
-
-    private data class ColorMap(
-            val primaryColor: Color,
-            val primaryColorText: Brightness,
-
-            val primaryColorDark: Color,
-            val primaryColorDarkText: Brightness,
-
-            val primaryColorLight: Color,
-            val primaryColorLightText: Brightness,
-
-            val backgroundColorPrimary: Color,
-            val backgroundColorSecondary: Color,
-            val textColor: Brightness
-    )
 
     private fun getTextColor(brightness: Brightness, level: ColorOpacityLevel): Color = when (brightness) {
         Brightness.DARK -> {

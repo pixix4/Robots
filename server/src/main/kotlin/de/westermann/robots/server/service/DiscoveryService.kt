@@ -1,7 +1,7 @@
 package de.westermann.robots.server.service
 
 import de.westermann.robots.robot.Discovery
-import de.westermann.robots.server.utils.WhoBlocks
+import de.westermann.robots.server.util.WhoBlocks
 import java.net.BindException
 import java.net.DatagramSocket
 import java.net.SocketException

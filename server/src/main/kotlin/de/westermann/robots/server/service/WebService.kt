@@ -1,8 +1,10 @@
 package de.westermann.robots.server.service
 
-import de.westermann.robots.server.utils.Configuration
-import de.westermann.robots.server.utils.ResourceHandler
-import de.westermann.robots.server.utils.WhoBlocks
+import de.westermann.robots.datamodel.util.Json
+import de.westermann.robots.server.connection.WebSocketConnection
+import de.westermann.robots.server.util.Configuration
+import de.westermann.robots.server.util.ResourceHandler
+import de.westermann.robots.server.util.WhoBlocks
 import io.javalin.Javalin
 import io.javalin.event.EventType
 import mu.KotlinLogging
@@ -16,6 +18,8 @@ object WebService {
 
     private val resourceHandler =
             ResourceHandler("website", Configuration.tmp("website"))
+
+    private val connection = WebSocketConnection()
 
     fun start(port: Int) {
         logger.info { "Start web server on port $port... (http://localhost:$port)" }
@@ -54,13 +58,13 @@ object WebService {
 
             ws("/ws") {
                 it.onConnect { session ->
-
+                    connection += session
                 }
                 it.onMessage { session, msg ->
-
+                    connection.execute(session, Json.fromString(msg))
                 }
                 it.onClose { session, _, _ ->
-
+                    connection -= session
                 }
             }
         }.start()

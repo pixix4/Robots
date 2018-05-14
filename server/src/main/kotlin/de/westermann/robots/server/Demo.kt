@@ -4,8 +4,8 @@ import de.westermann.robots.datamodel.Controller
 import de.westermann.robots.datamodel.DeviceManager
 import de.westermann.robots.datamodel.Robot
 import de.westermann.robots.datamodel.util.*
-import de.westermann.robots.server.utils.Charsets
-import de.westermann.robots.server.utils.Configuration
+import de.westermann.robots.server.util.Charsets
+import de.westermann.robots.server.util.Configuration
 
 /**
  * @author lars

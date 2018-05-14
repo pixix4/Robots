@@ -1,7 +1,6 @@
 package de.westermann.robots.datamodel
 
 import de.westermann.robots.datamodel.observe.ObservableObject
-import de.westermann.robots.datamodel.observe.ObservableProperty
 import de.westermann.robots.datamodel.observe.accessor
 import de.westermann.robots.datamodel.util.*
 
@@ -13,13 +12,13 @@ class Robot(
 ) : ObservableObject() {
 
     constructor(id: Int, init: Robot.() -> Unit) : this(id) {
-        init()
+        init(this)
     }
 
     val nameProperty = "".observable()
     var name by nameProperty.accessor()
 
-    val typeProperty: ObservableProperty<String?> = null.observable()
+    val typeProperty = "".observable()
     var type by typeProperty.accessor()
 
     val versionProperty = Version.UNKNOWN.observable()
@@ -31,7 +30,10 @@ class Robot(
     val speedProperty = (-1.0).observable()
     var speed by speedProperty.accessor()
 
-    val trackProperty = Track.DEFAULT.observable()
+    val trimProperty = 0.0.observable()
+    var trim by trimProperty.accessor()
+
+    val trackProperty = Track.DEFAULT.observable(false)
     var track by trackProperty.accessor()
 
     val lineFollowerPropety = LineFollower.UNKNOWN.observable()
@@ -46,52 +48,50 @@ class Robot(
     val kickerProperty = Kicker.NONE.observable()
     var kicker by kickerProperty.accessor()
 
-    override fun <T> update(element: T): Boolean =
-            (element as? Robot)?.let {
-                var changed = false
-                if (type == it.type) {
-                    type = it.type
-                    changed = true
-                }
-                if (version == it.version) {
-                    version = it.version
-                    changed = true
-                }
-                if (color == it.color) {
-                    color = it.color
-                    changed = true
-                }
-                if (speed == it.speed) {
-                    speed = it.speed
-                    changed = true
-                }
-                if (track == it.track) {
-                    track = it.track
-                    changed = true
-                }
-                if (lineFollower == it.lineFollower) {
-                    lineFollower = it.lineFollower
-                    changed = true
-                }
-                if (energy == it.energy) {
-                    energy = it.energy
-                    changed = true
-                }
-                if (camera == it.camera) {
-                    camera = it.camera
-                    changed = true
-                }
-                if (kicker == it.kicker) {
-                    kicker = it.kicker
-                    changed = true
-                }
-                changed
-            } ?: false
-
     val controllersProperty = {
         DeviceManager.getBoundControllers(this)
     }.observableFunction()
     val controllers by controllersProperty.accessor()
 
     override fun toString(): String = "Robot($id: '$name')"
+
+    override fun toJson(): Json = json {
+        value("id") { id }
+        value("name") { name }
+        value("type") { type }
+        value("version") { version.toJson() }
+        value("color") { color.toString() }
+        value("speed") { speed }
+        value("trim") { trim }
+        value("track") { track.toJson() }
+        value("lineFollower") { lineFollower.toJson() }
+        value("energy") { energy.toJson() }
+        value("camera") { camera.toJson() }
+        value("kicker") { kicker.toJson() }
+    }
+
+    override fun fromJson(json: Json) {
+        json["name"]?.toString()?.let { name = it }
+        json["type"]?.toString()?.let { type = it }
+        json.json("version")?.let { version = Version.fromJson(it) }
+        json["color"]?.toString()?.let {
+            try {
+                color = Color.parse(it)
+            } catch (_: IllegalArgumentException) {
+            }
+        }
+        json["speed"]?.toString()?.toDoubleOrNull()?.let { speed = it }
+        json["trim"]?.toString()?.toDoubleOrNull()?.let { trim = it }
+        json.json("track")?.let { track = Track.fromJson(it) }
+        json.json("lineFollower")?.let { lineFollower = LineFollower.fromJson(it) }
+        json.json("energy")?.let { energy = Energy.fromJson(it) }
+        json.json("camera")?.let { camera = Camera.fromJson(it) }
+        json.json("kicker")?.let { kicker = Kicker.fromJson(it) }
+    }
+
+    companion object {
+        fun fromJson(json: Json) = Robot(
+                json["id"]?.toString()?.toIntOrNull() ?: 0
+        ).also { it.fromJson(json) }
+    }
 }

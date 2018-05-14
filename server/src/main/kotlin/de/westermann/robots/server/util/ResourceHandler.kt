@@ -1,4 +1,4 @@
-package de.westermann.robots.server.utils
+package de.westermann.robots.server.util
 
 import com.vaadin.sass.internal.ScssContext
 import com.vaadin.sass.internal.ScssStylesheet

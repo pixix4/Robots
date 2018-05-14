@@ -64,13 +64,7 @@ data class Color(
     }
 
     private val hexArray = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
-    private fun Int.toHex(): String {
-        var result = ""
-        for (i in 1 downTo 0) {
-            result += hexArray[this.ushr(4 * i) and 0xF]
-        }
-        return result
-    }
+    private fun Int.toHex() = hexArray[ushr(4 * 1) and 0xF].toString() + hexArray[this and 0xF]
 
     val lumincane: Double = 0.2162 * red + 0.7152 * green + 0.0722 * blue
 
@@ -169,9 +163,7 @@ data class Color(
 
             var depth = 0
             var paramStart = 0
-            for (i in 0 until function.length) {
-                val c = function[i]
-
+            function.forEachIndexed { i, c ->
                 when (c) {
                     '(' -> {
                         if (list.isEmpty() && depth == 0) {
@@ -196,10 +188,8 @@ data class Color(
                     else -> {
                     }
                 }
-
-
             }
-            throw IllegalArgumentException("Cannot parse color '" + function + "'. Error at char " + function.length)
+            throw IllegalArgumentException("Cannot parse color '$function'. Error at char ${function.length}")
         }
 
 

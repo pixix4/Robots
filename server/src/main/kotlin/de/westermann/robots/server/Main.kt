@@ -3,7 +3,7 @@ package de.westermann.robots.server
 import de.westermann.robots.server.service.DiscoveryService
 import de.westermann.robots.server.service.ReplService
 import de.westermann.robots.server.service.WebService
-import de.westermann.robots.server.utils.Configuration
+import de.westermann.robots.server.util.Configuration
 import mu.KotlinLogging
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess

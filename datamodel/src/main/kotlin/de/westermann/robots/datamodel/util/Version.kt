@@ -19,7 +19,13 @@ data class Version(
         RC(3),
         BETA(2),
         ALPHA(1),
-        SNAPSHOT(0)
+        SNAPSHOT(0);
+
+        companion object {
+            fun find(value: Int?): Qualifier =
+                    Qualifier.values().find { it.value == value } ?: NONE
+
+        }
     }
 
     private fun values() = listOf(major, minor, patch, qualifier.value, qualifierNumber)
@@ -34,6 +40,14 @@ data class Version(
         "$major.$minor.$patch" + if (qualifier != Qualifier.NONE) {
             qualifier.name.toLowerCase() + if (qualifierNumber != 0) qualifierNumber else ""
         } else ""
+
+    fun toJson() = json {
+        value("major") { major }
+        value("minor") { minor }
+        value("patch") { patch }
+        value("qualifier") { qualifier.value }
+        value("qualifierNumber") { qualifierNumber }
+    }
 
     companion object {
         const val GROUP_MAJOR = 1
@@ -68,5 +82,14 @@ data class Version(
                     }
                     v
                 } ?: UNKNOWN
+
+        fun fromJson(json: Json) = Version(
+                json["major"]?.toString()?.toIntOrNull() ?: 0,
+                json["minor"]?.toString()?.toIntOrNull() ?: 0,
+                json["patch"]?.toString()?.toIntOrNull() ?: 0,
+                Qualifier.find(json["qualifier"]?.toString()?.toIntOrNull()),
+                json["qualifierNumber"]?.toString()?.toIntOrNull() ?: 0
+
+        )
     }
 }

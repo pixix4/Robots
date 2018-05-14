@@ -15,6 +15,7 @@ object DeviceManager {
         val old = controllerToRobots
         controllerToRobots += controller to (controllerToRobots.getOrElse(controller, { emptySet() }) + robot)
         if (old != controllerToRobots) {
+            notifyOnBind(controller, robot)
             controller.robotsProperty.update()
             robot.controllersProperty.update()
         }
@@ -27,6 +28,7 @@ object DeviceManager {
             controllerToRobots -= controller
         }
         if (old != controllerToRobots) {
+            notifyOnUnbind(controller, robot)
             controller.robotsProperty.update()
             robot.controllersProperty.update()
         }
@@ -39,4 +41,26 @@ object DeviceManager {
 
     fun getBoundRobots(controller: Controller): Set<Robot> =
             controllerToRobots.getOrElse(controller, { emptySet() })
+
+    private fun notifyOnBind(controller: Controller, robot: Robot) {
+        bindChangeListeners.forEach { it.onBind(controller, robot) }
+    }
+
+    private fun notifyOnUnbind(controller: Controller, robot: Robot) {
+        bindChangeListeners.forEach { it.onUnbind(controller, robot) }
+    }
+
+    var bindChangeListeners = emptyList<OnBindChange>()
+    fun onBindChange(onBindChange: OnBindChange) {
+        bindChangeListeners += onBindChange
+    }
+
+    fun removeOnBindChange(onBindChange: OnBindChange) {
+        bindChangeListeners -= onBindChange
+    }
+
+    interface OnBindChange {
+        fun onBind(controller: Controller, robot: Robot)
+        fun onUnbind(controller: Controller, robot: Robot)
+    }
 }

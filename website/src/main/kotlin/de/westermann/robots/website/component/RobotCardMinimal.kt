@@ -16,7 +16,7 @@ class RobotCardMinimal(robot: Robot) : View() {
 
     private val image: ImageView by ViewContainer(this, "image") {
         //robot.colorProperty.onChangeInit { newValue, _ ->
-        //    it.style.backgroundColor = newValue.lightness(0.8).toString()
+        //    it.style.backgroundColor = newValue.lightness(0.8).stringify()
         //}
         ImageView("/public/images/robot.png")
     }

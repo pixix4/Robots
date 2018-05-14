@@ -1,4 +1,4 @@
-package de.westermann.robots.server.utils
+package de.westermann.robots.server.util
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.ILoggingEvent

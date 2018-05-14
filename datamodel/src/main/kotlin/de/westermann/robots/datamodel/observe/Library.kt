@@ -44,12 +44,6 @@ class Library<T : ObservableObject> : Iterable<T> {
             }
 
             notifyAdd(element)
-        } else {
-            get(element.id)?.let {
-                if (it.update(element)) {
-                    notifyChange(it)
-                }
-            }
         }
     }
 
@@ -70,6 +64,11 @@ class Library<T : ObservableObject> : Iterable<T> {
     override fun iterator(): Iterator<T> = list.keys.toList().iterator()
 
     operator fun get(id: Int): T? = list.keys.find { it.id == id }
+
+    val nextId: Int
+        get() = list.map { it.key.id }.toSet().let {
+            ((0..(it.max() ?: 0)).toSet() - it).min() ?: 0
+        }
 
     interface Observer<T> {
         fun onAdd(element: T) {}

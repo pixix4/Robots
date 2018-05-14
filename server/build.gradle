@@ -52,6 +52,7 @@ run {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -66,6 +67,7 @@ dependencies {
     compile "com.lambdaworks:scrypt:1.4.0"
     compile "commons-io:commons-io:2.6"
     compile "com.vaadin:vaadin-sass-compiler:0.9.13"
+    compile 'com.beust:klaxon:3.0.1'
 
     expectedBy project(":datamodel")
     compile project(":robot")

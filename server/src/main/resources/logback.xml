@@ -1,7 +1,7 @@
 <configuration debug="false">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 
-        <filter class="de.westermann.robots.server.utils.LogFilter" />
+        <filter class="de.westermann.robots.server.util.LogFilter" />
 
         <withJansi>true</withJansi>
         <encoder>

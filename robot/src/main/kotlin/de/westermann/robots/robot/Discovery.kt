@@ -149,20 +149,13 @@ sealed class Discovery(
         private const val HEADER_SIZE = 2
 
 
-        fun Int.toByteArray(): ByteArray {
-            val arr = ByteArray(4)
-            for (i in 0..3) {
-                arr[i] = (this.shr(i * 8).and(0xFF)).toByte()
-            }
-            return arr
-        }
+        fun Int.toByteArray() = (0..3).map {
+            (this.shr(it * 8).and(0xFF)).toByte()
+        }.toByteArray()
 
-        fun ByteArray.toDataInt(): Int {
-            var int = 0
-            for (i in 0..3) {
-                int += this[i].toInt().shl(i * 8)
+        fun ByteArray.toDataInt() =
+            this.foldIndexed(0) { index, acc, byte ->
+                acc + byte.toInt().shl(index * 8)
             }
-            return int
-        }
     }
 }

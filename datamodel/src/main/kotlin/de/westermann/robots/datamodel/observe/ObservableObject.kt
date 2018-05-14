@@ -4,14 +4,15 @@ package de.westermann.robots.datamodel.observe
  * @author lars
  */
 
-abstract class ObservableObject {
+abstract class ObservableObject : JsonSerializable {
 
     abstract val id: Int
 
     private var observers = listOf<() -> Unit>()
 
-    fun addObserver(observer: () -> Unit) {
+    fun addObserver(observer: () -> Unit): () -> Unit {
         observers += observer
+        return observer
     }
 
     fun removeObserver(observer: () -> Unit) {
@@ -26,14 +27,15 @@ abstract class ObservableObject {
         observers.forEach { it() }
     }
 
-    fun <T> T.observable() = ObservableProperty(this).apply {
-        addObserver({ _, _ -> notifyObservers() })
+    fun <T> T.observable(notifyObject: Boolean = true) = ObservableProperty(this).apply {
+        if (notifyObject) {
+            addObserver({ _, _ -> notifyObservers() })
+        }
     }
 
-
-    fun <T> (() -> T).observableFunction() = ObservableFunction(this).apply {
-        addObserver({ _, _ -> notifyObservers() })
+    fun <T> (() -> T).observableFunction(notifyObject: Boolean = false) = ObservableFunction(this).apply {
+        if (notifyObject) {
+            addObserver({ _, _ -> notifyObservers() })
+        }
     }
-
-    abstract fun <T> update(element: T): Boolean
 }

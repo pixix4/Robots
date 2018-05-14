@@ -1,4 +1,4 @@
-package de.westermann.robots.server.utils
+package de.westermann.robots.server.util
 
 import kotlin.math.max
 
@@ -40,11 +40,8 @@ sealed class Printer {
                 logger("${Environment.INDENT.repeat(indent)}$title")
             }
             val childrenIndent = indent + 1
-            for (printer in children) {
-                when (printer) {
-                    is Table -> printer.internalLog(logger, childrenIndent, colWidths)
-                    is Line -> printer.internalLog(logger, childrenIndent, colWidths)
-                }
+            children.forEach {
+                it.internalLog(logger, childrenIndent, colWidths)
             }
         }
     }

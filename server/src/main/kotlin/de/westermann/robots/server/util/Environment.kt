@@ -1,4 +1,4 @@
-package de.westermann.robots.server.utils
+package de.westermann.robots.server.util
 
 import mu.KotlinLogging
 import java.io.IOException
