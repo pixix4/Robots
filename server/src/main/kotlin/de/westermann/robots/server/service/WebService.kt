@@ -31,7 +31,7 @@ object WebService {
 
             event(EventType.SERVER_START_FAILED) {
                 logger.error {
-                    "Cannot start discovery server cause port $port is already in use!" + (WhoBlocks.port(port)?.let {
+                    "Cannot start discovery server, cause port $port is already in use!" + (WhoBlocks.port(port)?.let {
                         " (by '${it.name}': ${it.id})"
                     } ?: "")
                 }

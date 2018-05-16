@@ -1,6 +1,8 @@
 package de.westermann.robots.website
 
 import de.westermann.robots.datamodel.*
+import de.westermann.robots.datamodel.observe.ObservableProperty
+import de.westermann.robots.datamodel.observe.accessor
 import de.westermann.robots.datamodel.util.Button
 import de.westermann.robots.datamodel.util.Json
 import de.westermann.robots.datamodel.util.Track
@@ -75,11 +77,11 @@ object WebSocketConnection {
         }
 
         override fun login() {
-            println("login")
+            adminProperty.value = true
         }
 
         override fun logout() {
-            println("logout")
+            adminProperty.value = false
         }
     }
 
@@ -122,6 +124,9 @@ object WebSocketConnection {
             send(IServer::logout.name)
         }
     }
+
+    val adminProperty = ObservableProperty(false)
+    val admin by adminProperty.accessor()
 
     private var onopen: () -> Unit = {}
 

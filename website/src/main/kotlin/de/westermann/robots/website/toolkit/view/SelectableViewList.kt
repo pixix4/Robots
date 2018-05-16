@@ -15,24 +15,26 @@ abstract class SelectableViewList<T : View>(
 
     protected open val ignoreTypes = emptyList<KClass<out View>>()
 
-    private val selectListener = mutableMapOf<T, MutableList<() -> Unit>>()
+    private val selectListener = mutableMapOf<T, MutableList<(T) -> Unit>>()
 
-    fun bind(element: T, onSelect: () -> Unit) {
+    fun bind(element: T, onSelect: (elem: T) -> Unit) {
         selectListener.getOrPut(element, {
             mutableListOf()
         }).add(onSelect)
     }
 
-    fun select(child: T) {
+    fun select(child: T, trigger: Boolean = true) {
         if (child in selected || child::class in ignoreTypes)
             return
 
         if (!multiple) selected.forEach { unselect(it) }
 
         children.find { it.first == child }?.also {
-            selectListener[child]?.forEach { it() }
             it.second.classList.add(CSS)
             selected.add(child)
+            if (trigger) {
+                selectListener[child]?.forEach { it(child) }
+            }
         }
     }
 

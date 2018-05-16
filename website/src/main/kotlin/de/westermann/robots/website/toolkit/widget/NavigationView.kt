@@ -1,22 +1,18 @@
 package de.westermann.robots.website.toolkit.widget
 
-import de.westermann.robots.website.toolkit.Builder
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
-import kotlin.browser.window
 
 /**
  * @author lars
  */
 
-class Navigation(
+class NavigationView(
         title: String,
-        init: Navigation.() -> Unit
+        init: NavigationView.() -> Unit
 ) : View() {
-
-    val initRoute: String = window.location.pathname
 
     private val toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
         Toolbar {
@@ -29,7 +25,7 @@ class Navigation(
     private val navigationDrawer: NavigationDrawer by ViewContainer(this, NavigationDrawer::class) {
         NavigationDrawer {
             state.on {
-                this@Navigation.element.classList.toggle("toggled", it)
+                this@NavigationView.element.classList.toggle("toggled", it)
             }
         }
     }
@@ -38,22 +34,9 @@ class Navigation(
 
     var content: View? by ViewContainer(this, "content") { null }
 
-    fun route(route: String, name: String, icon: Icon, init: Builder.() -> Unit = {}) {
-        var view: View? = null
-        navigationDrawer.entry(name, icon) {
-            if (view == null) {
-                val builder = Builder()
-                builder.init()
-                view = builder.renderView()
-            }
-            content = view
-            window.history.replaceState(null, name, route)
-        }.also {
-            if (route == initRoute) {
-                navigationDrawer.select(it)
-            }
-        }
-    }
+    fun entry(name: String, icon: Icon, onSelect: (View) -> Unit = {}): View = navigationDrawer.entry(name, icon, onSelect)
+
+    fun select(elem: View, trigger:Boolean = true) = navigationDrawer.select(elem, trigger)
 
     fun divider(title: String = "") {
         navigationDrawer.divider(title)
@@ -64,5 +47,3 @@ class Navigation(
         init()
     }
 }
-
-fun Builder.navigation(title: String, init: Navigation.() -> Unit = {}) = child(Navigation(title, init))

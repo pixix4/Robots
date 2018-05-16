@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var app = express();
+var expressWs = require('express-ws')(app);
 
 app.use(require('node-sass-middleware')({
     src: path.join(__dirname, '../src/main/resources/stylesheets'),
@@ -11,6 +12,12 @@ app.use(require('node-sass-middleware')({
 }));
 
 app.use('/public', express.static(path.join(__dirname, 'website')));
+
+app.ws('/ws', function(ws, req) {
+    ws.on('message', function(msg) {
+        console.log(msg)
+    });
+});
 
 app.use(function (req, res) {
     res.status(200);

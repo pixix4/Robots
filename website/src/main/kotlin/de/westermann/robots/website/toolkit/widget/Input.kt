@@ -1,6 +1,6 @@
 package de.westermann.robots.website.toolkit.widget
 
-import de.westermann.robots.website.toolkit.Builder
+import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.view.EventHandler
 import de.westermann.robots.website.toolkit.view.View
@@ -58,4 +58,4 @@ class Input(
 }
 
 
-fun Builder.input(value: String, init: Input.() -> Unit = {}) = child(Input(value, init))
+fun Router.input(value: String, init: Input.() -> Unit = {}) = view { Input(value, init) }

@@ -141,17 +141,21 @@ object Configuration {
     }
 
     private val Path.parentDirs: List<Path>
-        get() = (parent?.parentDirs ?: emptyList()) + this
+        get() = toAbsolutePath().let {
+            (it.parent?.parentDirs ?: emptyList()).plus(element = it)
+        }
 
     private fun findFiles() =
-            Paths.get(CONF_NAME).parentDirs.map {
+            Paths.get("").parentDirs.map {
                 it.resolve(CONF_NAME)
             }.filter {
                 Files.exists(it)
             }
 
     private fun loadFile(file: Path) =
-            loadMap(Files.readAllLines(file).map {
+            also {
+                logger.info { "Load config file ${file.toAbsolutePath()}" }
+            }.loadMap(Files.readAllLines(file).map {
                 it.replace("#.*".toRegex(), "").trim()
             }.filter(String::isNotEmpty).map {
                 it.split(':', limit = 2).let {

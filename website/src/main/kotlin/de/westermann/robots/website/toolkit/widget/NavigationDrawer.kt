@@ -12,16 +12,10 @@ import kotlin.reflect.KClass
 
 class NavigationDrawer(init: NavigationDrawer.() -> Unit) : SelectableViewList<View>(false) {
 
-    var first = true
-
-    fun entry(name: String, icon: Icon, onSelect: () -> Unit): Action {
+    fun entry(name: String, icon: Icon, onSelect: (View) -> Unit): Action {
         val action = Action(name, icon)
         this += action
         bind(action, onSelect)
-        if (first) {
-            select(action)
-            first = false
-        }
         return action
     }
 

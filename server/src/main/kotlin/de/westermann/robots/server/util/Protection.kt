@@ -9,6 +9,9 @@ import mu.KotlinLogging
 object Protection {
     private val logger = KotlinLogging.logger {}
 
+    val loginRequired: Boolean
+        get() = Configuration.properties.protection == Type.NONE
+
     fun login(password: String): Boolean = checkPassword(
             password,
             Configuration.properties.protection,

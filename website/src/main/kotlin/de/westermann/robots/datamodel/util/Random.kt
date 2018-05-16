@@ -10,6 +10,7 @@ import kotlin.math.floor
 actual object Random {
     actual fun int(bound: Int): Int = (double() * bound).toInt()
 
+    @Suppress("DEPRECATION")
     actual fun double(): Double = Math.random()
 
     actual fun ints(count: Long, bound: Int): List<Int> = (1..count).map { int(bound) }

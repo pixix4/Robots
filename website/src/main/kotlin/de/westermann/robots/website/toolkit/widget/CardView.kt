@@ -1,6 +1,6 @@
 package de.westermann.robots.website.toolkit.widget
 
-import de.westermann.robots.website.toolkit.Builder
+import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewList
 
@@ -14,4 +14,4 @@ class CardView(init: CardView.() -> Unit) : ViewList<View>() {
 }
 
 
-fun Builder.cardView(init: CardView.() -> Unit = {}) = child(CardView(init))
+fun Router.cardView(init: CardView.() -> Unit = {}) = view { CardView(init) }

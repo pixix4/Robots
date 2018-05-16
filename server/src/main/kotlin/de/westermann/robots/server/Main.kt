@@ -26,7 +26,7 @@ object Main {
         logger.info { "Temp folder is ${Configuration.properties.tmpDirectory.toAbsolutePath()}" }
 
         if (Configuration.properties.demo) {
-            logger.info { "Enter demo modus" }
+            logger.warn { "Enter demo modus" }
             Demo.load()
         }
 

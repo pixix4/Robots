@@ -1,13 +1,13 @@
 @import "../config";
 @import "../mixins";
 
-.navigation {
+.navigation-view {
   position: absolute;
   background: $background-secondary;
   width: 100%;
   height: 100%;
 
-  .navigation-toolbar {
+  .navigation-view-toolbar {
     position: absolute;
     top: 0;
     left: 0;
@@ -16,7 +16,7 @@
     z-index: 2;
   }
 
-  .navigation-navigation-drawer {
+  .navigation-view-navigation-drawer {
     position: absolute;
     top: $toolbar-height;
     left: -100%;
@@ -27,7 +27,7 @@
     transition: width $animation-time, left $animation-time;
   }
 
-  .navigation-content {
+  .navigation-view-content {
     position: absolute;
     top: $toolbar-height;
     left: 0;
@@ -39,25 +39,25 @@
   }
 
   &.toggled {
-    .navigation-navigation-drawer {
+    .navigation-view-navigation-drawer {
       left: 0;
     }
   }
 }
 
 @include tablet {
-  .navigation {
-    .navigation-navigation-drawer {
+  .navigation-view {
+    .navigation-view-navigation-drawer {
       left: 0;
       width: $navigation-bar-width;
     }
 
-    .navigation-content {
+    .navigation-view-content {
       left: $navigation-bar-width;
     }
 
     &.toggled {
-      .navigation-navigation-drawer {
+      .navigation-view-navigation-drawer {
         width: $navigation-drawer-width;
       }
     }
@@ -66,22 +66,22 @@
 
 
 @include desktop {
-  .navigation {
-    .navigation-navigation-drawer {
+  .navigation-view {
+    .navigation-view-navigation-drawer {
       left: 0;
       width: $navigation-drawer-width;
     }
 
-    .navigation-content {
+    .navigation-view-content {
       left: $navigation-drawer-width;
     }
 
     &.toggled {
-      .navigation-navigation-drawer {
+      .navigation-view-navigation-drawer {
         width: $navigation-bar-width;
       }
 
-      .navigation-content {
+      .navigation-view-content {
         left: $navigation-bar-width;
       }
     }

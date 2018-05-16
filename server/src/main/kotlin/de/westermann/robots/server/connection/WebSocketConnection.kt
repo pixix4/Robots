@@ -20,7 +20,7 @@ class WebSocketConnection {
             val controller: Controller
     ) {
 
-        var admin: Boolean = false
+        var admin: Boolean = !Protection.loginRequired
             set(value) {
                 val init = value && !field
                 field = value
@@ -136,7 +136,7 @@ class WebSocketConnection {
             }
         }
 
-        val bindObserver = object: DeviceManager.OnBindChange {
+        val bindObserver = object : DeviceManager.OnBindChange {
             override fun onBind(controller: Controller, robot: Robot) {
                 if (admin || controller == this@Connection.controller || robot in this@Connection.controller.robots) {
                     iClient.bind(controller.id, robot.id)
@@ -217,7 +217,12 @@ class WebSocketConnection {
                 admin = false
                 iClient.logout()
             }
+        }
 
+        init {
+            if (admin) {
+                initAdmin()
+            }
         }
     }
 

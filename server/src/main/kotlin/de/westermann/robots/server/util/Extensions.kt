@@ -16,5 +16,5 @@ fun String.toDashCase(): String = replace("(.)([A-Z])".toRegex(), "$1-$2")
         .toLowerCase()
 
 fun String.toUpperDashCase(): String = toDashCase().split("[-_]".toRegex()).joinToString("") {
-    capitalize()
+    it.capitalize()
 }
