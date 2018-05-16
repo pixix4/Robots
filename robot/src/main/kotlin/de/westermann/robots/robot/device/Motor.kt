@@ -26,7 +26,7 @@ interface Motor {
     fun reset()
 
     enum class Mode {
-        RUN_DIRECT, RUN_RELATIVE, RUN_ABSOLUTE
+        RUN_DIRECT, RUN_RELATIVE, RUN_ABSOLUTE, RUN_TIMED
     }
 
     enum class Polarity {

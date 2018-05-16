@@ -45,12 +45,15 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
+    compile "org.slf4j:slf4j-api:1.7.25"
+    compile "org.slf4j:slf4j-simple:1.7.25"
+
     compile project(":robot")
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "1.6"
 }
 

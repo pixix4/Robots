@@ -3,7 +3,6 @@ package de.westermann.robots.lego.ev3
 import de.westermann.robots.robot.device.Motor
 import org.ev3dev.hardware.motors.LargeMotor
 import org.ev3dev.hardware.motors.MediumMotor
-import org.ev3dev.hardware.ports.MotorPort
 
 /**
  * @author lars
@@ -14,8 +13,8 @@ class Ev3Motor(
 ) : Motor {
 
     private val motor: org.ev3dev.hardware.motors.Motor = when (type) {
-        Ev3Motor.MotorType.LARGE -> LargeMotor(port)
-        Ev3Motor.MotorType.MEDIUM -> MediumMotor(port)
+        Ev3Motor.MotorType.LARGE -> LargeMotor(port.port)
+        Ev3Motor.MotorType.MEDIUM -> MediumMotor(port.port)
     }
 
     enum class MotorType {
@@ -72,8 +71,14 @@ class Ev3Motor(
         }
 
     override var mode: Motor.Mode
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+        get() = TODO()
+        set(value) = when (value) {
+            Motor.Mode.RUN_DIRECT -> motor.runDirect()
+            Motor.Mode.RUN_RELATIVE -> motor.runToRelPos()
+            Motor.Mode.RUN_ABSOLUTE -> motor.runToAbsPos()
+            Motor.Mode.RUN_TIMED -> motor.runTimed()
+        }
+
 
     override var polarity: Motor.Polarity
         get() = when (motor.polarity) {
