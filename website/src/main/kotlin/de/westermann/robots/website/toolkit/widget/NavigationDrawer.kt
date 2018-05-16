@@ -10,9 +10,9 @@ import kotlin.reflect.KClass
  * @author lars
  */
 
-class NavigationDrawer(init: NavigationDrawer.() -> Unit) : SelectableViewList<View>(false) {
+class NavigationDrawer(init: NavigationDrawer.() -> Unit) : SelectableViewList<Action>(false) {
 
-    fun entry(name: String, icon: Icon, onSelect: (View) -> Unit): Action {
+    fun entry(name: String, icon: Icon, onSelect: (Action) -> Unit): Action {
         val action = Action(name, icon)
         this += action
         bind(action, onSelect)
@@ -26,12 +26,6 @@ class NavigationDrawer(init: NavigationDrawer.() -> Unit) : SelectableViewList<V
     fun toggle() {
         state.fire(!element.classList.contains("toggled"))
     }
-
-    fun divider(title: String = "") {
-        this += TextView(title)
-    }
-
-    override val ignoreTypes: List<KClass<out View>> = super.ignoreTypes + TextView::class
 
     init {
         init()

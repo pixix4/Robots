@@ -58,7 +58,7 @@ $line-height: 3.2rem;
     @include hover-background($main-text-primary);
   }
 
-  & > div > div.text-view {
+  & > div.text-view {
     border-top: solid 1px $main-divider;
     padding-left: $navigation-bar-width / 2 - 0.7rem;
     color: $main-text-secondary;
@@ -78,7 +78,7 @@ $line-height: 3.2rem;
 }
 
 @include tablet {
-  .navigation-drawer:not(.toggled) > div > div.text-view {
+  .navigation-drawer:not(.toggled) > div.text-view {
     margin-bottom: $line-height / 6;
     height: 0;
   }
@@ -86,7 +86,7 @@ $line-height: 3.2rem;
 
 
 @include desktop {
-  .navigation-drawer.toggled > div > div.text-view {
+  .navigation-drawer.toggled > div.text-view {
     margin-bottom: $line-height / 6;
     height: 0;
   }

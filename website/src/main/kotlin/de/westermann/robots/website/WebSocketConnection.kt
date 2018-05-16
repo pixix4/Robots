@@ -20,7 +20,7 @@ object WebSocketConnection {
                     window.location.hostname + window.location.port.let {
                 if (it.isEmpty()) "" else ":$it"
             } + "/ws"
-            ).also { println(it) }
+            )
     private var firstConnect = true
     private var closed = false
     private var connection: WebSocket = createWebSocket()
@@ -36,7 +36,6 @@ object WebSocketConnection {
 
     private val iClient = object : IClient {
         override fun addRobot(robot: Robot) {
-            println("Add robot $robot")
             DeviceManager.robots += robot
         }
 
@@ -145,21 +144,32 @@ object WebSocketConnection {
         }
     }
 
-    private fun createWebSocket() = WebSocket(url).also {
-        it.onopen = {
-            println("open")
+    private var intervalId: Int? = null
+
+    private fun createWebSocket() = WebSocket(url).also {ws ->
+        ws.onopen = {
             if (firstConnect) {
                 onopen()
                 firstConnect = false
             }
+            intervalId = window.setInterval({
+                ws.send("ping")
+            }, 5000)
+            Unit //This is weird
         }
-        it.onclose = {
+        ws.onclose = {
             closed = true
-            println("close")
+            intervalId?.let {
+                window.clearInterval(it)
+                intervalId = null
+            }
             connect()
         }
-        it.onmessage = { event ->
+        ws.onmessage = { event ->
             ((event as? MessageEvent)?.data as? String)?.let { str ->
+                if (str == "pong")
+                    return@let 0 //This is weird
+
                 val json = Json.fromString(str)
                 val function = json["function"] as? String
                 val data = json["param"]

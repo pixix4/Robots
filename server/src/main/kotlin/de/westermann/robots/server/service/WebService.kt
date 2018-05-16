@@ -6,6 +6,8 @@ import de.westermann.robots.server.util.Configuration
 import de.westermann.robots.server.util.ResourceHandler
 import de.westermann.robots.server.util.WhoBlocks
 import io.javalin.Javalin
+import io.javalin.embeddedserver.jetty.websocket.WebSocketConfig
+import io.javalin.embeddedserver.jetty.websocket.WebSocketHandler
 import io.javalin.event.EventType
 import mu.KotlinLogging
 import java.nio.file.Files
@@ -44,7 +46,7 @@ object WebService {
             }
 
             resourceHandler.walkFiles { path, file ->
-                get("public/$path") {
+                get("public/${path.replace("\\", "/")}") {
                     it.header("Content-Type", ResourceHandler.getMimeType(file))
                     it.result(Files.newInputStream(file))
                 }
@@ -61,6 +63,10 @@ object WebService {
                     connection += session
                 }
                 it.onMessage { session, msg ->
+                    if (msg == "ping") {
+                        session.send("pong")
+                        return@onMessage
+                    }
                     connection.execute(session, Json.fromString(msg))
                 }
                 it.onClose { session, _, _ ->

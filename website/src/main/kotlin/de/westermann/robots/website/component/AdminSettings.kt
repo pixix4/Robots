@@ -11,7 +11,6 @@ class AdminSettings : View() {
 
 fun Router.adminSettings() {
     view {
-        println("adminSettings")
         AdminSettings()
     }
 }

@@ -12,7 +12,6 @@ class AdminControllerDetail(
 }
 fun Router.adminControllerDetail(id: Int) {
     view {
-        println("adminControllerDetail $id")
         AdminControllerDetail(id)
     }
 }

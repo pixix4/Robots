@@ -1,6 +1,7 @@
 package de.westermann.robots.website.component
 
 import de.westermann.robots.datamodel.Robot
+import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
@@ -66,7 +67,7 @@ class RobotCard(robot: Robot) : View() {
         }
 
         click.on {
-            println("Open robot details: $robot")
+            Router.routeTo("admin/robots/${robot.id}")
         }
     }
 

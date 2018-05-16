@@ -7,7 +7,7 @@ import de.westermann.robots.datamodel.observe.ObservableProperty
  */
 class Condition(
         parent: Router,
-        val observable: ObservableProperty<Boolean>
+        private val observable: ObservableProperty<Boolean>
 ) : Router(parent) {
     private var routerTrue: Router? = null
     private var routerFalse: Router? = null
@@ -29,8 +29,8 @@ class Condition(
         set(value) {}
 
     init {
-        observable.onChange { value, _ ->
-            println("Update route!")
+        observable.onChange { _, _ ->
+            updateRoute()
         }
     }
 }

@@ -10,7 +10,6 @@ class AdminAbout: View() {
 }
 fun Router.adminAbout() {
     view {
-        println("adminAbout")
         AdminAbout()
     }
 }

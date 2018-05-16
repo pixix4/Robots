@@ -10,7 +10,6 @@ class Registration: View() {
 }
 fun Router.registration() {
     view {
-        println("registration")
         Registration()
     }
 }

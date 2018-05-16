@@ -34,9 +34,9 @@ class NavigationView(
 
     var content: View? by ViewContainer(this, "content") { null }
 
-    fun entry(name: String, icon: Icon, onSelect: (View) -> Unit = {}): View = navigationDrawer.entry(name, icon, onSelect)
+    fun entry(name: String, icon: Icon, onSelect: (Action) -> Unit = {}): Action = navigationDrawer.entry(name, icon, onSelect)
 
-    fun select(elem: View, trigger:Boolean = true) = navigationDrawer.select(elem, trigger)
+    fun select(elem: Action, trigger:Boolean = true) = navigationDrawer.select(elem, trigger)
 
     fun divider(title: String = "") {
         navigationDrawer.divider(title)

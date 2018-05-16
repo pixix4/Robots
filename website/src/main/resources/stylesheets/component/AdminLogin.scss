@@ -8,4 +8,19 @@
   height: 100%;
   background: $primary-color;
   color: $primary-color-text-primary;
+  .admin-login-password {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin-left: -10rem;
+    width: 20rem;
+    height: 2rem;
+    input {
+      line-height: 2rem;
+      border-radius: $border-radius;
+      background: $primary-dark-color;
+      color: $primary-dark-color-text-primary;
+      box-shadow: inset 1px 1px 4px -2px $shadow;
+    }
+  }
 }

@@ -13,7 +13,6 @@ class AdminRobotDetail(
 
 fun Router.adminRobotDetail(id: Int) {
     view {
-        println("adminRobotDetail $id")
         AdminRobotDetail(id)
     }
 }

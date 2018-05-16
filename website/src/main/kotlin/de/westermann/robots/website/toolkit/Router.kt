@@ -146,10 +146,12 @@ open class Router(
 
             window.onpopstate = {
                 (it as? PopStateEvent)?.let {
-                    routeTo(window.location.pathname)
+                    updateRoute()
                 }
             }
         }
+
+        fun updateRoute() = routeTo(window.location.pathname)
 
         fun routeTo(route: String? = null) {
             val toPos = route ?: window.location.pathname

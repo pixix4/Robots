@@ -13,8 +13,6 @@ abstract class SelectableViewList<T : View>(
 
     private val selected = mutableListOf<T>()
 
-    protected open val ignoreTypes = emptyList<KClass<out View>>()
-
     private val selectListener = mutableMapOf<T, MutableList<(T) -> Unit>>()
 
     fun bind(element: T, onSelect: (elem: T) -> Unit) {
@@ -24,9 +22,6 @@ abstract class SelectableViewList<T : View>(
     }
 
     fun select(child: T, trigger: Boolean = true) {
-        if (child in selected || child::class in ignoreTypes)
-            return
-
         if (!multiple) selected.forEach { unselect(it) }
 
         children.find { it.first == child }?.also {

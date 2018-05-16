@@ -12,8 +12,6 @@ data class Version(
         val qualifierNumber: Int = 0
 ) : Comparable<Version> {
 
-    val unknown: Boolean = this == UNKNOWN
-
     enum class Qualifier(val value: Int) {
         NONE(4),
         RC(3),
@@ -27,6 +25,12 @@ data class Version(
 
         }
     }
+
+    val unknown: Boolean = major == 0 &&
+            minor == 0 &&
+            patch == 0 &&
+            qualifier == Qualifier.NONE &&
+            qualifierNumber == 0
 
     private fun values() = listOf(major, minor, patch, qualifier.value, qualifierNumber)
 
@@ -50,11 +54,11 @@ data class Version(
     }
 
     companion object {
-        const val GROUP_MAJOR = 1
-        const val GROUP_MINOR = 2
-        const val GROUP_PATCH = 3
-        const val GROUP_QUALIFIER = 4
-        const val GROUP_QUALIFIER_NUMBER = 5
+        private const val GROUP_MAJOR = 1
+        private const val GROUP_MINOR = 2
+        private const val GROUP_PATCH = 3
+        private const val GROUP_QUALIFIER = 4
+        private const val GROUP_QUALIFIER_NUMBER = 5
 
         val UNKNOWN = Version(0, 0, 0, Qualifier.NONE, 0)
 
@@ -81,7 +85,7 @@ data class Version(
                         }
                     }
                     v
-                } ?: UNKNOWN
+                } ?: Version.UNKNOWN
 
         fun fromJson(json: Json) = Version(
                 json["major"]?.toString()?.toIntOrNull() ?: 0,

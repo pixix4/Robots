@@ -1,5 +1,6 @@
 package de.westermann.robots.website.toolkit.view
 
+import de.westermann.robots.website.toolkit.widget.TextView
 import org.w3c.dom.Element
 import kotlin.browser.document
 import kotlin.dom.clear
@@ -45,6 +46,10 @@ open class ViewList<T : View> : View(), Iterable<T> {
         children.forEach {
             remove(it.first)
         }
+    }
+
+    fun divider(text: String = "") {
+        element.appendChild(TextView(text).element)
     }
 
     fun isEmpty() = children.isEmpty()

@@ -10,7 +10,6 @@ class AdminOverview:View() {
 }
 fun Router.adminOverview() {
     view {
-        println("adminOverview")
         AdminOverview()
     }
 }

@@ -1,6 +1,7 @@
 package de.westermann.robots.website.component
 
 import de.westermann.robots.datamodel.Controller
+import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
@@ -57,7 +58,7 @@ class ControllerCard(controller: Controller) : View() {
         }
 
         click.on {
-            println("Open controller details: $controller")
+            Router.routeTo("admin/controllers/${controller.id}")
         }
     }
 
