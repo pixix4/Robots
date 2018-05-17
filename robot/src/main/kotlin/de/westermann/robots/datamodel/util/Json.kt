@@ -3,7 +3,6 @@ package de.westermann.robots.datamodel.util
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 
-
 /**
  * @author lars
  */

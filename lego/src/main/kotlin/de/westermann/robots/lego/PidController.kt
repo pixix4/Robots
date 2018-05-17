@@ -3,6 +3,7 @@ package de.westermann.robots.lego
 import de.westermann.robots.robot.device.ColorSensor
 import de.westermann.robots.robot.device.Motor
 import kotlin.concurrent.thread
+import kotlin.jvm.Volatile
 import kotlin.math.max
 import kotlin.math.min
 
