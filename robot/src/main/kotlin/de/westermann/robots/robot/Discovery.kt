@@ -154,7 +154,7 @@ sealed class Discovery(
         }.toByteArray()
 
         fun ByteArray.toDataInt() =
-            this.foldIndexed(0) { index, acc, byte ->
+            foldIndexed(0) { index, acc, byte ->
                 acc + byte.toInt().shl(index * 8)
             }
     }

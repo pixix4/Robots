@@ -9,7 +9,7 @@ import org.ev3dev.hardware.motors.MediumMotor
  */
 class Ev3Motor(
         type: MotorType,
-        port: MotorPort
+        port: Ev3MotorPort
 ) : Motor {
 
     private val motor: org.ev3dev.hardware.motors.Motor = when (type) {

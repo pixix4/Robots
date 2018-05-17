@@ -3,7 +3,7 @@ package de.westermann.robots.lego.ev3
 import de.westermann.robots.robot.device.GyroSensor
 
 class Ev3GyroSensor(
-        port: SensorPort
+        port: Ev3SensorPort
 ) : GyroSensor {
     private val sensor = org.ev3dev.hardware.sensors.GyroSensor(port.port)
 
