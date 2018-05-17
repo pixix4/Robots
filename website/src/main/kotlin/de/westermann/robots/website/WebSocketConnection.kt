@@ -168,7 +168,7 @@ object WebSocketConnection {
         ws.onmessage = { event ->
             ((event as? MessageEvent)?.data as? String)?.let { str ->
                 if (str == "pong")
-                    return@let 0 //This is weird
+                    Unit
 
                 val json = Json.fromString(str)
                 val function = json["function"] as? String

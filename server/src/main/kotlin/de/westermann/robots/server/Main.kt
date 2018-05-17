@@ -1,6 +1,7 @@
 package de.westermann.robots.server
 
 import de.westermann.robots.server.service.DiscoveryService
+import de.westermann.robots.server.service.MqttService
 import de.westermann.robots.server.service.ReplService
 import de.westermann.robots.server.service.WebService
 import de.westermann.robots.server.util.Configuration
@@ -32,6 +33,7 @@ object Main {
 
         DiscoveryService.start(Configuration.properties.discoveryPort)
         WebService.start(Configuration.properties.webPort)
+        MqttService.start(Configuration.properties.robotPort)
         ReplService.start()
 
         Runtime.getRuntime().addShutdownHook(thread(start = false, name = "shutdown") {
@@ -40,6 +42,8 @@ object Main {
             Configuration.tmpClear()
             DiscoveryService.stop()
             ReplService.stop()
+            WebService.stop()
+            MqttService.stop()
         })
     }
 

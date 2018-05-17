@@ -6,8 +6,6 @@ import de.westermann.robots.server.util.Configuration
 import de.westermann.robots.server.util.ResourceHandler
 import de.westermann.robots.server.util.WhoBlocks
 import io.javalin.Javalin
-import io.javalin.embeddedserver.jetty.websocket.WebSocketConfig
-import io.javalin.embeddedserver.jetty.websocket.WebSocketHandler
 import io.javalin.event.EventType
 import mu.KotlinLogging
 import java.nio.file.Files
@@ -15,7 +13,15 @@ import java.nio.file.Files
 /**
  * @author lars
  */
-object WebService {
+object WebService : Service {
+    override val running: Boolean
+        get() = server != null
+    var server: Javalin? = null
+
+    override fun start() {
+        start(Configuration.properties.webPort)
+    }
+
     private val logger = KotlinLogging.logger {}
 
     private val resourceHandler =
@@ -24,11 +30,12 @@ object WebService {
     private val connection = WebSocketConnection()
 
     fun start(port: Int) {
+        if (running) return
         logger.info { "Start web server on port $port... (http://localhost:$port)" }
 
         updateColors()
 
-        Javalin.create().apply {
+        server = Javalin.create().apply {
             port(port)
 
             event(EventType.SERVER_START_FAILED) {
@@ -80,7 +87,8 @@ object WebService {
         resourceHandler.compileSass()
     }
 
-    fun stop() {
-
+    override fun stop() {
+        server?.stop()
+        server = null
     }
 }

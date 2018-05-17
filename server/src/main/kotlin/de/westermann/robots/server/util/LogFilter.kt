@@ -12,7 +12,7 @@ class LogFilter : Filter<ILoggingEvent>() {
     override fun decide(event: ILoggingEvent?): FilterReply = if (event == null) {
         FilterReply.NEUTRAL
     } else {
-        if (event.loggerName.contains("javalin|jetty".toRegex())) {
+        if (event.loggerName.contains("javalin|jetty|moquette|netty".toRegex())) {
             if (event.level.toInt() > Level.ERROR_INT) FilterReply.ACCEPT else FilterReply.DENY
         } else {
             FilterReply.ACCEPT

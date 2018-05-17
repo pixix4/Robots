@@ -67,6 +67,8 @@ dependencies {
     compile "commons-io:commons-io:2.6"
     compile "com.vaadin:vaadin-sass-compiler:0.9.13"
 
+    compile 'io.moquette:moquette-broker:0.10'
+
     compile project(":robot")
     compile project(":website")
 

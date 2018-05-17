@@ -6,11 +6,19 @@ import de.westermann.robots.server.util.ColorScheme
 import de.westermann.robots.server.util.Configuration
 import de.westermann.robots.server.util.Environment
 import de.westermann.robots.server.util.Printer
+import mu.KotlinLogging
 
 /**
  * @author lars
  */
-object ReplService : Service() {
+object ReplService : ThreadedService() {
+
+    override fun start() {
+        logger.info { "Start repl server on std::in..." }
+        super.start()
+    }
+
+    override val logger = KotlinLogging.logger {}
 
     private val commands: Command = Command.create {
         command("stop", "exit", "quit", description = "Shutdown Robots server") {
