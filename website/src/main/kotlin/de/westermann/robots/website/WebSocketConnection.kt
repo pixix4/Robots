@@ -127,14 +127,14 @@ object WebSocketConnection {
     val adminProperty = ObservableProperty(false)
     val admin by adminProperty.accessor()
 
-    private var onopen: () -> Unit = {}
+    private var onOpen: () -> Unit = {}
 
-    fun connect(onopen: (() -> Unit)? = null) {
-        if (onopen != null) {
+    fun connect(onOpen: (() -> Unit)? = null) {
+        if (onOpen != null) {
             if (firstConnect) {
-                this.onopen = onopen
+                this.onOpen = onOpen
             } else {
-                onopen()
+                onOpen()
             }
         }
 
@@ -149,7 +149,7 @@ object WebSocketConnection {
     private fun createWebSocket() = WebSocket(url).also {ws ->
         ws.onopen = {
             if (firstConnect) {
-                onopen()
+                onOpen()
                 firstConnect = false
             }
             intervalId = window.setInterval({
@@ -172,7 +172,7 @@ object WebSocketConnection {
 
                 val json = Json.fromString(str)
                 val function = json["function"] as? String
-                val data = json["param"]
+                //val data = json["param"]
                 val parsed = json.json("param")
 
                 when (function) {

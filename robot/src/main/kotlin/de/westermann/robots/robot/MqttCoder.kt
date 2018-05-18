@@ -2,6 +2,7 @@ package de.westermann.robots.robot
 
 import de.westermann.robots.datamodel.util.*
 import java.lang.reflect.Method
+import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.functions
@@ -10,6 +11,13 @@ import kotlin.reflect.jvm.jvmErasure
 /**
  * @author lars
  */
+
+fun Int.toByteArray(): ByteArray =
+        ByteBuffer.allocate(java.lang.Integer.BYTES)
+                .putInt(this)
+                .array()
+
+fun ByteArray.toInt(): Int = ByteBuffer.wrap(this).int
 
 private val seperator: String = "|"
 

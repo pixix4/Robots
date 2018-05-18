@@ -82,7 +82,7 @@ object MqttClient {
             Driver.speed = speed
         }
 
-        override fun motors(track: Track) {
+        override fun track(track: Track) {
             Driver.drive(track)
         }
 
@@ -95,9 +95,9 @@ object MqttClient {
     val iServer = Proxy.newProxyInstance(
             MqttClient::class.java.classLoader,
             arrayOf(IRobotServer::class.java)
-    ) { obj, method, params ->
+    ) { _, method, params ->
         send(encodeMqtt(method, params.toList()))
-    }
+    } as IRobotServer
 
     private fun send(params: List<String>) {
         mqtt?.let {

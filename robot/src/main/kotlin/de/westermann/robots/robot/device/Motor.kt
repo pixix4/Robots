@@ -69,7 +69,7 @@ interface Motor {
     enum class StopAction {
 
         /**
-         * Power will be removed from the motor and a passive electrical load will be placed on the motor. This is usually done by shorting the motor terminals together. This load will absorb the energy from the rotation of the motors and cause the motor to stop more quickly than coasting.
+         * Power will be removed from the motor and a passive electrical load will be placed on the motor. This is usually done by shorting the motor terminals together. This load will absorb the energy from the rotation of the track and cause the motor to stop more quickly than coasting.
          */
         BRAKE,
 

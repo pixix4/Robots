@@ -15,6 +15,6 @@ interface IRobotClient {
     fun pid(enable: Boolean)
 
     fun speed(speed: Double)
-    fun motors(track: Track)
+    fun track(track: Track)
     fun trim(trim: Double)
 }

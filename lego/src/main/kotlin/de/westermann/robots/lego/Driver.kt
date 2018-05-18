@@ -7,14 +7,14 @@ import kotlin.math.PI
  * @author lars
  */
 object Driver {
-    const val maxSpeed: Int = 100
+    private const val maxSpeed: Int = 100
     var speed: Double = 0.5
     var trim: Double = 0.0
 
-    const val diff = PI / 4
-    const val deg1 = PI / 2
-    const val deg2 = PI
-    const val deg3 = PI * 3 / 2
+    private const val diff = PI / 4
+    private const val deg1 = PI / 2
+    private const val deg2 = PI
+    private const val deg3 = PI * 3 / 2
 
     fun drive(track: Track) {
         val angle = track.angle
@@ -34,7 +34,7 @@ object Driver {
                 ((angle - deg1) / diff - diff) to -1.0
             }
         }
-        drive(left, right)
+        drive(left * radius, right * radius)
     }
 
     fun drive(left: Double, right: Double) {

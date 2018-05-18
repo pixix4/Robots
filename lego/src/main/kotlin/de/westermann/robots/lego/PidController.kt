@@ -103,7 +103,7 @@ object PidController {
                 val output = constProportional * error + constIntegral * integral + constDerivative * derivative
                 last_error = error
 
-                Driver.drive((speed + (countermeasure * error)), (speed - (countermeasure * error * -1.0)))
+                Driver.drive((speed + (countermeasure * output)), (speed - (countermeasure * output * -1.0)))
             }
 
             Driver.stop()
