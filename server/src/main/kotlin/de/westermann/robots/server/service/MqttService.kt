@@ -2,8 +2,9 @@ package de.westermann.robots.server.service
 
 import de.westermann.robots.server.util.Configuration
 import io.moquette.interception.AbstractInterceptHandler
-import io.moquette.interception.InterceptHandler
-import io.moquette.interception.messages.*
+import io.moquette.interception.messages.InterceptPublishMessage
+import io.moquette.interception.messages.InterceptSubscribeMessage
+import io.moquette.interception.messages.InterceptUnsubscribeMessage
 import io.moquette.server.Server
 import mu.KotlinLogging
 import java.util.*

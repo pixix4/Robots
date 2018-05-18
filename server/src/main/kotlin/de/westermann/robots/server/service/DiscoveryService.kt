@@ -1,11 +1,10 @@
 package de.westermann.robots.server.service
 
 import de.westermann.robots.robot.toByteArray
-import de.westermann.robots.robot.toDataInt
+import de.westermann.robots.robot.toInt
 import de.westermann.robots.server.util.Configuration
 import de.westermann.robots.server.util.WhoBlocks
 import mu.KotlinLogging
-import org.slf4j.Logger
 import java.net.BindException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -30,7 +29,9 @@ object DiscoveryService : ThreadedService(false) {
         logger.info { "Start discovery server on port $port..." }
 
         try {
-            server = DatagramSocket(port)
+            server = DatagramSocket(port).also {
+                it.reuseAddress = true
+            }
         } catch (_: BindException) {
             logger.error {
                 "Cannot start discovery server cause port $port is already in use!" + (WhoBlocks.port(port)?.let {
@@ -50,7 +51,7 @@ object DiscoveryService : ThreadedService(false) {
             server?.let { server ->
                 val packet = DatagramPacket(ByteArray(4), 4)
                 server.receive(packet)
-                if (packet.data.toDataInt() == 0) {
+                if (packet.data.toInt() == 0) {
                     Configuration.properties.robotPort.toByteArray().let {
                         server.send(DatagramPacket(it, it.size, packet.address, packet.port))
                     }

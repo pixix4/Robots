@@ -48,51 +48,51 @@ class WebSocketConnection {
             )
         }
 
-        val iClient = object : IClient {
+        val iClient = object : IWebClient {
             override fun addRobot(robot: Robot) {
-                send(IClient::addRobot.name, robot.toJson())
+                send(IWebClient::addRobot.name, robot.toJson())
             }
 
             override fun updateRobot(robot: Robot) {
-                send(IClient::updateRobot.name, robot.toJson())
+                send(IWebClient::updateRobot.name, robot.toJson())
             }
 
             override fun removeRobot(robot: Robot) {
-                send(IClient::removeRobot.name, robot.toJson())
+                send(IWebClient::removeRobot.name, robot.toJson())
             }
 
             override fun addController(controller: Controller) {
-                send(IClient::addController.name, controller.toJson())
+                send(IWebClient::addController.name, controller.toJson())
             }
 
             override fun updateController(controller: Controller) {
-                send(IClient::updateController.name, controller.toJson())
+                send(IWebClient::updateController.name, controller.toJson())
             }
 
             override fun removeController(controller: Controller) {
-                send(IClient::removeController.name, controller.toJson())
+                send(IWebClient::removeController.name, controller.toJson())
             }
 
             override fun bind(controllerId: Int, robotId: Int) {
-                send(IClient::bind.name, json {
+                send(IWebClient::bind.name, json {
                     value("controllerId") { controllerId }
                     value("robotId") { robotId }
                 })
             }
 
             override fun unbind(controllerId: Int, robotId: Int) {
-                send(IClient::unbind.name, json {
+                send(IWebClient::unbind.name, json {
                     value("controllerId") { controllerId }
                     value("robotId") { robotId }
                 })
             }
 
             override fun login() {
-                send(IClient::login.name)
+                send(IWebClient::login.name)
             }
 
             override fun logout() {
-                send(IClient::logout.name)
+                send(IWebClient::logout.name)
             }
         }
 
@@ -163,7 +163,7 @@ class WebSocketConnection {
             DeviceManager.onBindChange(bindObserver)
         }
 
-        val iServer = object : IServer {
+        val iServer = object : IWebServer {
             override fun onTrack(track: Track) {
                 controller.robots.forEach { it.track = track }
             }
@@ -252,32 +252,32 @@ class WebSocketConnection {
         val parsed = json.json("param")
 
         when (function) {
-            IServer::onTrack.name -> parsed?.let {
+            IWebServer::onTrack.name -> parsed?.let {
                 connection.iServer.onTrack(Track.fromJson(it))
             }
-            IServer::onAbsoluteSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
+            IWebServer::onAbsoluteSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
                 connection.iServer.onAbsoluteSpeed(it)
             }
-            IServer::onRelativeSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
+            IWebServer::onRelativeSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
                 connection.iServer.onRelativeSpeed(it)
             }
-            IServer::onButton.name -> parsed?.let {
+            IWebServer::onButton.name -> parsed?.let {
                 connection.iServer.onButton(Button.fromJson(it))
             }
-            IServer::bind.name -> parsed?.let {
+            IWebServer::bind.name -> parsed?.let {
                 connection.iServer.bind(
                         it["controllerId"]?.toString()?.toIntOrNull() ?: -1,
                         it["robotId"]?.toString()?.toIntOrNull() ?: -1
                 )
             }
-            IServer::unbind.name -> parsed?.let {
+            IWebServer::unbind.name -> parsed?.let {
                 connection.iServer.bind(
                         it["controllerId"]?.toString()?.toIntOrNull() ?: -1,
                         it["robotId"]?.toString()?.toIntOrNull() ?: -1
                 )
             }
-            IServer::login.name -> connection.iServer.login((data as? String) ?: "")
-            IServer::logout.name -> connection.iServer.logout()
+            IWebServer::login.name -> connection.iServer.login((data as? String) ?: "")
+            IWebServer::logout.name -> connection.iServer.logout()
             else -> throw IllegalArgumentException("Cannot find function '$function' of client ${socket.remoteAddress}")
         }
     }

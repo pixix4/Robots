@@ -1,7 +1,5 @@
 package de.westermann.robots.lego
 
-import de.westermann.robots.robot.device.ColorSensor
-import de.westermann.robots.robot.device.Motor
 import kotlin.concurrent.thread
 import kotlin.jvm.Volatile
 import kotlin.math.max
@@ -11,10 +9,6 @@ import kotlin.math.min
  * @author lars
  */
 object PidController {
-
-    var colorSensor: ColorSensor? = null
-    var leftMotor: Motor? = null
-    var rightMotor: Motor? = null
 
     @Volatile
     var foregroundRed: Int = 0
@@ -59,7 +53,7 @@ object PidController {
 
 
     fun foreground() {
-        colorSensor?.let {
+        Devices.colorSensor.let {
             foregroundRed = it.red
             foregroundGreen = it.green
             foregroundBlue = it.blue
@@ -67,7 +61,7 @@ object PidController {
     }
 
     fun background() {
-        colorSensor?.let {
+        Devices.colorSensor.let {
             backgroundRed = it.red
             backgroundGreen = it.green
             backgroundBlue = it.blue
@@ -81,27 +75,20 @@ object PidController {
     const val constIntegral: Double = 1.0
     const val constDerivative: Double = 1.0
 
-    @Volatile
-    var speed: Double = 50.0
-    @Volatile
-    var countermeasure: Double = 20.0
 
     const val integralLimiter: Double = 2.0 / 3.0
+    const val speed: Double = 0.5
+    const val countermeasure: Double = 0.2
 
     fun start() {
         if (running) return
-        val sensor = colorSensor ?: return
-        val left = leftMotor ?: return
-        val right = rightMotor ?: return
+        val sensor = Devices.colorSensor
         running = true
 
         thread(name = "pid") {
             var last_error: Double = 0.0
             var integral: Double = 0.0
             val dt: Double = 1.0
-
-            var leftPos = left.position
-            var rightPos = right.position
 
             while (running) {
                 val red = (sensor.red - foregroundRed).toDouble() / (backgroundRed - foregroundRed).toDouble()
@@ -116,12 +103,10 @@ object PidController {
                 val output = constProportional * error + constIntegral * integral + constDerivative * derivative
                 last_error = error
 
-                left.dutyCycleSp = (speed + (countermeasure * error)).toInt()
-                right.dutyCycleSp = (speed - (countermeasure * error * -1.0)).toInt()
+                Driver.drive((speed + (countermeasure * error)), (speed - (countermeasure * error * -1.0)))
             }
 
-            left.stop()
-            right.stop()
+            Driver.stop()
         }
     }
 

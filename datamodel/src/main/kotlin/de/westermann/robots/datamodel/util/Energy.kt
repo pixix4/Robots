@@ -10,6 +10,9 @@ data class Energy(
     companion object {
         val UNKNOWN = Energy(0.0, State.UNKNOWN)
 
+        fun parse(data: String) = data.split(",").let {
+            Energy(it[0].toDouble(), State.valueOf(it[1]))
+        }
 
         fun fromJson(json: Json) = Energy(
                 json["value"]?.toString()?.toDoubleOrNull() ?: 0.0,
@@ -18,6 +21,8 @@ data class Energy(
                 } ?: State.UNKNOWN
         )
     }
+
+    fun toMqtt() = "$value,$state"
 
     fun toJson() = json {
         value("value") { value }

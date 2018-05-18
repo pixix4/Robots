@@ -6,7 +6,7 @@ import de.westermann.robots.datamodel.util.Track
 /**
  * @author lars
  */
-interface IServer {
+interface IWebServer {
     fun onTrack(track: Track)
     fun onAbsoluteSpeed(speed: Double)
     fun onRelativeSpeed(deltaSpeed: Double)

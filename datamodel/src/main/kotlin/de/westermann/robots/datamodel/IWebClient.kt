@@ -3,7 +3,7 @@ package de.westermann.robots.datamodel
 /**
  * @author lars
  */
-interface IClient {
+interface IWebClient {
     fun addRobot(robot: Robot)
     fun updateRobot(robot: Robot)
     fun removeRobot(robot: Robot)

@@ -34,7 +34,7 @@ object WebSocketConnection {
         )
     }
 
-    private val iClient = object : IClient {
+    private val iClient = object : IWebClient {
         override fun addRobot(robot: Robot) {
             DeviceManager.robots += robot
         }
@@ -84,43 +84,43 @@ object WebSocketConnection {
         }
     }
 
-    val iServer = object : IServer {
+    val iServer = object : IWebServer {
         override fun onTrack(track: Track) {
-            send(IServer::onTrack.name, track.toJson())
+            send(IWebServer::onTrack.name, track.toJson())
         }
 
         override fun onAbsoluteSpeed(speed: Double) {
-            send(IServer::onAbsoluteSpeed.name, speed)
+            send(IWebServer::onAbsoluteSpeed.name, speed)
         }
 
         override fun onRelativeSpeed(deltaSpeed: Double) {
-            send(IServer::onRelativeSpeed.name, deltaSpeed)
+            send(IWebServer::onRelativeSpeed.name, deltaSpeed)
         }
 
         override fun onButton(button: Button) {
-            send(IServer::onButton.name, button.toJson())
+            send(IWebServer::onButton.name, button.toJson())
         }
 
         override fun bind(controllerId: Int, robotId: Int) {
-            send(IServer::bind.name, json {
+            send(IWebServer::bind.name, json {
                 value("controllerId") { controllerId }
                 value("robotId") { robotId }
             })
         }
 
         override fun unbind(controllerId: Int, robotId: Int) {
-            send(IServer::unbind.name, json {
+            send(IWebServer::unbind.name, json {
                 value("controllerId") { controllerId }
                 value("robotId") { robotId }
             })
         }
 
         override fun login(password: String) {
-            send(IServer::login.name, password)
+            send(IWebServer::login.name, password)
         }
 
         override fun logout() {
-            send(IServer::logout.name)
+            send(IWebServer::logout.name)
         }
     }
 
@@ -176,29 +176,29 @@ object WebSocketConnection {
                 val parsed = json.json("param")
 
                 when (function) {
-                    IClient::addRobot.name -> parsed?.let { iClient.addRobot(Robot.fromJson(it)) }
+                    IWebClient::addRobot.name -> parsed?.let { iClient.addRobot(Robot.fromJson(it)) }
 
-                    IClient::updateRobot.name -> parsed?.let { iClient.updateRobot(Robot.fromJson(it)) }
-                    IClient::removeRobot.name -> parsed?.let { iClient.removeRobot(Robot.fromJson(it)) }
-                    IClient::addController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
-                    IClient::updateController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
-                    IClient::removeController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
-                    IClient::bind.name -> {
+                    IWebClient::updateRobot.name -> parsed?.let { iClient.updateRobot(Robot.fromJson(it)) }
+                    IWebClient::removeRobot.name -> parsed?.let { iClient.removeRobot(Robot.fromJson(it)) }
+                    IWebClient::addController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
+                    IWebClient::updateController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
+                    IWebClient::removeController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
+                    IWebClient::bind.name -> {
                         val robotId = parsed?.get("robotId")?.toString()?.toIntOrNull()
                         val controllerId = parsed?.get("controllerId")?.toString()?.toIntOrNull()
                         if (robotId != null && controllerId != null) {
                             iClient.bind(controllerId, robotId)
                         }
                     }
-                    IClient::unbind.name -> {
+                    IWebClient::unbind.name -> {
                         val robotId = parsed?.get("robotId")?.toString()?.toIntOrNull()
                         val controllerId = parsed?.get("controllerId")?.toString()?.toIntOrNull()
                         if (robotId != null && controllerId != null) {
                             iClient.unbind(controllerId, robotId)
                         }
                     }
-                    IClient::login.name -> iClient.login()
-                    IClient::logout.name -> iClient.logout()
+                    IWebClient::login.name -> iClient.login()
+                    IWebClient::logout.name -> iClient.logout()
                     else -> throw IllegalArgumentException("Cannot find function '$function'")
                 }
                 Unit //This is weird
