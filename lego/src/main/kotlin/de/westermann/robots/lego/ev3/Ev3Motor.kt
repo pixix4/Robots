@@ -7,7 +7,7 @@ import org.ev3dev.hardware.motors.MediumMotor
 /**
  * @author lars
  */
-class Ev3Motor(
+class Ev3Motor internal constructor(
         type: MotorType,
         port: Ev3MotorPort
 ) : Motor {

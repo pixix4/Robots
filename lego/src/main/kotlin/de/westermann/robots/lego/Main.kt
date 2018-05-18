@@ -21,7 +21,20 @@ class Main {
                 Devices.extraMotor.stop()
             })
 
-            DiscoveryClient.find(7510, MqttClient::start)
+            findAndConnect()
+
+            while (true) {}
+        }
+
+        const val port:Int = 7500
+
+        fun findAndConnect() {
+            DiscoveryClient.find(port) {address, port ->
+                MqttClient.start(address, port) {
+                    println("------ Connection lost ------")
+                    findAndConnect()
+                }
+            }
         }
     }
 }

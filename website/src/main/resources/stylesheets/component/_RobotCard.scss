@@ -46,17 +46,19 @@ $card-height: 10rem;
   .robot-card-controllers {
     position: absolute;
     top: 3.6rem;
-    bottom: 1rem;
+    bottom: 0;
     left: $card-height;
-    padding: 0 1rem;
-
+    right: 0;
     & > div {
       height: 100%;
-
+      white-space: nowrap;
       & > div {
-        float: left;
+        display: inline-block;
         margin-right: 0.8rem;
-        height: 100%;
+        height: 5.4rem;
+        &:first-child {
+          margin-left: 1rem;
+        }
       }
 
       &:empty::before {
@@ -64,12 +66,13 @@ $card-height: 10rem;
         content: "Add controller";
         width: 10rem;
         display: block;
-        height: 100%;
+        height: 5.1rem;
         min-width: 10rem;
         border: dashed 1px $main-divider;
         border-radius: $border-radius;
         text-align: center;
         line-height: 5.2rem;
+        margin-left: 1rem;
       }
     }
   }

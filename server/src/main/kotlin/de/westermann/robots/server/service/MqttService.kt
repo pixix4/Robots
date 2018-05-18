@@ -8,10 +8,12 @@ import de.westermann.robots.server.util.Configuration
 import io.moquette.interception.AbstractInterceptHandler
 import io.moquette.interception.messages.*
 import io.moquette.server.Server
+import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.mqtt.MqttMessageBuilders
 import io.netty.handler.codec.mqtt.MqttQoS
 import mu.KotlinLogging
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
 import java.util.*
 
@@ -38,12 +40,13 @@ object MqttService : Service {
     }
 
     private fun addRobot(id: String) {
+        if (robots.containsKey(id)) return
         val robot = Robot(DeviceManager.robots.nextId)
         DeviceManager.robots += robot
 
         val iRobotClient = Proxy.newProxyInstance(
                 MqttService::class.java.classLoader,
-                arrayOf(IRobotServer::class.java)
+                arrayOf(IRobotClient::class.java)
         ) { _, method, params ->
             server?.internalPublish(
                     MqttMessageBuilders.publish()
@@ -130,8 +133,15 @@ object MqttService : Service {
                 override fun onPublish(msg: InterceptPublishMessage?) {
                     if (msg == null) return
                     val helper = robots[msg.clientID] ?: return
-                    val exec = decodeMqtt(IRobotServer::class, msg.payload.array().toStringList()) ?: return
-                    exec.first.call(helper.iServer, *exec.second)
+                    try {
+                        val exec =
+                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList()) ?: return
+                        exec.first.call(helper.iServer, *exec.second)
+                    } catch (e: InvocationTargetException) {
+                        logger.warn(
+                                "Cannot invoke mqtt message: ${msg.payload.toByteArraySafe().toStringList()}", e.cause
+                        )
+                    }
                 }
 
                 override fun onSubscribe(msg: InterceptSubscribeMessage?) {
@@ -163,5 +173,16 @@ object MqttService : Service {
     override fun stop() {
         server?.stopServer()
         server = null
+    }
+
+    fun ByteBuf.toByteArraySafe(): ByteArray {
+        if (this.hasArray()) {
+            return this.array()
+        }
+
+        val bytes = ByteArray(this.readableBytes())
+        this.getBytes(this.readerIndex(), bytes)
+
+        return bytes
     }
 }

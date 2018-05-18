@@ -29,7 +29,7 @@ fun decodeMqtt(clazz: KClass<*>, message: List<String>): Pair<KFunction<*>, Arra
         it.name == message[0]
     } ?: return null
 
-    val p = func.parameters
+    val p = func.parameters.drop(1)
             .zip(message.drop(1))
             .map { (param, value) ->
                 @Suppress("IMPLICIT_CAST_TO_ANY")

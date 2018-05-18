@@ -14,10 +14,13 @@ object DiscoveryClient {
     @Volatile
     private var running: Boolean = false
 
-    fun find(port: Int, onFound: (address: InetAddress, port: Int) -> Unit) {
+    fun find(port: Int, onFound: (address: InetAddress, port: Int) -> Boolean) {
         val broadcastAddresses = NetworkInterface.getNetworkInterfaces().toList().flatMap {
             it.interfaceAddresses.map { it.broadcast }
         }.filterNotNull()
+
+        println("Try to find server on port $port")
+        println("Search in networks "+broadcastAddresses.map { it.toString().replace("/","") })
 
         thread(name = "discovery") {
             running = true
@@ -34,10 +37,13 @@ object DiscoveryClient {
                         val packet = DatagramPacket(ByteArray(4), 4)
                         socket.receive(packet)
                         val p = packet.data.toInt()
-                        if (p != 0) {
-                            onFound(packet.address, p)
+                        if (p != 0 && onFound(packet.address, p)) {
+                            println("Exit discovery")
                             running = false
                             break
+                        } else {
+                            println("Continue discover")
+                            Thread.sleep(1000)
                         }
                     } catch (_: SocketTimeoutException) {
                         //Useless

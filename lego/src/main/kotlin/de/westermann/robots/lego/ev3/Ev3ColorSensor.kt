@@ -2,7 +2,7 @@ package de.westermann.robots.lego.ev3
 
 import de.westermann.robots.robot.device.ColorSensor
 
-class Ev3ColorSensor(
+class Ev3ColorSensor internal constructor(
         port: Ev3SensorPort
 ) : ColorSensor {
     private val sensor = org.ev3dev.hardware.sensors.ColorSensor(port.port).also {

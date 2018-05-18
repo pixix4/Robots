@@ -1,6 +1,5 @@
-package de.westermann.robots.server.util
+package de.westermann.robots.robot
 
-import mu.KotlinLogging
 import java.io.IOException
 import java.net.URLClassLoader
 import java.nio.file.Files
@@ -17,7 +16,6 @@ import kotlin.reflect.full.memberProperties
  * @author lars
  */
 object Environment {
-    private val logger = KotlinLogging.logger {}
     private const val UNKNOWN = "Unknown"
 
     private val manifest: Manifest? = this::class.java.classLoader.let {
@@ -26,7 +24,6 @@ object Environment {
         try {
             Manifest(it.findResource("META-INF/MANIFEST.MF").openStream())
         } catch (e: IOException) {
-            logger.error { "Cannot read manifest" }
             null
         }
     }
@@ -77,7 +74,6 @@ object Environment {
                     try {
                         format.parse(it)
                     } catch (e: ParseException) {
-                        logger.error { "Cannot parse build time" }
                         null
                     }
                 } ?: Date()
@@ -105,9 +101,7 @@ object Environment {
 
     val INDENT = " ".repeat(2)
 
-    fun log(l: (String) -> Unit = {
-        logger.info { it }
-    }) = Printer.Table(
+    fun log(l: (String) -> Unit) = Printer.Table(
             "Environment information",
             listOf(Build, Execution).map {
                 it.printer

@@ -2,12 +2,13 @@ package de.westermann.robots.lego
 
 import de.westermann.robots.datamodel.util.Color
 import de.westermann.robots.datamodel.util.Track
+import de.westermann.robots.datamodel.util.Version
 import de.westermann.robots.robot.*
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.MqttClient
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
 import java.net.InetAddress
-import java.net.InetSocketAddress
 
 /**
  * @author lars
@@ -18,35 +19,50 @@ object MqttClient {
 
     private var mqtt: MqttClient? = null
 
-    fun start(address: InetAddress, port: Int) {
-        if (running) return
+    private fun addressToString(address: InetAddress, port: Int): String =
+            "tcp://" + "$address:$port".replace("/", "")
 
-        mqtt = MqttClient(
-                InetSocketAddress(address, port).toString(),
-                MqttAsyncClient.generateClientId()
-        )
-        mqtt?.let {
-            it.setCallback(object : MqttCallback {
-                override fun messageArrived(topic: String?, message: MqttMessage?) {
-                    val data = message ?: return
-                    val exec = decodeMqtt(IRobotClient::class, data.payload.toStringList()) ?: return
-                    exec.first.call(iClient, *exec.second)
-                }
+    fun start(address: InetAddress, port: Int, onDisconnect: () -> Unit): Boolean {
+        if (running) return true
 
-                override fun connectionLost(cause: Throwable?) {
-                    stop()
-                    start(address, port)
-                }
+        println("Connect to ${address.toString().replace("/", "")}:$port")
 
-                override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                    TODO("not implemented")
-                }
+        try {
+            mqtt = MqttClient(
+                    addressToString(address, port),
+                    MqttClient.generateClientId(),
+                    null
+            )
+            mqtt?.let {
+                it.setCallback(object : MqttCallback {
+                    override fun messageArrived(topic: String?, message: MqttMessage?) {
+                        val data = message ?: return
+                        try {
+                            val exec = decodeMqtt(IRobotClient::class, data.payload.toStringList()) ?: return
+                            exec.first.call(iClient, *exec.second)
+                        } catch (_: InvocationTargetException) {
+                        }
+                    }
 
-            })
-            val options = MqttConnectOptions()
-            it.connect(options)
+                    override fun connectionLost(cause: Throwable?) {
+                        stop()
+                        onDisconnect()
+                    }
 
+                    override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                        //TODO
+                    }
+
+                })
+                val options = MqttConnectOptions()
+                it.connect(options)
+
+                iServer.version(Version.parse(Environment.Build.version))
+            }
+        } catch (_: Exception) {
+            return false
         }
+        return true
     }
 
     val iClient = object : IRobotClient {
@@ -87,7 +103,7 @@ object MqttClient {
         }
 
         override fun trim(trim: Double) {
-           Driver.trim = trim
+            Driver.trim = trim
         }
 
     }
@@ -106,7 +122,9 @@ object MqttClient {
     }
 
     fun stop() {
-        mqtt?.disconnect()
+        if (mqtt?.isConnected == true) {
+            mqtt?.disconnect()
+        }
         mqtt = null
     }
 }

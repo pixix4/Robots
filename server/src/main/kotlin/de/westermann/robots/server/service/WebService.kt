@@ -37,7 +37,6 @@ object WebService : Service {
 
         server = Javalin.create().apply {
             port(port)
-
             event(EventType.SERVER_START_FAILED) {
                 logger.error {
                     "Cannot start discovery server, cause port $port is already in use!" + (WhoBlocks.port(port)?.let {

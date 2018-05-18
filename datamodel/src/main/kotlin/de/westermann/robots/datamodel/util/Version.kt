@@ -42,7 +42,7 @@ data class Version(
         "TRANSPARENT"
     else
         "$major.$minor.$patch" + if (qualifier != Qualifier.NONE) {
-            qualifier.name.toLowerCase() + if (qualifierNumber != 0) qualifierNumber else ""
+            "-"+qualifier.name.toLowerCase() + if (qualifierNumber != 0) ".$qualifierNumber" else ""
         } else ""
 
     fun toJson() = json {

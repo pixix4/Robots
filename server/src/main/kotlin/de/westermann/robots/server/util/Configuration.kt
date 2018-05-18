@@ -3,6 +3,8 @@ package de.westermann.robots.server.util
 import de.westermann.robots.datamodel.util.Brightness
 import de.westermann.robots.datamodel.util.Color
 import de.westermann.robots.datamodel.util.ColorDefaults
+import de.westermann.robots.robot.Environment
+import de.westermann.robots.robot.Printer
 import mu.KotlinLogging
 import org.apache.commons.io.FileUtils
 import java.io.IOException

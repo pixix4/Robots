@@ -146,7 +146,7 @@ object WebSocketConnection {
 
     private var intervalId: Int? = null
 
-    private fun createWebSocket() = WebSocket(url).also {ws ->
+    private fun createWebSocket() = WebSocket(url).also { ws ->
         ws.onopen = {
             if (firstConnect) {
                 onOpen()
@@ -168,7 +168,7 @@ object WebSocketConnection {
         ws.onmessage = { event ->
             ((event as? MessageEvent)?.data as? String)?.let { str ->
                 if (str == "pong")
-                    Unit
+                    return@let Unit
 
                 val json = Json.fromString(str)
                 val function = json["function"] as? String
