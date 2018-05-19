@@ -5,6 +5,7 @@ import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.condition
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.navigation
+import de.westermann.robots.website.toolkit.widget.trackPad
 import kotlin.browser.window
 import kotlin.js.Date
 
@@ -13,7 +14,7 @@ fun main(args: Array<String>) {
         WebSocketConnection.connect()
 
         Router.init {
-            registration()
+            trackPad {  }
             route("admin") {
                 condition(WebSocketConnection.adminProperty) {
                     onFalse {

@@ -1,0 +1,53 @@
+@import "../config";
+
+$track-size: 2.5rem;
+$track-border: 0.25rem;
+
+.track-pad {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  & > div {
+    border: solid $primary-color $track-border;
+    background: $background-primary;
+    border-radius: 100%;
+    position: absolute;
+    box-shadow: 0 1px 2px $shadow;
+    left: 0;
+    bottom: 0;
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: $main-divider;
+    }
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: $main-divider;
+    }
+    & > div {
+      position: absolute;
+      width: $track-size;
+      height: $track-size;
+      border: solid $primary-dark-color $track-border;
+      background: $primary-color;
+      border-radius: 100%;
+      margin-left: -$track-size / 2;
+      margin-top: -$track-size / 2;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+      box-shadow: 0 1px 2px $shadow;
+    }
+  }
+}

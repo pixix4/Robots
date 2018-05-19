@@ -2,6 +2,7 @@ package de.westermann.robots.datamodel.util
 
 import kotlin.math.PI
 import kotlin.math.acos
+import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
@@ -25,6 +26,22 @@ data class Track(
     }
 
     fun toMqtt() = "$x,$y"
+    fun normalize(): Track = radius.let {
+        if (it > 1.0) {
+            copy(x = x / it, y = y / it)
+        } else {
+            this
+        }
+    }
+
+    val isZero: Boolean
+        get() = x == 0.0 && y == 0.0
+
+    fun radius(r: Double): Track = radius.let { oldRadius ->
+        (max(r, 0.0) / oldRadius).let {
+            copy(x = x * it, y = y * it)
+        }
+    }
 
     companion object {
         val DEFAULT = Track(0.0, 0.0)

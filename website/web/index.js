@@ -13,9 +13,10 @@ app.use(require('node-sass-middleware')({
 
 app.use('/public', express.static(path.join(__dirname, 'website')));
 
-app.ws('/ws', function(ws, req) {
-    ws.on('message', function(msg) {
-        console.log(msg)
+app.ws('/ws', function (ws, req) {
+    ws.on('message', function (msg) {
+        if (msg !== "ping")
+            console.log(msg)
     });
 });
 
