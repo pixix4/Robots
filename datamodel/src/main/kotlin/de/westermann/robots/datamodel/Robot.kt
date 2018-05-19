@@ -15,6 +15,10 @@ class Robot(
         init(this)
     }
 
+    constructor(init: Robot.() -> Unit): this(DeviceManager.robots.nextId) {
+        init(this)
+    }
+
     val nameProperty = "".observable()
     var name by nameProperty.accessor()
 
@@ -52,6 +56,8 @@ class Robot(
         DeviceManager.getBoundControllers(this)
     }.observableFunction()
     val controllers by controllersProperty.accessor()
+
+    var iRobotServer: IRobotServer? = null
 
     override fun toString(): String = "Robot($id: '$name')"
 

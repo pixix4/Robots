@@ -29,10 +29,10 @@ object DiscoveryClient {
             socket.reuseAddress = true
 
             while (running) {
-                for (addr in broadcastAddresses) {
+                for (address in broadcastAddresses) {
                     try {
                         val sendPacket = 0.toByteArray()
-                        socket.send(DatagramPacket(sendPacket, sendPacket.size, addr, port))
+                        socket.send(DatagramPacket(sendPacket, sendPacket.size, address, port))
 
                         val packet = DatagramPacket(ByteArray(4), 4)
                         socket.receive(packet)

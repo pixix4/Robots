@@ -67,7 +67,7 @@ class Library<T : ObservableObject> : Iterable<T> {
 
     val nextId: Int
         get() = list.map { it.key.id }.toSet().let {
-            ((0..(it.max() ?: 0)).toSet() - it).min() ?: 0
+            ((0..(it.max() ?: 0)).toSet() - it).min() ?: it.max()?.let { it + 1 } ?: 0
         }
 
     interface Observer<T> {

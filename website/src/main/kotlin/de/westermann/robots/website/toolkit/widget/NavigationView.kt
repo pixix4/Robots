@@ -2,6 +2,7 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
+import de.westermann.robots.website.toolkit.view.EventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 
@@ -17,7 +18,13 @@ class NavigationView(
     private val toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
         Toolbar {
             icon = MaterialIcon.MENU
-            iconAction { toggle() }
+            iconAction {
+                if (backButton) {
+                    back.fire(Unit)
+                } else {
+                    toggle()
+                }
+            }
         }
     }
 
@@ -36,11 +43,23 @@ class NavigationView(
 
     fun entry(name: String, icon: Icon, onSelect: (Action) -> Unit = {}): Action = navigationDrawer.entry(name, icon, onSelect)
 
-    fun select(elem: Action, trigger:Boolean = true) = navigationDrawer.select(elem, trigger)
+    fun select(elem: Action, trigger: Boolean = true) = navigationDrawer.select(elem, trigger)
 
     fun divider(title: String = "") {
         navigationDrawer.divider(title)
     }
+
+    val back = EventHandler<Unit>()
+
+    var backButton: Boolean
+        get() = toolbar.icon == MaterialIcon.ARROW_BACK
+        set(value) {
+            toolbar.icon = if (value) {
+                MaterialIcon.ARROW_BACK
+            } else {
+                MaterialIcon.MENU
+            }
+        }
 
     init {
         toolbar.title = title

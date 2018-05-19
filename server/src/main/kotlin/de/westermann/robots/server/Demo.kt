@@ -13,27 +13,27 @@ import de.westermann.robots.server.util.Configuration
 
 object Demo {
     fun load() {
-        DeviceManager.robots += Robot(0) {
+        DeviceManager.robots += Robot() {
             name = "Demo robot 1"
             version = Version(0, 4, 3)
             kicker = Kicker(true)
             type = "Demobot"
             energy = Energy(0.8, Energy.State.DISCHARGING)
         }
-        DeviceManager.robots += Robot(1) {
+        DeviceManager.robots += Robot() {
             name = "Demo robot 2"
             kicker = Kicker(true)
             camera = Camera(true)
             type = "Demobot"
             energy = Energy(0.4, Energy.State.CHARGING)
         }
-        DeviceManager.robots += Robot(2) {
+        DeviceManager.robots += Robot() {
             name = "Demo robot 3"
             type = "Demobot"
             color = Color.AMBER
             energy = Energy(0.0, Energy.State.NO_BATTERY)
         }
-        DeviceManager.robots += Robot(3) {
+        DeviceManager.robots += Robot() {
             name = "Demo robot 4"
             type = "Demobot"
             kicker = Kicker(true)
@@ -41,7 +41,7 @@ object Demo {
             energy = Energy(0.5, Energy.State.UNKNOWN)
         }
 
-        DeviceManager.controllers += Controller(0) {
+        DeviceManager.controllers += Controller() {
             name = "Demo controller 1"
             generateCode(
                     Configuration.properties.controllerCodeLength,
@@ -49,7 +49,7 @@ object Demo {
             )
             type = Controller.Type.DESKTOP
         }
-        DeviceManager.controllers += Controller(1) {
+        DeviceManager.controllers += Controller() {
             name = "Demo controller 2"
             generateCode(
                     Configuration.properties.controllerCodeLength,
@@ -58,12 +58,12 @@ object Demo {
             description = "A random browser identifier"
             type = Controller.Type.MOBIL
         }
-        DeviceManager.controllers += Controller(2) {
+        DeviceManager.controllers += Controller() {
             name = "Demo controller 3"
             type = Controller.Type.PHYSICAL
             color = Color.BLUE_GREY
         }
-        DeviceManager.controllers += Controller(3) {
+        DeviceManager.controllers += Controller() {
             name = "Demo controller 4"
             type = Controller.Type.UNKNOWN
         }

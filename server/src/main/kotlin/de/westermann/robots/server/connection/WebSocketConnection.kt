@@ -164,22 +164,6 @@ class WebSocketConnection {
         }
 
         val iServer = object : IWebServer {
-            override fun onTrack(track: Track) {
-                controller.robots.forEach { it.track = track }
-            }
-
-            override fun onAbsoluteSpeed(speed: Double) {
-                controller.robots.forEach { it.speed = speed }
-            }
-
-            override fun onRelativeSpeed(deltaSpeed: Double) {
-                controller.robots.forEach { it.speed += deltaSpeed }
-            }
-
-            override fun onButton(button: Button) {
-                TODO()
-            }
-
             override fun bind(controllerId: Int, robotId: Int) {
                 if (admin) {
                     val controller = DeviceManager.controllers[controllerId]
@@ -252,17 +236,17 @@ class WebSocketConnection {
         val parsed = json.json("param")
 
         when (function) {
-            IWebServer::onTrack.name -> parsed?.let {
-                connection.iServer.onTrack(Track.fromJson(it))
+            IController::onTrack.name -> parsed?.let {
+                connection.controller.iController?.onTrack(Track.fromJson(it))
             }
-            IWebServer::onAbsoluteSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
-                connection.iServer.onAbsoluteSpeed(it)
+            IController::onAbsoluteSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
+                connection.controller.iController?.onAbsoluteSpeed(it)
             }
-            IWebServer::onRelativeSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
-                connection.iServer.onRelativeSpeed(it)
+            IController::onRelativeSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
+                connection.controller.iController?.onRelativeSpeed(it)
             }
-            IWebServer::onButton.name -> parsed?.let {
-                connection.iServer.onButton(Button.fromJson(it))
+            IController::onButton.name -> parsed?.let {
+                connection.controller.iController?.onButton(Button.fromJson(it))
             }
             IWebServer::bind.name -> parsed?.let {
                 connection.iServer.bind(

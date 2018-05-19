@@ -14,6 +14,10 @@ class DemoMotor : Motor {
         get() = dutyCycleSp
 
     override var dutyCycleSp: Int = 50
+        set(value) {
+            field = value
+            println("Set motor speed to $value")
+        }
 
     override val position: Int
         get() = positionSp

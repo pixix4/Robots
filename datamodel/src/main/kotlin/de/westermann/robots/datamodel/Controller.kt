@@ -2,10 +2,7 @@ package de.westermann.robots.datamodel
 
 import de.westermann.robots.datamodel.observe.ObservableObject
 import de.westermann.robots.datamodel.observe.accessor
-import de.westermann.robots.datamodel.util.Color
-import de.westermann.robots.datamodel.util.Json
-import de.westermann.robots.datamodel.util.Random
-import de.westermann.robots.datamodel.util.json
+import de.westermann.robots.datamodel.util.*
 
 /**
  * @author lars
@@ -15,6 +12,9 @@ class Controller(
 ) : ObservableObject() {
 
     constructor(id: Int, init: Controller.() -> Unit) : this(id) {
+        init(this)
+    }
+    constructor(init: Controller.() -> Unit): this(DeviceManager.controllers.nextId) {
         init(this)
     }
 
@@ -32,6 +32,8 @@ class Controller(
 
     val colorProperty = Color.TRANSPARENT.observable()
     var color by colorProperty.accessor()
+
+    var iController: IController? = null
 
     fun generateCode(length: Int, chars: List<Char>) {
         fun gen() = Random.ints(length.toLong(), chars.size).map { chars[it] }.joinToString("")

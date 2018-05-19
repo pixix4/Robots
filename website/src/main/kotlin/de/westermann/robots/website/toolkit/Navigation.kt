@@ -15,6 +15,9 @@ class Navigation(
     val inner = Box {}
     val nav = NavigationView(title) {
         content = inner
+        back.on {
+            Router.routeUp()
+        }
     }.also {
         view { it }
     }

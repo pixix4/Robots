@@ -14,7 +14,11 @@ fun main(args: Array<String>) {
         WebSocketConnection.connect()
 
         Router.init {
-            trackPad {  }
+            trackPad {
+                change.on {
+                    WebSocketConnection.iController.onTrack(it)
+                }
+            }
             route("admin") {
                 condition(WebSocketConnection.adminProperty) {
                     onFalse {

@@ -1,5 +1,7 @@
 package de.westermann.robots.lego
 
+import de.westermann.robots.datamodel.IRobotClient
+import de.westermann.robots.datamodel.IRobotServer
 import de.westermann.robots.datamodel.util.Color
 import de.westermann.robots.datamodel.util.Track
 import de.westermann.robots.datamodel.util.Version

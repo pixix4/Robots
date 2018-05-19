@@ -7,7 +7,7 @@ actual class Json(val obj: kotlin.js.Json) {
     actual operator fun get(propertyName: String): Any? = obj[propertyName]
 
     actual operator fun set(propertyName: String, value: Any?) {
-        obj[propertyName] = value
+        obj[propertyName] = (value as? Json)?.obj ?: value
     }
 
     actual fun value(propertyName: String, init: () -> Any?) = set(propertyName, init())

@@ -37,6 +37,11 @@ class TrackPad(
     }
 
     var sticky: Boolean = false
+    var disable: Boolean
+        get() = element.classList.contains("disabled")
+        set(value) {
+            element.classList.toggle("disabled", value)
+        }
 
     val change = EventHandler<Track>()
 
@@ -83,7 +88,7 @@ class TrackPad(
     private var interval: Int? = null
 
     fun startTrack(event: Event) {
-        if (identifier != null) return
+        if (identifier != null || disable) return
 
         interval?.let {
             window.clearInterval(it)
@@ -168,13 +173,12 @@ class TrackPad(
         if (!sticky) {
             interval = window.setInterval({
                 val oldRadius = currentPosition.radius
-                val newRadius = oldRadius - max(oldRadius / 8.0, 0.01)
-                println("old: $oldRadius | new: $newRadius")
+                val newRadius = oldRadius - max(oldRadius / 10.0, 0.01)
                 updateTrack(currentPosition.radius(newRadius))
                 if (currentPosition.isZero) {
                     interval?.let { window.clearInterval(it) }
                 }
-            }, 20)
+            }, 15)
         }
     }
 
@@ -182,10 +186,6 @@ class TrackPad(
         init()
         resize()
         window.addEventListener("resize", this::resize)
-
-        change.on {
-            println(it)
-        }
     }
 }
 

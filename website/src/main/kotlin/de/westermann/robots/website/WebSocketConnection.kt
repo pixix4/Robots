@@ -26,12 +26,16 @@ object WebSocketConnection {
     private var connection: WebSocket = createWebSocket()
 
     private fun send(function: String, data: Any? = null) {
-        connection.send(
-                json {
-                    value("function") { function }
-                    value("param") { data }
-                }.stringify()
-        )
+        try {
+            connection.send(
+                    json {
+                        value("function") { function }
+                        value("param") { data }
+                    }.stringify().also { println(it) }
+            )
+        } catch (_: Throwable) {
+            println("Problem in web socket connection")
+        }
     }
 
     private val iClient = object : IWebClient {
@@ -84,22 +88,26 @@ object WebSocketConnection {
         }
     }
 
-    val iServer = object : IWebServer {
+    val iController = object : IController {
+
         override fun onTrack(track: Track) {
-            send(IWebServer::onTrack.name, track.toJson())
+            send(IController::onTrack.name, track.toJson())
         }
 
         override fun onAbsoluteSpeed(speed: Double) {
-            send(IWebServer::onAbsoluteSpeed.name, speed)
+            send(IController::onAbsoluteSpeed.name, speed)
         }
 
         override fun onRelativeSpeed(deltaSpeed: Double) {
-            send(IWebServer::onRelativeSpeed.name, deltaSpeed)
+            send(IController::onRelativeSpeed.name, deltaSpeed)
         }
 
         override fun onButton(button: Button) {
-            send(IWebServer::onButton.name, button.toJson())
+            send(IController::onButton.name, button.toJson())
         }
+    }
+
+    val iServer = object : IWebServer {
 
         override fun bind(controllerId: Int, robotId: Int) {
             send(IWebServer::bind.name, json {

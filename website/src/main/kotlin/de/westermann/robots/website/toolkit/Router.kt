@@ -164,5 +164,9 @@ open class Router(
                 }
             } ?: println("Error")
         }
+
+        fun routeUp() {
+            routeTo(window.location.pathname.split("/").dropLast(1).joinToString("/"))
+        }
     }
 }

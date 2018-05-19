@@ -1,4 +1,4 @@
-package de.westermann.robots.robot
+package de.westermann.robots.datamodel
 
 import de.westermann.robots.datamodel.util.Color
 import de.westermann.robots.datamodel.util.Track

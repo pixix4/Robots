@@ -1,6 +1,8 @@
 package de.westermann.robots.server.service
 
 import de.westermann.robots.datamodel.DeviceManager
+import de.westermann.robots.datamodel.IRobotClient
+import de.westermann.robots.datamodel.IRobotServer
 import de.westermann.robots.datamodel.Robot
 import de.westermann.robots.datamodel.util.*
 import de.westermann.robots.robot.*
@@ -28,12 +30,8 @@ object MqttService : Service {
         get() = server != null
     var server: Server? = null
 
-    private data class Helper(
-            val robot: Robot,
-            val iServer: IRobotServer
-    )
 
-    private var robots = mapOf<String, Helper>()
+    private var robots = mapOf<String, Robot>()
 
     override fun start() {
         start(Configuration.properties.robotPort)
@@ -80,39 +78,12 @@ object MqttService : Service {
             }
         }
 
-        robots += id to Helper(
-                robot,
-                object : IRobotServer {
-                    override fun map(points: List<Coordinate>) {
-                        //TODO
-                    }
-
-                    override fun currentColor(color: Color) {
-                        robot.color = color
-                    }
-
-                    override fun foregroundColor(color: Color) {
-                        robot.lineFollower = robot.lineFollower.copy(foreground = color)
-                    }
-
-                    override fun backgroundColor(color: Color) {
-                        robot.lineFollower = robot.lineFollower.copy(background = color)
-                    }
-
-                    override fun energy(energy: Energy) {
-                        robot.energy = energy
-                    }
-
-                    override fun version(version: Version) {
-                        robot.version = version
-                    }
-                }
-        )
+        robots += id to robot
     }
 
     private fun removeRobot(id: String) {
-        val helper = robots[id] ?: return
-        DeviceManager.robots -= helper.robot
+        val robot = robots[id] ?: return
+        DeviceManager.robots -= robot
         robots -= id
     }
 
@@ -132,11 +103,11 @@ object MqttService : Service {
 
                 override fun onPublish(msg: InterceptPublishMessage?) {
                     if (msg == null) return
-                    val helper = robots[msg.clientID] ?: return
+                    val robot = robots[msg.clientID] ?: return
                     try {
                         val exec =
                                 decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList()) ?: return
-                        exec.first.call(helper.iServer, *exec.second)
+                        exec.first.call(robot.iRobotServer, *exec.second)
                     } catch (e: InvocationTargetException) {
                         logger.warn(
                                 "Cannot invoke mqtt message: ${msg.payload.toByteArraySafe().toStringList()}", e.cause
