@@ -2,7 +2,6 @@ package de.westermann.robots.website
 
 import de.westermann.robots.datamodel.*
 import de.westermann.robots.datamodel.observe.ObservableProperty
-import de.westermann.robots.datamodel.observe.accessor
 import de.westermann.robots.datamodel.util.Button
 import de.westermann.robots.datamodel.util.Json
 import de.westermann.robots.datamodel.util.Track
@@ -105,6 +104,10 @@ object WebSocketConnection {
         override fun onButton(button: Button) {
             send(IController::onButton.name, button.toJson())
         }
+
+        override fun name(name: String) {
+            send(IController::name.name, name)
+        }
     }
 
     val iServer = object : IWebServer {
@@ -133,7 +136,6 @@ object WebSocketConnection {
     }
 
     val adminProperty = ObservableProperty(false)
-    val admin by adminProperty.accessor()
 
     private var onOpen: () -> Unit = {}
 
@@ -163,6 +165,7 @@ object WebSocketConnection {
             intervalId = window.setInterval({
                 ws.send("ping")
             }, 5000)
+            iController.name(window.navigator.userAgent)
             Unit //This is weird
         }
         ws.onclose = {

@@ -1,4 +1,4 @@
-package de.westermann.robots.server.util
+package de.westermann.robots.datamodel.util
 
 /**
  * @author lars

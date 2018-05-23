@@ -3,7 +3,7 @@ package de.westermann.robots.robot.device
 /**
  * @author lars
  */
-interface Motor {
+interface Motor : Device {
     val state: State
 
     val dutyCycle: Int
@@ -39,22 +39,22 @@ interface Motor {
          * The motor is not turning, but rather attempting to hold a fixed position.
          */
         HOLDING,
-        
+
         /**
          * The motor is turning, but cannot reach its speed_sp.
          */
         OVERLOADED,
-        
+
         /**
          * The motor is accelerating up or down and has not yet reached a constant output level.
          */
         ACCELERATING,
-        
+
         /**
          * Power is being sent to the motor.
          */
         RUNNING,
-        
+
         /**
          * The motor is not turning when it should be.
          */
@@ -83,6 +83,6 @@ interface Motor {
          */
         HOLD
 
-        
+
     }
 }

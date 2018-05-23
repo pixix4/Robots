@@ -20,6 +20,7 @@ class IconView(icon: Icon? = null, init: IconView.() -> Unit = {}) : View() {
 
     init {
         this.icon = icon
+        element.setAttribute("aria-hidden", "true")
         init()
     }
 }

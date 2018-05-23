@@ -31,11 +31,24 @@ $card-height: 10rem;
     }
   }
 
+  .controller-card-minimal-code {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.8rem;
+    font-size: 0.85rem;
+  }
+
   .controller-card-minimal-name {
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 0 1rem;
+    padding: 0 0.6rem;
     line-height: 2rem;
+    width: 100%;
+    div {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

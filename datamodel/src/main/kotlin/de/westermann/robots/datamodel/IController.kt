@@ -11,4 +11,6 @@ interface IController {
     fun onAbsoluteSpeed(speed: Double)
     fun onRelativeSpeed(deltaSpeed: Double)
     fun onButton(button: Button)
+
+    fun name(name: String)
 }

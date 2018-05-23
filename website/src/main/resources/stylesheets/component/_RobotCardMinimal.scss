@@ -33,7 +33,12 @@ $card-height: 10rem;
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 0 1rem;
+    padding: 0 0.6rem;
     line-height: 2rem;
+    width: 100%;
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

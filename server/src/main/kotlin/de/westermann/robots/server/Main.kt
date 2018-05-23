@@ -48,6 +48,10 @@ object Main {
                     override fun onButton(button: Button) {
                         logger.info { "Controller $element pressed $button" }
                     }
+
+                    override fun name(name: String) {
+                        element.name = name
+                    }
                 }
             }
         })

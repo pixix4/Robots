@@ -8,12 +8,15 @@ import de.westermann.robots.datamodel.util.Track
 import de.westermann.robots.datamodel.util.json
 import de.westermann.robots.server.util.Protection
 import io.javalin.embeddedserver.jetty.websocket.WsSession
+import mu.KotlinLogging
 import java.security.AccessControlException
 
 /**
  * @author lars
  */
 class WebSocketConnection {
+
+    val logger = KotlinLogging.logger {}
 
     private data class Connection(
             val session: WsSession,
@@ -248,6 +251,9 @@ class WebSocketConnection {
             IController::onButton.name -> parsed?.let {
                 connection.controller.iController?.onButton(Button.fromJson(it))
             }
+            IController::name.name -> data?.toString()?.let {
+                connection.controller.iController?.name(it)
+            }
             IWebServer::bind.name -> parsed?.let {
                 connection.iServer.bind(
                         it["controllerId"]?.toString()?.toIntOrNull() ?: -1,
@@ -262,7 +268,7 @@ class WebSocketConnection {
             }
             IWebServer::login.name -> connection.iServer.login((data as? String) ?: "")
             IWebServer::logout.name -> connection.iServer.logout()
-            else -> throw IllegalArgumentException("Cannot find function '$function' of client ${socket.remoteAddress}")
+            else -> logger.warn("Cannot find function '$function' of client ${socket.remoteAddress}")
         }
     }
 }

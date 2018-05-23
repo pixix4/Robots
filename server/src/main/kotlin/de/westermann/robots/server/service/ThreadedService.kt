@@ -1,10 +1,8 @@
 package de.westermann.robots.server.service
 
 import de.westermann.robots.server.util.ServiceAlreadyStartedException
-import de.westermann.robots.server.util.toDashCase
+import de.westermann.robots.datamodel.util.toDashCase
 import mu.KLogger
-import mu.KotlinLogging
-import org.slf4j.Logger
 import kotlin.concurrent.thread
 import kotlin.jvm.Volatile
 

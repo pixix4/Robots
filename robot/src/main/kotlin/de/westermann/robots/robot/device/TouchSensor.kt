@@ -1,5 +1,5 @@
 package de.westermann.robots.robot.device
 
-interface TouchSensor {
+interface TouchSensor : Sensor {
     val isPressed: Boolean
 }

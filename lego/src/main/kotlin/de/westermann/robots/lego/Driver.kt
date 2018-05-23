@@ -21,18 +21,11 @@ object Driver {
         val radius = track.radius
 
         val (left, right) = when {
-            angle < deg1 -> {
-                1.0 to (angle / diff - diff)
-            }
-            angle < deg2 -> {
-                -((angle - deg1) / diff - diff) to 1.0
-            }
-            angle < deg3 -> {
-                -1.0 to -((angle - deg2) / diff - diff)
-            }
-            else -> {
-                ((angle - deg1) / diff - diff) to -1.0
-            }
+            radius == 0.0 -> 0.0 to 0.0
+            angle < deg1 -> 1.0 to ((angle - diff) / diff)
+            angle < deg2 -> -((angle - deg1 - diff) / diff) to 1.0
+            angle < deg3 -> -1.0 to -((angle - deg2 - diff) / diff)
+            else -> ((angle - deg3 - diff) / diff) to -1.0
         }
         drive(left * radius, right * radius)
     }

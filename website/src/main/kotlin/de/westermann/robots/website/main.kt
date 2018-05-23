@@ -9,44 +9,45 @@ import de.westermann.robots.website.toolkit.widget.trackPad
 import kotlin.browser.window
 import kotlin.js.Date
 
+@Suppress("UNUSED")
 fun main(args: Array<String>) {
     window.onload = {
-        WebSocketConnection.connect()
-
-        Router.init {
-            trackPad {
-                change.on {
-                    WebSocketConnection.iController.onTrack(it)
-                }
-            }
-            route("admin") {
-                condition(WebSocketConnection.adminProperty) {
-                    onFalse {
-                        adminLogin()
+        WebSocketConnection.connect {
+            Router.init {
+                trackPad {
+                    change.on {
+                        WebSocketConnection.iController.onTrack(it)
                     }
-                    onTrue {
-                        navigation("Robots ${Date().getFullYear()}") {
-                            route("Overview", MaterialIcon.DASHBOARD) {
-                                adminOverview()
-                            }
-                            route("robots", "Robots", MaterialIcon.BUG_REPORT) {
-                                adminRobotList()
-                                param(Int::class) { id ->
-                                    adminRobotDetail(id)
+                }
+                route("admin") {
+                    condition(WebSocketConnection.adminProperty) {
+                        onFalse {
+                            adminLogin()
+                        }
+                        onTrue {
+                            navigation("Robots ${Date().getFullYear()}") {
+                                route("Overview", MaterialIcon.DASHBOARD) {
+                                    adminOverview()
                                 }
-                            }
-                            route("controllers", "Controllers", MaterialIcon.GAMEPAD) {
-                                adminControllerList()
-                                param(Int::class) { id ->
-                                    adminControllerDetail(id)
+                                route("robots", "Robots", MaterialIcon.BUG_REPORT) {
+                                    adminRobotList()
+                                    param(Int::class) { id ->
+                                        adminRobotDetail(id)
+                                    }
                                 }
-                            }
-                            divider()
-                            route("settings", "Settings", MaterialIcon.SETTINGS) {
-                                adminSettings()
-                            }
-                            route("about", "About", MaterialIcon.INFO_OUTLINE) {
-                                adminAbout()
+                                route("controllers", "Controllers", MaterialIcon.GAMEPAD) {
+                                    adminControllerList()
+                                    param(Int::class) { id ->
+                                        adminControllerDetail(id)
+                                    }
+                                }
+                                divider()
+                                route("settings", "Settings", MaterialIcon.SETTINGS) {
+                                    adminSettings()
+                                }
+                                route("about", "About", MaterialIcon.INFO_OUTLINE) {
+                                    adminAbout()
+                                }
                             }
                         }
                     }

@@ -1,5 +1,6 @@
 package de.westermann.robots.robot
 
+import de.westermann.robots.datamodel.IRobotClient
 import de.westermann.robots.datamodel.util.*
 import java.lang.reflect.Method
 import java.nio.ByteBuffer
@@ -19,10 +20,39 @@ fun Int.toByteArray(): ByteArray =
 
 fun ByteArray.toInt(): Int = ByteBuffer.wrap(this).int
 
-private val seperator: String = "|"
+private const val seperator: String = "|"
 
 fun List<String>.toByteArray(): ByteArray = joinToString(seperator).toByteArray(Charsets.UTF_8)
 fun ByteArray.toStringList(): List<String> = toString(Charsets.UTF_8).split(seperator)
+
+fun decodeMqtt(iClient: IRobotClient, message: List<String>) {
+    when (message[0]) {
+        IRobotClient::track.name -> {
+            iClient.track(Track.parse(message[1]))
+        }
+        IRobotClient::speed.name -> {
+            iClient.speed(message[1].toDouble())
+        }
+        IRobotClient::trim.name -> {
+            iClient.trim(message[1].toDouble())
+        }
+        IRobotClient::pid.name -> {
+            iClient.pid(message[1].toBoolean())
+        }
+        IRobotClient::resetMap.name -> {
+            iClient.resetMap()
+        }
+        IRobotClient::foregroundColor.name -> {
+            iClient.foregroundColor(Color.parse(message[1]))
+        }
+        IRobotClient::backgroundColor.name -> {
+            iClient.backgroundColor(Color.parse(message[1]))
+        }
+        else -> {
+            println("Unknown function ${message[0]}")
+        }
+    }
+}
 
 fun decodeMqtt(clazz: KClass<*>, message: List<String>): Pair<KFunction<*>, Array<Any?>>? {
     val func = clazz.functions.find {

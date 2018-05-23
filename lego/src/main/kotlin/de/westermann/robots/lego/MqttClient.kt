@@ -8,9 +8,12 @@ import de.westermann.robots.datamodel.util.Version
 import de.westermann.robots.robot.*
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.MqttClient
-import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
 import java.net.InetAddress
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+
 
 /**
  * @author lars
@@ -20,6 +23,7 @@ object MqttClient {
         get() = mqtt?.isConnected ?: false
 
     private var mqtt: MqttClient? = null
+    private var executor: ScheduledExecutorService? = null
 
     private fun addressToString(address: InetAddress, port: Int): String =
             "tcp://" + "$address:$port".replace("/", "")
@@ -34,15 +38,14 @@ object MqttClient {
                     addressToString(address, port),
                     MqttClient.generateClientId(),
                     null
-            )
-            mqtt?.let {
+            ).also {
                 it.setCallback(object : MqttCallback {
                     override fun messageArrived(topic: String?, message: MqttMessage?) {
                         val data = message ?: return
                         try {
-                            val exec = decodeMqtt(IRobotClient::class, data.payload.toStringList()) ?: return
-                            exec.first.call(iClient, *exec.second)
-                        } catch (_: InvocationTargetException) {
+                            decodeMqtt(iClient, data.payload.toStringList())
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
 
@@ -59,8 +62,16 @@ object MqttClient {
                 val options = MqttConnectOptions()
                 it.connect(options)
 
+                it.subscribe(it.clientId)
                 iServer.version(Version.parse(Environment.Build.version))
+
+                executor = Executors.newSingleThreadScheduledExecutor().also {
+                    it.scheduleAtFixedRate({
+                        iServer.currentColor(Devices.colorSensor.color)
+                    }, 0, 1, TimeUnit.SECONDS)
+                }
             }
+
         } catch (_: Exception) {
             return false
         }
@@ -126,7 +137,9 @@ object MqttClient {
     fun stop() {
         if (mqtt?.isConnected == true) {
             mqtt?.disconnect()
+            executor?.shutdown()
         }
         mqtt = null
+        executor = null
     }
 }

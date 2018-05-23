@@ -43,7 +43,7 @@ class TrackPad(
             element.classList.toggle("disabled", value)
         }
 
-    val change = EventHandler<Track>()
+    val change = EventHandler<Track>(250)
 
     fun resize(event: Event? = null) {
         val size = min(element.clientWidth, element.clientHeight)

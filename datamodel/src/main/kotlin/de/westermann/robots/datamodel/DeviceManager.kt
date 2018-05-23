@@ -6,8 +6,24 @@ import de.westermann.robots.datamodel.observe.Library
  * @author lars
  */
 object DeviceManager {
-    val robots = Library<Robot>()
-    val controllers = Library<Controller>()
+    val robots = Library<Robot>().also {
+        it.onChange(object : Library.Observer<Robot> {
+            override fun onRemove(element: Robot) {
+                controllerToRobots.filter { it.value.contains(element) }.keys.forEach {
+                    unbindController(it, element)
+                }
+            }
+        })
+    }
+    val controllers = Library<Controller>().also {
+        it.onChange(object : Library.Observer<Controller> {
+            override fun onRemove(element: Controller) {
+                controllerToRobots[element]?.forEach {
+                    unbindController(element, it)
+                }
+            }
+        })
+    }
 
     private var controllerToRobots: Map<Controller, Set<Robot>> = emptyMap()
 

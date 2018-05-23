@@ -58,4 +58,7 @@ open class ViewList<T : View> : View(), Iterable<T> {
 
     override fun iterator(): Iterator<T> = children.map { it.first }.iterator()
 
+    operator fun T.unaryPlus() {
+        this@ViewList += this
+    }
 }

@@ -2,6 +2,7 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
+import de.westermann.robots.website.toolkit.view.EventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 
@@ -14,12 +15,20 @@ class Toolbar(
 ) : View() {
 
     private val iconView: IconView by ViewContainer(this, "icon") {
-        IconView()
+        IconView {
+            click.on {
+                if (searchMode) {
+                    searchMode = false
+                } else {
+                    action.fire(Unit)
+                }
+            }
+        }
     }
 
-    var icon: Icon?
-        get() = iconView.icon
+    var icon: Icon? = null
         set(value) {
+            field = value
             iconView.icon = value
         }
 
@@ -33,27 +42,40 @@ class Toolbar(
             titleView.text = value
         }
 
-    fun iconAction(onAction: () -> Unit) {
-        iconView.click.on { onAction() }
-    }
+    val action = EventHandler<Unit>()
 
     private val searchBar: Input by ViewContainer(this, "search") {
         Input {
             placeholder = "Search…"
             icon = MaterialIcon.SEARCH
+            focus.on {
+                searchMode = true
+            }
+            click.on {
+                searchMode = true
+            }
+            exit.on {
+                searchMode = false
+            }
         }
     }
 
-    var enableSearchBar: Boolean
-        get() = searchBar.visible
+    private var searchMode: Boolean
+        get() = element.classList.contains("search")
         set(value) {
-            searchBar.visible = value
+            element.classList.toggle("search", value)
+
+            if (value) {
+                iconView.icon = MaterialIcon.CLOSE
+            } else {
+                iconView.icon = icon
+            }
         }
 
     private val searchIcon: IconView by ViewContainer(this, "search-icon") {
         IconView(MaterialIcon.SEARCH) {
             click.on {
-                searchBar.element.classList.add("active")
+                searchMode = true
             }
         }
     }

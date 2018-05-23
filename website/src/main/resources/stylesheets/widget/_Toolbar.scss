@@ -10,6 +10,7 @@
   border-bottom: solid 1px $primary-dark-color;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   display: flex;
+  transition: background $animation-time, color $animation-time;
 
   .toolbar-icon {
     margin-left: 0.5rem;
@@ -21,6 +22,7 @@
 
     .icon-view {
       color: $primary-color-icon;
+      transition: color $animation-time;
     }
 
     &:hover {
@@ -40,18 +42,16 @@
     height: 100%;
     z-index: 1;
     top: -2px;
+    //transition: left $animation-time;
 
     .input {
       height: 100%;
       left: 0;
-      transition: left $animation-time;
-
-      &.active {
-        left: -100%;
-      }
 
       .icon-view {
+        display: none;
         color: $primary-color-icon-disabled;
+        transition: color $animation-time;
       }
 
       input {
@@ -59,6 +59,8 @@
         color: $primary-color-text-primary;
         box-shadow: none;
         border: none;
+        padding-left: 0;
+        transition: background $animation-time, color $animation-time;
       }
     }
   }
@@ -79,6 +81,29 @@
       @include hover-background($primary-color-text-primary);
     }
   }
+
+  &.search {
+    background: $background-primary;
+    color: $main-text-primary;
+
+    .toolbar-icon {
+      .icon-view {
+      color: $main-icon;
+    }
+      &:hover {
+        @include hover-background($main-text-primary);
+      }
+    }
+    .toolbar-search {
+      left: $navigation-bar-width;
+
+      input {
+        background: $background-primary;
+        color: $main-text-primary;
+      }
+    }
+
+  }
 }
 
 @include tablet {
@@ -96,13 +121,14 @@
       .input {
         .icon-view {
           color: $primary-dark-color-icon-disabled;
+          display: block;
         }
 
         input {
-          left: 0;
           background: $primary-dark-color;
           color: $primary-dark-color-text-primary;
-          box-shadow: inset 1px 1px 4px -2px $shadow;
+          //box-shadow: inset 1px 1px 4px -2px $shadow;
+          padding-left: 2rem;
         }
       }
     }
@@ -110,9 +136,20 @@
     .toolbar-search-icon {
       display: none;
     }
+
+    &.search {
+      .toolbar-search {
+        .icon-view {
+          color: $main-icon-disabled;
+        }
+        input {
+          background: $background-secondary;
+          color: $main-text-primary;
+        }
+      }
+    }
   }
 }
-
 
 @include desktop {
   .toolbar {
@@ -128,19 +165,33 @@
       .input {
         .icon-view {
           color: $primary-dark-color-icon-disabled;
+          display: block;
         }
 
         input {
-          left: 0;
           background: $primary-dark-color;
           color: $primary-dark-color-text-primary;
-          box-shadow: inset 1px 1px 4px -2px $shadow;
+          //box-shadow: inset 1px 1px 4px -2px $shadow;
+          padding-left: 2rem;
         }
       }
     }
 
     .toolbar-search-icon {
       display: none;
+    }
+
+    &.search {
+      .toolbar-search {
+        left: 50%;
+        .icon-view {
+          color: $main-icon-disabled;
+        }
+        input {
+          background: $background-secondary;
+          color: $main-text-primary;
+        }
+      }
     }
   }
 }

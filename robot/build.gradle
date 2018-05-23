@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
+
     compile 'com.beust:klaxon:3.0.1'
     expectedBy project(":datamodel")
 

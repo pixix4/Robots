@@ -12,6 +12,7 @@ import kotlin.reflect.KProperty
 class ViewContainer<in Container : View, Child : View?>(
         parentClass: Container,
         fieldName: String,
+        parentElement: HTMLElement,
         init: (container: HTMLElement) -> Child
 ) {
 
@@ -22,6 +23,29 @@ class ViewContainer<in Container : View, Child : View?>(
     ) : this(
             containerClass,
             childClass.simpleName.toDashCase(),
+            init
+    )
+
+    constructor(
+            containerClass: Container,
+            childClass: KClass<out View>,
+            parentElement: HTMLElement,
+            init: (container: HTMLElement) -> Child
+    ) : this(
+            containerClass,
+            childClass.simpleName.toDashCase(),
+            parentElement,
+            init
+    )
+
+    constructor(
+            parentClass: Container,
+            fieldName: String,
+            init: (container: HTMLElement) -> Child
+    ) : this(
+            parentClass,
+            fieldName,
+            parentClass.element,
             init
     )
 
@@ -44,6 +68,6 @@ class ViewContainer<in Container : View, Child : View?>(
 
 
     init {
-        parentClass.element.appendChild(container)
+        parentElement.appendChild(container)
     }
 }

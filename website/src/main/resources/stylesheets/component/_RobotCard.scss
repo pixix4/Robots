@@ -21,11 +21,16 @@ $card-height: 10rem;
     position: absolute;
     top: 0;
     left: $card-height;
-    right: 0;
+    right: 2rem;
     padding: 0 1rem;
     font-weight: bold;
     line-height: 3rem;
     font-size: 1.2rem;
+    white-space: nowrap;
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .robot-card-modules {
@@ -48,7 +53,8 @@ $card-height: 10rem;
     top: 3.6rem;
     bottom: 0;
     left: $card-height;
-    right: 0;
+    overflow-x: auto;
+    max-width: calc(100% - 10rem);
     & > div {
       height: 100%;
       white-space: nowrap;

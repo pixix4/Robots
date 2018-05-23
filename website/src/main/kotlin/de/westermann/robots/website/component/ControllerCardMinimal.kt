@@ -22,10 +22,14 @@ class ControllerCardMinimal(controller: Controller) : View() {
     }
 
     private val name: TextView by ViewContainer(this, "name") { TextView(controller.name, "Unnamed") }
+    private val code: TextView by ViewContainer(this, "code") { TextView(controller.code) }
 
     init {
         controller.nameProperty.onChange { newValue, _ ->
             name.text = newValue
+        }
+        controller.codeProperty.onChange { newValue, _ ->
+            code.text = newValue
         }
 
         controller.typeProperty.onChangeInit { newValue, _ ->

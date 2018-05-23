@@ -1,5 +1,6 @@
 package de.westermann.robots.website.component
 
+import de.westermann.robots.datamodel.DeviceManager
 import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.view.View
 
@@ -13,6 +14,8 @@ class AdminRobotDetail(
 
 fun Router.adminRobotDetail(id: Int) {
     view {
-        AdminRobotDetail(id)
+        DeviceManager.robots[id]?.let {
+            RobotDetail(it)
+        } ?: AdminRobotDetail(id)
     }
 }

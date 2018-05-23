@@ -50,7 +50,6 @@ object MqttService : Service {
                     MqttMessageBuilders.publish()
                             .topicName(id)
                             .qos(MqttQoS.AT_LEAST_ONCE)
-                            .retained(true)
                             .payload(Unpooled.copiedBuffer(encodeMqtt(method, params.toList()).toByteArray()))
                             .build(),
                     id

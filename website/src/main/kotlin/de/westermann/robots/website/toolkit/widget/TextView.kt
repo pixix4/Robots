@@ -1,6 +1,7 @@
 package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.view.View
+import de.westermann.robots.website.toolkit.view.ViewList
 
 /**
  * @author lars
@@ -33,4 +34,8 @@ class TextView(text: String = "", placeholder: String = "") : View() {
     init {
         this.text = text
     }
+}
+
+fun ViewList<View>.textView(text: String = "", placeholder: String = "") {
+    this += TextView(text, placeholder)
 }

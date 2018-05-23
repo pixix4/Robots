@@ -31,7 +31,7 @@ class Robot(
     val colorProperty = Color.TRANSPARENT.observable()
     var color by colorProperty.accessor()
 
-    val speedProperty = (-1.0).observable()
+    val speedProperty = 0.5.observable()
     var speed by speedProperty.accessor()
 
     val trimProperty = 0.0.observable()

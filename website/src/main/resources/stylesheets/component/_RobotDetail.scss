@@ -1,0 +1,73 @@
+@import "../config";
+@import "../mixins";
+
+$top-height: 10rem;
+
+.robot-detail {
+  position: relative;
+  margin: 1.5rem 1rem 1rem;
+}
+
+.robot-detail-top {
+  width: 100%;
+  height: $top-height;
+  background: $background-primary;
+  box-shadow: 0 1px 2px $shadow;
+  border-radius: $border-radius;
+  & > div {
+    height: 100%;
+  }
+}
+
+.robot-detail-image {
+  height: 100%;
+  width: $top-height;
+  background: $primary-light-color;
+  padding: 1rem;
+
+  div {
+    height: 100%;
+  }
+}
+
+.robot-detail-name {
+  position: absolute;
+  top: 0;
+  left: $top-height;
+  right: 2rem;
+  padding: 0 1rem;
+  font-weight: bold;
+  line-height: 3rem;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.robot-detail-content {
+  margin: -0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  & > .card-view {
+    margin: 0;
+    & > div {
+      width: 100%;
+      & > .box > div:first-child > .text-view {
+        background: $primary-color;
+        color: $primary-color-text-primary;
+        line-height: 2.4rem;
+        padding: 0 0.8rem;
+      }
+      .view-list {
+        padding: 0.5rem 0;
+        & > div {
+          &:hover {
+            @include hover-background($main-text-primary);
+          }
+        }
+      }
+    }
+  }
+}

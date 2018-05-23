@@ -11,3 +11,7 @@ class Box(init: Box.() -> Unit): ViewList<View>() {
         init()
     }
 }
+
+fun ViewList<View>.box(init: Box.() -> Unit) {
+    this += Box(init)
+}

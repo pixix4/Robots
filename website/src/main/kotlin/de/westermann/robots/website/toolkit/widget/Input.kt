@@ -30,12 +30,17 @@ class Input(
         it.addEventListener("keyup", object : EventListener {
             override fun handleEvent(event: Event) {
                 (event as? KeyboardEvent)?.let {
-                    if (it.keyCode == 13) {
-                        submit.fire(value)
-                    } else {
-                        change.fire(value)
+                    when {
+                        it.keyCode == 13 -> submit.fire(value)
+                        it.keyCode == 27 -> exit.fire(Unit)
+                        else -> change.fire(value)
                     }
                 }
+            }
+        })
+        it.addEventListener("focus", object : EventListener {
+            override fun handleEvent(event: Event) {
+                focus.fire(Unit)
             }
         })
         it.addEventListener("change", object : EventListener {
@@ -72,8 +77,10 @@ class Input(
 
     val change = EventHandler<String>()
     val submit = EventHandler<String>()
+    val focus = EventHandler<Unit>()
+    val exit = EventHandler<Unit>()
 
-    fun focus() {
+    fun requestFocus() {
         inputElement.focus()
     }
 

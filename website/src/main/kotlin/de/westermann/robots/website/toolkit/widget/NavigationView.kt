@@ -18,7 +18,7 @@ class NavigationView(
     private val toolbar: Toolbar by ViewContainer(this, Toolbar::class) {
         Toolbar {
             icon = MaterialIcon.MENU
-            iconAction {
+            action.on {
                 if (backButton) {
                     back.fire(Unit)
                 } else {

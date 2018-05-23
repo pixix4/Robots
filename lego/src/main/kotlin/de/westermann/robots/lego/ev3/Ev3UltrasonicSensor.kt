@@ -4,7 +4,7 @@ import de.westermann.robots.robot.device.UltrasonicSensor
 
 class Ev3UltrasonicSensor internal constructor(
         port: Ev3SensorPort
-): UltrasonicSensor {
+) : UltrasonicSensor {
     private val sensor = org.ev3dev.hardware.sensors.UltrasonicSensor(port.port)
 
     override val distanceCentimeters: Double
