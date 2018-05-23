@@ -7,7 +7,7 @@ import de.westermann.robots.website.toolkit.view.ViewList
  * @author lars
  */
 
-class TextView(text: String = "", placeholder: String = "") : View() {
+class TextView(text: String = "", placeholder: String = "", init: TextView.() -> Unit = {}) : View() {
 
     var text: String = text
         set(value) {
@@ -33,6 +33,7 @@ class TextView(text: String = "", placeholder: String = "") : View() {
 
     init {
         this.text = text
+        init()
     }
 }
 

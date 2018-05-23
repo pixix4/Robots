@@ -26,6 +26,14 @@ abstract class View(
             element.style.display = if (value) "block" else "none"
         }
 
+    fun offsetLeft(element: HTMLElement): Double = element.offsetLeft + ((element.parentElement as? HTMLElement)?.let {
+        offsetLeft(it)
+    } ?: 0.0)
+
+    fun offsetTop(element: HTMLElement): Double = element.offsetTop + ((element.parentElement as? HTMLElement)?.let {
+        offsetTop(it)
+    } ?: 0.0)
+
     init {
         init()
     }

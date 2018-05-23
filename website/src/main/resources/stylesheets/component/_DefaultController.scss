@@ -1,0 +1,78 @@
+@import "../config";
+@import "../mixins";
+
+$track-pad-size: 60%;
+
+.default-controller {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: calc(100% - 1rem);
+  height: calc(100% - 1rem);
+}
+
+.default-controller-top-right {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100% - $track-pad-size;
+  .slider {
+    bottom: 1rem;
+    left: 0;
+  }
+  .button-view {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 4rem;
+    background: $primary-color;
+    border: solid 0.25rem $primary-dark-color;
+    border-radius: $border-radius;
+    color: $primary-color-text-primary;
+    div {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      line-height: 2rem;
+      margin-top: -1rem;
+      top: 50%;
+    }
+
+    @include no-select;
+  }
+}
+
+.default-controller-bottom-left {
+  position: absolute;
+  top: 100% - $track-pad-size;
+  left: 0;
+  width: 100%;
+  height: $track-pad-size;
+}
+
+@include landscape {
+  .default-controller-top-right {
+    top: 0;
+    left: $track-pad-size;
+    width: 100% - $track-pad-size;
+    height: 100%;
+    .slider {
+      bottom: 0;
+      left: 1rem;
+    }
+    .button-view {
+      left: 4rem;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+  .default-controller-bottom-left {
+    top: 0;
+    left: 0;
+    width: $track-pad-size;
+    height: 100%;
+  }
+}

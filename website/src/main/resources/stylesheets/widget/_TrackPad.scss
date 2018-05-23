@@ -13,8 +13,8 @@ $track-border: 0.25rem;
     border-radius: 100%;
     position: absolute;
     box-shadow: 0 1px 2px $shadow;
-    left: 0;
-    bottom: 0;
+    left: 50%;
+    top: 50%;
     &::before {
       content: '';
       display: block;

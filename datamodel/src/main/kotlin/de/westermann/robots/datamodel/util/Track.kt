@@ -1,9 +1,6 @@
 package de.westermann.robots.datamodel.util
 
-import kotlin.math.PI
-import kotlin.math.acos
-import kotlin.math.max
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * @author lars
@@ -33,6 +30,12 @@ data class Track(
             this
         }
     }
+
+    fun discretize(stepSize: Double) = Track(
+            (x / stepSize).roundToInt() * stepSize,
+            (y / stepSize).roundToInt() * stepSize
+    )
+
 
     val isZero: Boolean
         get() = x == 0.0 && y == 0.0
