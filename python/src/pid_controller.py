@@ -76,7 +76,7 @@ def thread():
             last_error = 0
             lost_line = 0
 
-            #drive.relative(SPEED_SLOW, 180, 180)
+            # drive.relative(SPEED_SLOW, 180, 180)
 
             while calc_error() * DRIVE_MULTIPLIER > -0.5:
                 drive.direct(SPEED_SLOW * DRIVE_MULTIPLIER, -SPEED_SLOW * DRIVE_MULTIPLIER)
@@ -117,3 +117,5 @@ def thread():
 def stop():
     global __running
     __running = False
+
+    drive.direct(0.0, 0.0)

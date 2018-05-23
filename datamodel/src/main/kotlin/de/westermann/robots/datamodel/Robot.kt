@@ -15,7 +15,7 @@ class Robot(
         init(this)
     }
 
-    constructor(init: Robot.() -> Unit): this(DeviceManager.robots.nextId) {
+    constructor(init: Robot.() -> Unit) : this(DeviceManager.robots.nextId) {
         init(this)
     }
 
@@ -51,6 +51,9 @@ class Robot(
 
     val kickerProperty = Kicker.NONE.observable()
     var kicker by kickerProperty.accessor()
+
+    val buttonProperty = Button(Button.Type.UNKNOWN, Button.State.PRESS).observable()
+    var button by buttonProperty.accessor()
 
     val controllersProperty = {
         DeviceManager.getBoundControllers(this)

@@ -46,7 +46,7 @@ object Main {
                     }
 
                     override fun onButton(button: Button) {
-                        logger.info { "Controller $element pressed $button" }
+                        element.robots.forEach { it.button = button }
                     }
 
                     override fun name(name: String) {

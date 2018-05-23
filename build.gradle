@@ -12,7 +12,7 @@ allprojects {
 
 task copyArtefacts(type: Copy) {
     from tasks.getByPath(':server:jar')
-    from tasks.getByPath(':lego:jar')
+    //from tasks.getByPath(':lego:jar')
     into "$buildDir"
 }
 

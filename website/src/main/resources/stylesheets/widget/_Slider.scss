@@ -12,7 +12,7 @@ $slider-height: 0.2rem;
     position: absolute;
     left: 0;
     top: 50%;
-    margin-top: - $slider-height / 2;
+    margin-top: -($slider-height / 2);
     height: $slider-height;
     width: 100%;
     & > div {
@@ -21,8 +21,8 @@ $slider-height: 0.2rem;
       height: $slider-size;
       background: $primary-color;
       border-radius: 100%;
-      margin-left: -$slider-size / 2;
-      margin-top: -$slider-size / 2;
+      margin-left: -($slider-size / 2);
+      margin-top: -($slider-size / 2);
       top: 50%;
       left: 50%;
       z-index: 1;
@@ -36,7 +36,7 @@ $slider-height: 0.2rem;
       left: 50%;
       top: 0;
       margin-top: 0;
-      margin-left: - $slider-height / 2;
+      margin-left: -($slider-height / 2);
       height: 100%;
       width: $slider-height;
     }

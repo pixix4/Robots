@@ -17,4 +17,5 @@ interface IRobotClient {
     fun speed(speed: Double)
     fun track(track: Track)
     fun trim(trim: Double)
+    fun kick()
 }

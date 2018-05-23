@@ -4,8 +4,12 @@ import de.westermann.robots.datamodel.DeviceManager
 import de.westermann.robots.datamodel.IRobotClient
 import de.westermann.robots.datamodel.IRobotServer
 import de.westermann.robots.datamodel.Robot
-import de.westermann.robots.datamodel.util.*
-import de.westermann.robots.robot.*
+import de.westermann.robots.datamodel.util.Button
+import de.westermann.robots.datamodel.util.LineFollower
+import de.westermann.robots.robot.decodeMqtt
+import de.westermann.robots.robot.encodeMqtt
+import de.westermann.robots.robot.toByteArray
+import de.westermann.robots.robot.toStringList
 import de.westermann.robots.server.util.Configuration
 import io.moquette.interception.AbstractInterceptHandler
 import io.moquette.interception.messages.*
@@ -74,6 +78,11 @@ object MqttService : Service {
             }
             if (newValue.background != oldValue.background) {
                 iRobotClient.backgroundColor(newValue.background)
+            }
+        }
+        robot.buttonProperty.onChange { newValue, _ ->
+            if (newValue.type == Button.Type.A && newValue.state == Button.State.DOWN) {
+                iRobotClient.kick()
             }
         }
 

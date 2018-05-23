@@ -1,6 +1,7 @@
 from typing import List
 
 import drive
+import kicker
 from util.color import Color
 from util.track import Track
 
@@ -22,7 +23,7 @@ def pid(enable: bool):
 
 
 def speed(speed: float):
-    pass
+    drive.__speed = speed
 
 
 def track(track: Track):
@@ -30,9 +31,23 @@ def track(track: Track):
 
 
 def trim(trim: float):
-    pass
+    drive.__trim = trim
+
+
+def kick():
+    kicker.kick()
 
 
 def parse(command: List[str]):
     if command[0] == "track":
         track(Track.parse(command[1]))
+    elif command[0] == "kick":
+        kick()
+    elif command[0] == "speed":
+        speed(float(command[1]))
+    elif command[0] == "trim":
+        trim(float(command[1]))
+    elif command[0] == "pid":
+        pid(bool(command[1]))
+    else:
+        print("Unknown command " + str(command))

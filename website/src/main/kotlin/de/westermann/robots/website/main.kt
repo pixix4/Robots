@@ -5,13 +5,15 @@ import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.condition
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.navigation
-import de.westermann.robots.website.toolkit.widget.trackPad
+import org.w3c.dom.get
+import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Date
 
 @Suppress("UNUSED")
 fun main(args: Array<String>) {
     window.onload = {
+        document.getElementsByTagName("h1")[0]?.textContent = "Wait for connection..."
         WebSocketConnection.connect {
             Router.init {
                 defaultController()
