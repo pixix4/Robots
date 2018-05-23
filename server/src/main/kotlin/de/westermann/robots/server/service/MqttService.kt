@@ -80,9 +80,23 @@ object MqttService : Service {
                 iRobotClient.backgroundColor(newValue.background)
             }
         }
-        robot.buttonProperty.onChange { newValue, _ ->
-            if (newValue.type == Button.Type.A && newValue.state == Button.State.DOWN) {
-                iRobotClient.kick()
+        robot.buttonProperty.onChange { button, _ ->
+            when (button.type) {
+                Button.Type.A -> if (button.isDown) iRobotClient.kick()
+                Button.Type.B -> if (button.isDown) {
+                    when {
+                        robot.lineFollower.state == LineFollower.State.RUNNING -> {
+                            robot.lineFollower = robot.lineFollower.copy(state = LineFollower.State.DISABLED)
+                        }
+                        robot.lineFollower.state == LineFollower.State.DISABLED -> {
+                            robot.lineFollower = robot.lineFollower.copy(state = LineFollower.State.RUNNING)
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                else -> {
+                }
             }
         }
 

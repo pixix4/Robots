@@ -35,9 +35,15 @@ class DefaultController : View() {
             WebSocketConnection.iController.onAbsoluteSpeed(it)
         }
     }
+    private val pidButton = ButtonView("Line follower") {
+        down.on {
+            WebSocketConnection.iController.onButton(Button(Button.Type.B, Button.State.PRESS))
+        }
+    }
     private val topRight: Box by ViewContainer(this, "top-right") {
         Box {
             +slider
+            +pidButton
             +ButtonView("Kick") {
                 down.on {
                     WebSocketConnection.iController.onButton(Button(Button.Type.A, Button.State.DOWN))
@@ -49,7 +55,7 @@ class DefaultController : View() {
         }
     }
 
-    private fun resize(event: Event? = null) {
+    private fun resize(@Suppress("UNUSED_PARAMETER") event: Event? = null) {
         val landscape = element.clientWidth > element.clientHeight
         slider.vertical = landscape
     }

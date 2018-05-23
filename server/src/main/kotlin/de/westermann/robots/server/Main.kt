@@ -69,10 +69,16 @@ object Main {
 
                     override fun foregroundColor(color: Color) {
                         element.lineFollower = element.lineFollower.copy(foreground = color)
+                        if (element.lineFollower.state == LineFollower.State.UNAVAILABLE) {
+                            element.lineFollower = element.lineFollower.copy(state = LineFollower.State.DISABLED)
+                        }
                     }
 
                     override fun backgroundColor(color: Color) {
                         element.lineFollower = element.lineFollower.copy(background = color)
+                        if (element.lineFollower.state == LineFollower.State.UNAVAILABLE) {
+                            element.lineFollower = element.lineFollower.copy(state = LineFollower.State.DISABLED)
+                        }
                     }
 
                     override fun energy(energy: Energy) {

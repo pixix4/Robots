@@ -21,6 +21,10 @@ data class Button(
         value("state") { state.name }
     }
 
+    val isDown: Boolean = state == State.DOWN
+    val isUp: Boolean = state == State.UP
+    val isPress: Boolean = state == State.PRESS
+
     companion object {
         fun fromJson(json: Json) = Button(
                 json["type"]?.toString()?.let { s ->

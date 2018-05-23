@@ -21,9 +21,32 @@ $track-pad-size: 60%;
     bottom: 1rem;
     left: 0;
   }
-  .button-view {
-    position: absolute;
+  div:nth-child(2) > .button-view {
+    top: 0;
+    bottom: 4rem;
     left: 0;
+    right: auto;
+    width: 7rem;
+    height: auto;
+    position: absolute;
+    background: $primary-color;
+    border: solid 0.25rem $primary-dark-color;
+    border-radius: $border-radius;
+    color: $primary-color-text-primary;
+    div {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      line-height: 2rem;
+      margin-top: -1rem;
+      top: 50%;
+    }
+
+    @include no-select;
+  }
+  div:nth-child(3) > .button-view {
+    position: absolute;
+    left: 7.5rem;
     right: 0;
     top: 0;
     bottom: 4rem;
@@ -62,10 +85,18 @@ $track-pad-size: 60%;
       bottom: 0;
       left: 1rem;
     }
-    .button-view {
+    div:nth-child(2) > .button-view {
+      top: 0;
+      bottom: auto;
       left: 4rem;
       right: 0;
-      top: 0;
+      width: auto;
+      height: 5rem;
+    }
+    div:nth-child(3) > .button-view {
+      left: 4rem;
+      right: 0;
+      top: 5.5rem;
       bottom: 0;
     }
   }

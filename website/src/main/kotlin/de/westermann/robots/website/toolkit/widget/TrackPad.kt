@@ -46,7 +46,7 @@ class TrackPad(
 
     val change = EventHandler<Track>(250)
 
-    private fun resize(event: Event? = null) {
+    private fun resize(@Suppress("UNUSED_PARAMETER") event: Event? = null) {
         val size = min(element.clientWidth, element.clientHeight)
         panel.style.width = "${size}px"
         panel.style.height = "${size}px"
