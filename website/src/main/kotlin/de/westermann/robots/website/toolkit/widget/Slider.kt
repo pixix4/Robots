@@ -39,7 +39,7 @@ class Slider(
             element.classList.toggle("disabled", value)
         }
 
-    val change = EventHandler<Double>(250)
+    val change = TimeoutEventHandler<Double>(250)
 
     var stepSize: Double = 0.0
         set(value) {

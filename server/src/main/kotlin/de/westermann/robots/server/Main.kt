@@ -46,7 +46,7 @@ object Main {
                     }
 
                     override fun onButton(button: Button) {
-                        element.robots.forEach { it.button = button }
+                        element.robots.forEach { it.button.fire(button) }
                     }
 
                     override fun name(name: String) {

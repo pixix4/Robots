@@ -1,10 +1,8 @@
 package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
-import de.westermann.robots.website.toolkit.view.EventHandler
+import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
 import de.westermann.robots.website.toolkit.view.SelectableViewList
-import de.westermann.robots.website.toolkit.view.View
-import kotlin.reflect.KClass
 
 /**
  * @author lars
@@ -19,7 +17,7 @@ class NavigationDrawer(init: NavigationDrawer.() -> Unit) : SelectableViewList<A
         return action
     }
 
-    val state = EventHandler<Boolean> {
+    val state = TimeoutEventHandler<Boolean> {
         element.classList.toggle("toggled", it)
     }
 

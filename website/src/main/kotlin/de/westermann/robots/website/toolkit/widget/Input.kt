@@ -2,7 +2,7 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.icon.Icon
-import de.westermann.robots.website.toolkit.view.EventHandler
+import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import org.w3c.dom.HTMLInputElement
@@ -75,10 +75,10 @@ class Input(
         inputElement.type = value.name.toLowerCase()
     }
 
-    val change = EventHandler<String>()
-    val submit = EventHandler<String>()
-    val focus = EventHandler<Unit>()
-    val exit = EventHandler<Unit>()
+    val change = TimeoutEventHandler<String>()
+    val submit = TimeoutEventHandler<String>()
+    val focus = TimeoutEventHandler<Unit>()
+    val exit = TimeoutEventHandler<Unit>()
 
     fun requestFocus() {
         inputElement.focus()

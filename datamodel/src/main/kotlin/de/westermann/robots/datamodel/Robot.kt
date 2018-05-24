@@ -1,5 +1,6 @@
 package de.westermann.robots.datamodel
 
+import de.westermann.robots.datamodel.observe.EventHandler
 import de.westermann.robots.datamodel.observe.ObservableObject
 import de.westermann.robots.datamodel.observe.accessor
 import de.westermann.robots.datamodel.util.*
@@ -52,8 +53,7 @@ class Robot(
     val kickerProperty = Kicker.NONE.observable()
     var kicker by kickerProperty.accessor()
 
-    val buttonProperty = Button(Button.Type.UNKNOWN, Button.State.PRESS).observable()
-    var button by buttonProperty.accessor()
+    val button = EventHandler<Button>()
 
     val controllersProperty = {
         DeviceManager.getBoundControllers(this)

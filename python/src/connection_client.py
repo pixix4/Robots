@@ -2,6 +2,7 @@ from typing import List
 
 import drive
 import kicker
+import pid_controller
 from util.color import Color
 from util.track import Track
 
@@ -19,19 +20,23 @@ def reset_map():
 
 
 def pid(enable: bool):
-    pass
+    if enable:
+        pid_controller.start()
+    else:
+        pid_controller.stop()
 
 
-def speed(speed: float):
-    drive.__speed = speed
+def speed(s: float):
+    print("new speed {}".format(s))
+    drive.speed(s)
 
 
-def track(track: Track):
-    drive.on_track(track)
+def track(t: Track):
+    drive.on_track(t)
 
 
-def trim(trim: float):
-    drive.__trim = trim
+def trim(t: float):
+    drive.trim(t)
 
 
 def kick():

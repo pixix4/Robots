@@ -2,7 +2,7 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
-import de.westermann.robots.website.toolkit.view.EventHandler
+import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 
@@ -42,7 +42,7 @@ class Toolbar(
             titleView.text = value
         }
 
-    val action = EventHandler<Unit>()
+    val action = TimeoutEventHandler<Unit>()
 
     private val searchBar: Input by ViewContainer(this, "search") {
         Input {

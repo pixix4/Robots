@@ -21,8 +21,8 @@ class ButtonView(
         element.appendChild(it)
     }
 
-    val down = EventHandler<Unit>()
-    val up = EventHandler<Unit>()
+    val down = TimeoutEventHandler<Unit>()
+    val up = TimeoutEventHandler<Unit>()
 
     var text: String = ""
         set(value) {

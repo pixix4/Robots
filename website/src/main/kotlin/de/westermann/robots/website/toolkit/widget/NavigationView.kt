@@ -2,7 +2,7 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
-import de.westermann.robots.website.toolkit.view.EventHandler
+import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 
@@ -49,7 +49,7 @@ class NavigationView(
         navigationDrawer.divider(title)
     }
 
-    val back = EventHandler<Unit>()
+    val back = TimeoutEventHandler<Unit>()
 
     var backButton: Boolean
         get() = toolbar.icon == MaterialIcon.ARROW_BACK

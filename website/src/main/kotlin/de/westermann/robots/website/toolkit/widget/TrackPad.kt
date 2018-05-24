@@ -11,7 +11,6 @@ import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 /**
  * @author lars
@@ -44,7 +43,7 @@ class TrackPad(
             element.classList.toggle("disabled", value)
         }
 
-    val change = EventHandler<Track>(250)
+    val change = TimeoutEventHandler<Track>(250)
 
     private fun resize(@Suppress("UNUSED_PARAMETER") event: Event? = null) {
         val size = min(element.clientWidth, element.clientHeight)

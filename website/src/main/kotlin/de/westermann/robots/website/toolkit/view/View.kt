@@ -13,7 +13,7 @@ abstract class View(
         init: () -> Unit = {}
 ) {
 
-    val click = EventHandler<Event>()
+    val click = TimeoutEventHandler<Event>()
 
     val element: HTMLElement = (document.createElement("div") as HTMLElement).also {
         it.addClass(this::class.simpleName.toDashCase())

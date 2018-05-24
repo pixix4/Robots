@@ -54,7 +54,9 @@ object MqttService : Service {
                     MqttMessageBuilders.publish()
                             .topicName(id)
                             .qos(MqttQoS.AT_LEAST_ONCE)
-                            .payload(Unpooled.copiedBuffer(encodeMqtt(method, params.toList()).toByteArray()))
+                            .payload(Unpooled.copiedBuffer(
+                                    encodeMqtt(method, params?.toList() ?: emptyList()).toByteArray()
+                            ))
                             .build(),
                     id
             )
@@ -80,9 +82,13 @@ object MqttService : Service {
                 iRobotClient.backgroundColor(newValue.background)
             }
         }
-        robot.buttonProperty.onChange { button, _ ->
+        robot.button.on { button ->
             when (button.type) {
-                Button.Type.A -> if (button.isDown) iRobotClient.kick()
+                Button.Type.A -> {
+                    if (button.isDown) {
+                        iRobotClient.kick()
+                    }
+                }
                 Button.Type.B -> if (button.isDown) {
                     when {
                         robot.lineFollower.state == LineFollower.State.RUNNING -> {
