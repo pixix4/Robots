@@ -6,8 +6,8 @@ import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import de.westermann.robots.website.toolkit.view.ViewList
+import de.westermann.robots.website.toolkit.widget.Action
 import de.westermann.robots.website.toolkit.widget.IconView
-import de.westermann.robots.website.toolkit.widget.ImageView
 import de.westermann.robots.website.toolkit.widget.TextView
 
 /**
@@ -22,25 +22,29 @@ class ControllerCard(controller: Controller) : View() {
         IconView()
     }
 
-    private val name: TextView by ViewContainer(this, "name") { TextView(controller.name, "Unnamed") }
-    private val code: TextView by ViewContainer(this, "code") { TextView(controller.code) }
+    private val name: TextView by ViewContainer(this, "name") { TextView("", "Unnamed") }
+    private val code: TextView by ViewContainer(this, "code") { TextView("") }
 
     private val robots: ViewList<RobotCardMinimal> by ViewContainer(this, "robots") {
         ViewList<RobotCardMinimal>().also { list ->
-            list.click.on {
-                if (list.isEmpty()) {
+            list.footer = Action(
+                    "Add robot",
+                    MaterialIcon.ADD
+            ) {
+                click.on {
                     it.stopPropagation()
-                    println("Add robot to controller: $controller")
+
+                    addRobotDialog(controller).show()
                 }
             }
         }
     }
 
     init {
-        controller.nameProperty.onChange { newValue, _ ->
+        controller.nameProperty.onChangeInit { newValue, _ ->
             name.text = newValue
         }
-        controller.codeProperty.onChange { newValue, _ ->
+        controller.codeProperty.onChangeInit { newValue, _ ->
             code.text = newValue
         }
 
@@ -56,7 +60,7 @@ class ControllerCard(controller: Controller) : View() {
         controller.robotsProperty.onChangeInit { newValue, _ ->
             robots.clear()
             newValue.forEach {
-                robots += RobotCardMinimal(it)
+                robots += RobotCardMinimal(it, controller)
             }
         }
 

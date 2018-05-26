@@ -1,6 +1,7 @@
 package de.westermann.robots.website.component
 
 import de.westermann.robots.datamodel.Robot
+import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import de.westermann.robots.website.toolkit.view.ViewList
@@ -24,7 +25,17 @@ class RobotDetail(robot: Robot) : View() {
     private val name: TextView by ViewContainer(this, "name", topBox.element) { TextView(robot.name, "Unnamed") }
 
 
-    private val controllers = ViewList<ControllerListItem>()
+    private val controllers = ViewList<ControllerListItem>().also {
+        it.element.classList.add("robot-detail-controllers")
+        it.footer = Action(
+                "Add controller",
+                MaterialIcon.ADD
+        ) {
+            click.on {
+                addControllerDialog(robot).show()
+            }
+        }
+    }
     private val contentBox: CardView<View> by ViewContainer(this, "content") {
         CardView<View> {
             box {
@@ -51,9 +62,8 @@ class RobotDetail(robot: Robot) : View() {
         robot.controllersProperty.onChangeInit { newValue, _ ->
             controllers.clear()
             newValue.forEach {
-                controllers += ControllerListItem(it)
+                controllers += ControllerListItem(it, robot)
             }
         }
     }
-
 }

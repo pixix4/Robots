@@ -31,9 +31,9 @@ class Input(
             override fun handleEvent(event: Event) {
                 (event as? KeyboardEvent)?.let {
                     when {
-                        it.keyCode == 13 -> submit.fire(value)
-                        it.keyCode == 27 -> exit.fire(Unit)
-                        else -> change.fire(value)
+                        it.keyCode == 13 -> submit.fire(this@Input.value)
+                        it.keyCode == 27 -> revokeFocus()
+                        else -> change.fire(this@Input.value)
                     }
                 }
             }
@@ -43,9 +43,14 @@ class Input(
                 focus.fire(Unit)
             }
         })
+        it.addEventListener("blur", object : EventListener {
+            override fun handleEvent(event: Event) {
+                blur.fire(Unit)
+            }
+        })
         it.addEventListener("change", object : EventListener {
             override fun handleEvent(event: Event) {
-                change.fire(value)
+                change.fire(this@Input.value)
             }
         })
     }
@@ -78,10 +83,14 @@ class Input(
     val change = TimeoutEventHandler<String>()
     val submit = TimeoutEventHandler<String>()
     val focus = TimeoutEventHandler<Unit>()
-    val exit = TimeoutEventHandler<Unit>()
+    val blur = TimeoutEventHandler<Unit>()
 
     fun requestFocus() {
         inputElement.focus()
+    }
+
+    fun revokeFocus() {
+        inputElement.blur()
     }
 
     init {

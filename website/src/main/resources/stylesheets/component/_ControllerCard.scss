@@ -58,23 +58,50 @@ $card-height: 10rem;
         display: inline-block;
         margin-right: 0.8rem;
         height: 5.4rem;
+        vertical-align: top;
         &:first-child {
           margin-left: 1rem;
         }
-      }
 
-      &:empty::before {
-        color: $main-text-disabled;
-        content: "Add robot";
-        width: 10rem;
-        display: block;
-        height: 5.1rem;
-        min-width: 10rem;
-        border: dashed 1px $main-divider;
-        border-radius: $border-radius;
-        text-align: center;
-        line-height: 5.2rem;
-        margin-left: 1rem;
+        &.footer {
+          color: $main-text-disabled;
+          width: 10rem;
+          min-width: 10rem;
+          border: dashed 1px $main-divider;
+          border-radius: $border-radius;
+          text-align: center;
+
+          &:hover {
+            border-style: solid;
+          }
+
+          .action {
+            position: relative;
+            height: 100%;
+            i {
+              color: $main-icon-disabled
+            }
+          }
+
+          .action-icon {
+            position: absolute;
+            top: 0.8rem;
+            font-size: 2rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+          }
+
+          .action-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            line-height: 2rem;
+            width: 100%;
+            text-align: center;
+            padding: 0 0.6rem;
+          }
+        }
       }
     }
   }

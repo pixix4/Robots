@@ -1,5 +1,7 @@
 package de.westermann.robots.datamodel.observe
 
+import de.westermann.robots.datamodel.search.Match
+
 /**
  * @author lars
  */
@@ -69,6 +71,22 @@ class Library<T : ObservableObject> : Iterable<T> {
         get() = list.map { it.key.id }.toSet().let {
             ((0..(it.max() ?: 0)).toSet() - it).min() ?: it.max()?.let { it + 1 } ?: 0
         }
+
+    fun toSet(): Set<T> = list.keys
+    fun toList(): List<T> = toSet().toList()
+
+    fun find(search: List<String>, minimalProbability: Double = 0.0, limit: Int = 0): List<Match<T>> =
+            toSet().map { elem ->
+                Match(elem, search.map {
+                    it to elem.probability(it)
+                }.toMap().filterValues { it > minimalProbability })
+            }.filter {
+                it.probability > minimalProbability
+            }.sortedDescending().let {
+                if (limit > 0) {
+                    it.take(limit)
+                } else it
+            }
 
     interface Observer<T> {
         fun onAdd(element: T) {}

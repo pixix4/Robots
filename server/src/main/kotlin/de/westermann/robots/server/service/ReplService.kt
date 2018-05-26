@@ -21,7 +21,7 @@ object ReplService : ThreadedService() {
     override val logger = KotlinLogging.logger {}
 
     private val commands: Command = Command.create {
-        command("stop", "exit", "quit", description = "Shutdown Robots server") {
+        command("stop", "blur", "quit", description = "Shutdown Robots server") {
             action {
                 Main.stop()
             }

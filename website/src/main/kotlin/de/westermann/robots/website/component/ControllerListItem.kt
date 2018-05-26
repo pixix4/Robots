@@ -1,18 +1,21 @@
 package de.westermann.robots.website.component
 
 import de.westermann.robots.datamodel.Controller
+import de.westermann.robots.datamodel.Robot
+import de.westermann.robots.website.WebSocketConnection
+import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
-import de.westermann.robots.website.toolkit.view.ViewList
+import de.westermann.robots.website.toolkit.widget.ContextMenu
 import de.westermann.robots.website.toolkit.widget.IconView
-import de.westermann.robots.website.toolkit.widget.ImageView
 import de.westermann.robots.website.toolkit.widget.TextView
+import org.w3c.dom.events.MouseEvent
 
 /**
  * @author lars
  */
-class ControllerListItem(controller: Controller) : View() {
+class ControllerListItem(controller: Controller, robot: Robot, onClickListener: () -> Boolean = { false }) : View() {
 
     private val icon: IconView by ViewContainer(this, "icon") {
         controller.colorProperty.onChangeInit { newValue, _ ->
@@ -43,7 +46,18 @@ class ControllerListItem(controller: Controller) : View() {
 
         click.on {
             it.stopPropagation()
-            println("Open controller context menu: $controller")
+
+            if (onClickListener()) return@on
+
+            ContextMenu(((it as? MouseEvent)?.clientX ?: 0) to ((it as? MouseEvent)?.clientY ?: 0)) {
+                item("Open controller details") {
+                    Router.routeTo("admin/controllers/${controller.id}")
+                }
+                item("Remove controller") {
+                    WebSocketConnection.iServer.unbind(controller.id, robot.id)
+                }
+                open()
+            }
         }
     }
 

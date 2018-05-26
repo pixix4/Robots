@@ -1,10 +1,12 @@
 package de.westermann.robots.datamodel.observe
 
+import de.westermann.robots.datamodel.search.Searchable
+
 /**
  * @author lars
  */
 
-abstract class ObservableObject : JsonSerializable {
+abstract class ObservableObject : JsonSerializable, Searchable {
 
     abstract val id: Int
 

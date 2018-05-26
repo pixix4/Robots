@@ -54,11 +54,13 @@ class Toolbar(
             click.on {
                 searchMode = true
             }
-            exit.on {
+            blur.on {
                 searchMode = false
             }
         }
     }
+    
+    val search = searchBar.change
 
     private var searchMode: Boolean
         get() = element.classList.contains("search")

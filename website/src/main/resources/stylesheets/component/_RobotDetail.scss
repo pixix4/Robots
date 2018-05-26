@@ -62,10 +62,49 @@ $top-height: 10rem;
       }
       .view-list {
         padding: 0.5rem 0;
-        & > div {
-          &:hover {
-            @include hover-background($main-text-primary);
-          }
+      }
+    }
+  }
+}
+
+.robot-detail-controllers {
+  @include no-select;
+
+  .footer {
+
+    &:hover {
+      @include hover-background($main-text-primary);
+    }
+    .action {
+      position: relative;
+      height: 3rem;
+      width: 100%;
+      line-height: 3rem;
+
+      .action-icon {
+        position: absolute;
+        line-height: 3rem;
+        width: 3rem;
+        text-align: center;
+
+        div {
+          width: 100%;
+          height: 100%;
+          font-size: 1.5rem;
+          color: $main-icon-disabled;
+        }
+      }
+
+      .action-text {
+        position: absolute;
+        left: 3rem;
+        line-height: 3rem;
+        right: 5rem;
+        color: $main-text-disabled;
+        div {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

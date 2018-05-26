@@ -3,7 +3,7 @@
 
 $item-height: 3rem;
 
-.controller-list-item {
+.robot-list-item {
   position: relative;
   height: $item-height;
   width: 100%;
@@ -14,7 +14,7 @@ $item-height: 3rem;
     @include hover-background($main-text-primary);
   }
 
-  .controller-list-item-icon {
+  .robot-list-item-icon {
     position: absolute;
     line-height: $item-height;
     width: $item-height;
@@ -28,14 +28,14 @@ $item-height: 3rem;
     }
   }
 
-  .controller-list-item-code {
+  .robot-list-item-type {
     position: absolute;
     line-height: $item-height;
     right: 0.8rem;
     font-size: 0.9rem;
   }
 
-  .controller-list-item-name {
+  .robot-list-item-name {
     position: absolute;
     left: $item-height;
     line-height: $item-height;

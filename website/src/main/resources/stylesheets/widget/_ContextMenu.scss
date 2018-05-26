@@ -1,0 +1,26 @@
+@import "../config";
+@import "../mixins";
+
+.context-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  & > div {
+    position: absolute;
+    background: $background-primary;
+    border: $main-divider;
+    border-radius: $border-radius;
+    box-shadow: 0 1px 4px 1px $shadow;
+    padding: 0.5rem 0;
+    & > div {
+      line-height: 2.6rem;
+      padding: 0 0.8rem;
+      &:hover {
+        @include hover-background($main-text-primary)
+      }
+    }
+  }
+}

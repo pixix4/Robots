@@ -6,10 +6,10 @@ import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import de.westermann.robots.website.toolkit.view.ViewList
+import de.westermann.robots.website.toolkit.widget.Action
 import de.westermann.robots.website.toolkit.widget.IconView
 import de.westermann.robots.website.toolkit.widget.ImageView
 import de.westermann.robots.website.toolkit.widget.TextView
-import kotlin.browser.window
 
 /**
  * @author lars
@@ -31,10 +31,14 @@ class RobotCard(robot: Robot) : View() {
 
     private val controllers: ViewList<ControllerCardMinimal> by ViewContainer(this, "controllers") {
         ViewList<ControllerCardMinimal>().also { list ->
-            list.click.on {
-                if (list.isEmpty()) {
+            list.footer = Action(
+                    "Add controller",
+                    MaterialIcon.ADD
+            ) {
+                click.on {
                     it.stopPropagation()
-                    println("Add controller to robot: $robot")
+
+                    addControllerDialog(robot).show()
                 }
             }
         }
@@ -48,7 +52,7 @@ class RobotCard(robot: Robot) : View() {
         robot.controllersProperty.onChangeInit { newValue, _ ->
             controllers.clear()
             newValue.forEach {
-                controllers += ControllerCardMinimal(it)
+                controllers += ControllerCardMinimal(it, robot)
             }
         }
 

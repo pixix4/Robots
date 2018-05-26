@@ -51,6 +51,13 @@ object Main {
 
                     override fun name(name: String) {
                         element.name = name
+                        if (element.type == Controller.Type.UNKNOWN) {
+                            Controller.Type.detect(name).let {
+                                if (it != Controller.Type.UNKNOWN) {
+                                    element.type = it
+                                }
+                            }
+                        }
                     }
                 }
             }

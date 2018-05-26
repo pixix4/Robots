@@ -3,6 +3,7 @@ package de.westermann.robots.datamodel
 import de.westermann.robots.datamodel.observe.EventHandler
 import de.westermann.robots.datamodel.observe.ObservableObject
 import de.westermann.robots.datamodel.observe.accessor
+import de.westermann.robots.datamodel.search.StringSimilarity
 import de.westermann.robots.datamodel.util.*
 
 /**
@@ -97,6 +98,13 @@ class Robot(
         json.json("camera")?.let { camera = Camera.fromJson(it) }
         json.json("kicker")?.let { kicker = Kicker.fromJson(it) }
     }
+
+    override fun probability(search: String): Double = StringSimilarity.check(
+            search,
+            name to 1.0,
+            type to 0.8,
+            id.toString() to 0.6
+    )
 
     companion object {
         fun fromJson(json: Json) = Robot(

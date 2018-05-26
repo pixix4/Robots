@@ -19,6 +19,8 @@ open class Router(
     protected open var forward = emptyList<Router>()
     private var param: ((args: List<String>) -> List<String>?)? = null
 
+    val search: String = window.location.search
+
     fun route(route: String, exec: Router.() -> Unit) {
         routes += route to Router(this, route).also(exec)
     }

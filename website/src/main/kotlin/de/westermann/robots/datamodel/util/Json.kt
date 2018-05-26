@@ -24,8 +24,6 @@ actual class Json(val obj: kotlin.js.Json) {
     actual companion object {
         actual fun create(init: Json.() -> Unit): Json = Json(kotlin.js.JSON.parse("{}")).also(init)
 
-        actual fun fromString(data: String): Json = Json(kotlin.js.JSON.parse(data.also {
-            println("Try to parse: $it")
-        }))
+        actual fun fromString(data: String): Json = Json(kotlin.js.JSON.parse(data))
     }
 }

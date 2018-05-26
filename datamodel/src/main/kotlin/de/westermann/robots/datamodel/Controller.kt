@@ -2,7 +2,11 @@ package de.westermann.robots.datamodel
 
 import de.westermann.robots.datamodel.observe.ObservableObject
 import de.westermann.robots.datamodel.observe.accessor
-import de.westermann.robots.datamodel.util.*
+import de.westermann.robots.datamodel.search.StringSimilarity
+import de.westermann.robots.datamodel.util.Color
+import de.westermann.robots.datamodel.util.Json
+import de.westermann.robots.datamodel.util.Random
+import de.westermann.robots.datamodel.util.json
 
 /**
  * @author lars
@@ -14,7 +18,8 @@ class Controller(
     constructor(id: Int, init: Controller.() -> Unit) : this(id) {
         init(this)
     }
-    constructor(init: Controller.() -> Unit): this(DeviceManager.controllers.nextId) {
+
+    constructor(init: Controller.() -> Unit) : this(DeviceManager.controllers.nextId) {
         init(this)
     }
 
@@ -53,7 +58,19 @@ class Controller(
     val robots by robotsProperty.accessor()
 
     enum class Type {
-        DESKTOP, MOBIL, PHYSICAL, UNKNOWN
+        DESKTOP, MOBIL, PHYSICAL, UNKNOWN;
+
+        companion object {
+
+            private val mobilIndicator = listOf("mobil", "iphone", "ipad", "ipod", "android", "phone")
+            private val desktopIndicator = listOf("linux", "imac", "macbook", "windows")
+
+            fun detect(name: String): Type {
+                if (mobilIndicator.any { name.contains(it, true) }) return MOBIL
+                if (desktopIndicator.any { name.contains(it, true) }) return DESKTOP
+                return UNKNOWN
+            }
+        }
     }
 
     override fun toString(): String = "Controller($id: '$name')"
@@ -83,6 +100,15 @@ class Controller(
             }
         }
     }
+
+    override fun probability(search: String): Double = StringSimilarity.check(
+            search,
+            name to 1.0,
+            type.name to 0.8,
+            id.toString() to 0.6,
+            description to 0.5,
+            code to 0.9
+    )
 
     companion object {
         fun fromJson(json: Json) = Controller(

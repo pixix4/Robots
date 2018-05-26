@@ -192,8 +192,8 @@ object WebSocketConnection {
                     IWebClient::updateRobot.name -> parsed?.let { iClient.updateRobot(Robot.fromJson(it)) }
                     IWebClient::removeRobot.name -> parsed?.let { iClient.removeRobot(Robot.fromJson(it)) }
                     IWebClient::addController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
-                    IWebClient::updateController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
-                    IWebClient::removeController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
+                    IWebClient::updateController.name -> parsed?.let { iClient.updateController(Controller.fromJson(it)) }
+                    IWebClient::removeController.name -> parsed?.let { iClient.removeController(Controller.fromJson(it)) }
                     IWebClient::bind.name -> {
                         val robotId = parsed?.get("robotId")?.toString()?.toIntOrNull()
                         val controllerId = parsed?.get("controllerId")?.toString()?.toIntOrNull()

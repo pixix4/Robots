@@ -1,13 +1,12 @@
 package de.westermann.robots.website.toolkit.view
 
 import org.w3c.dom.Element
-import kotlin.reflect.KClass
 
 /**
  * @author lars
  */
 
-abstract class SelectableViewList<T : View>(
+open class SelectableViewList<T : View>(
         private val multiple: Boolean = false
 ) : ViewList<T>() {
 
@@ -19,6 +18,37 @@ abstract class SelectableViewList<T : View>(
         selectListener.getOrPut(element, {
             mutableListOf()
         }).add(onSelect)
+    }
+
+    fun selectionDown() {
+        if (multiple) return
+
+        val index = (selected.getOrNull(0)?.let {
+            children.map { it.first }.indexOf(it) - 1
+        } ?: -1).let {
+            if (it < 0) children.size - 1 else it
+        }
+
+        select(children[index].first)
+    }
+
+    fun selectionUp() {
+        if (multiple) return
+
+        val index = (selected.getOrNull(0)?.let {
+            children.map { it.first }.indexOf(it) + 1
+        } ?: children.size).let {
+            if (it >= children.size) 0 else it
+        }
+
+        select(children[index].first)
+    }
+
+    fun selectionExec() {
+        if (multiple) return
+        val element = selected.getOrNull(0) ?: return
+
+        selectListener[element]?.forEach { it(element) }
     }
 
     fun select(child: T, trigger: Boolean = true) {

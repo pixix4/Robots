@@ -1,5 +1,6 @@
 package de.westermann.robots.website.toolkit.widget
 
+import de.westermann.robots.datamodel.search.Searcher
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
@@ -24,6 +25,14 @@ class NavigationView(
                 } else {
                     toggle()
                 }
+            }
+
+            search.on {
+                val s = Searcher(it)
+                println("Search for '$it'")
+                println("    E: ${s.command}")
+                println("    R: ${s.robots}")
+                println("    C: ${s.controllers}")
             }
         }
     }
