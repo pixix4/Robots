@@ -22,7 +22,6 @@ $card-height: 10rem;
     top: 0;
     left: $card-height;
     right: 2rem;
-    padding: 0 1rem;
     font-weight: bold;
     line-height: 3rem;
     font-size: 1.2rem;
@@ -30,6 +29,7 @@ $card-height: 10rem;
     div {
       overflow: hidden;
       text-overflow: ellipsis;
+      padding: 0 1rem;
     }
   }
 

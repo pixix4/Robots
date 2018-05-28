@@ -42,11 +42,11 @@ fun decodeMqtt(iClient: IRobotClient, message: List<String>) {
         IRobotClient::resetMap.name -> {
             iClient.resetMap()
         }
-        IRobotClient::foregroundColor.name -> {
-            iClient.foregroundColor(Color.parse(message[1]))
+        IRobotClient::setForegroundColor.name -> {
+            iClient.setForegroundColor()
         }
-        IRobotClient::backgroundColor.name -> {
-            iClient.backgroundColor(Color.parse(message[1]))
+        IRobotClient::setBackgroundColor.name -> {
+            iClient.setBackgroundColor()
         }
         else -> {
             println("Unknown function ${message[0]}")
@@ -71,6 +71,8 @@ fun decodeMqtt(clazz: KClass<*>, message: List<String>): Pair<KFunction<*>, Arra
                     Energy::class -> Energy.parse(value)
                     Version::class -> Version.parse(value)
                     Coordinates::class -> Coordinates.parse(value)
+                    List::class -> value.split(";").map { Color.parse(it) }
+                    String::class -> value
                     else -> null
                 }
             }.toTypedArray()

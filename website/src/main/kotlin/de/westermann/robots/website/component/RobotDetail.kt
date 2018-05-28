@@ -1,11 +1,14 @@
 package de.westermann.robots.website.component
 
 import de.westermann.robots.datamodel.Robot
+import de.westermann.robots.datamodel.util.Energy
+import de.westermann.robots.website.WebSocketConnection
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import de.westermann.robots.website.toolkit.view.ViewList
 import de.westermann.robots.website.toolkit.widget.*
+import kotlin.math.roundToInt
 
 /**
  * @author lars
@@ -22,7 +25,27 @@ class RobotDetail(robot: Robot) : View() {
         ImageView("/public/images/robot.png")
     }
 
-    private val name: TextView by ViewContainer(this, "name", topBox.element) { TextView(robot.name, "Unnamed") }
+    private val imageColor: IconView by ViewContainer(this, "image-color", topBox.element) {
+        IconView(MaterialIcon.PALETTE) {
+            click.on {
+                val newIndex = (robot.availableColors.indexOf(robot.color) + 1) % robot.availableColors.size
+                WebSocketConnection.iServer.setColor(robot.id, robot.availableColors[newIndex])
+            }
+        }
+    }
+
+    private val name: TextView by ViewContainer(this, "name", topBox.element) {
+        TextView(robot.name, "Unnamed") {
+            editable = true
+            edit.on {
+                WebSocketConnection.iServer.setName(robot.id, it)
+            }
+        }
+    }
+
+    private val power: Action by ViewContainer(this, "power", topBox.element) {
+        Action()
+    }
 
 
     private val controllers = ViewList<ControllerListItem>().also {
@@ -43,9 +66,6 @@ class RobotDetail(robot: Robot) : View() {
                 +controllers
             }
             box {
-                textView("Drive")
-            }
-            box {
                 textView("Line follower")
             }
             box {
@@ -55,8 +75,25 @@ class RobotDetail(robot: Robot) : View() {
     }
 
     init {
-        robot.nameProperty.onChange { newValue, _ ->
+        robot.nameProperty.onChangeInit { newValue, _ ->
             name.text = newValue
+        }
+
+        robot.availableColorsProperty.onChangeInit { list, _ ->
+            imageColor.visible = list.isNotEmpty()
+        }
+
+        robot.energyProperty.onChangeInit { energy, _ ->
+            power.iconView.icon = when (energy.state) {
+                Energy.State.CHARGING -> MaterialIcon.BATTERY_CHARGING_FULL
+                Energy.State.DISCHARGING -> MaterialIcon.BATTERY_STD
+                Energy.State.UNKNOWN -> MaterialIcon.BATTERY_UNKNOWN
+                Energy.State.NO_BATTERY -> MaterialIcon.POWER
+            }
+
+            power.text.text = if (energy.state == Energy.State.NO_BATTERY) "" else {
+                "${(energy.value * 100).roundToInt()}%"
+            }
         }
 
         robot.controllersProperty.onChangeInit { newValue, _ ->

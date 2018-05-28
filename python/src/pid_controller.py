@@ -18,7 +18,8 @@ def background():
     __background = devices.current_color()
 
 
-__running: bool = False
+__pid_kill: threading.Event = None
+__pid_thread: threading.Thread = None
 
 CONST_PROPORTIONAL = 0.4
 CONST_INTEGRAL = 0.18
@@ -35,14 +36,14 @@ DRIVE_MULTIPLIER: float = -1
 
 def start():
     print("Start pid")
-    global __running
-    if __running:
+    global __pid_kill
+    if running():
         return
 
-    __running = True
-    t = threading.Thread(target=thread, name="pid")
-    t.daemon = True
-    t.start()
+    __pid_kill = threading.Event()
+    __pid_thread = threading.Thread(target=thread, name="pid", args=(__pid_kill,))
+    __pid_thread.daemon = True
+    __pid_thread.start()
 
 
 def calc_error() -> float:
@@ -53,7 +54,7 @@ def calc_error() -> float:
     return (max(min((red + green + blue) / 1.5, 2.0), 0.0) - 1.0) * DRIVE_MULTIPLIER
 
 
-def thread():
+def thread(kill_event, arg):
     history_error: float = 0.0
     last_error: float = 0.0
     integral: float = 0.0
@@ -61,7 +62,7 @@ def thread():
     lost_line = 0
     drive_slow = 0
 
-    while __running:
+    while not kill_event.wait(0):
         error = calc_error()
 
         integral = (integral + error * dt) * INTEGRAL_LIMITER
@@ -75,8 +76,6 @@ def thread():
             history_error = 0
             last_error = 0
             lost_line = 0
-
-            # drive.relative(SPEED_SLOW, 180, 180)
 
             while calc_error() * DRIVE_MULTIPLIER > -0.5:
                 drive.direct(SPEED_SLOW * DRIVE_MULTIPLIER, -SPEED_SLOW * DRIVE_MULTIPLIER)
@@ -115,7 +114,18 @@ def thread():
 
 
 def stop():
-    global __running
-    __running = False
+    global __pid_kill, __pid_thread
+    if not running():
+        return
+
+    __pid_kill.set()
+    __pid_thread.join()
+
+    __pid_kill = None
+    __pid_thread = None
 
     drive.direct(0.0, 0.0)
+
+
+def running() -> bool:
+    return __pid_kill is not None

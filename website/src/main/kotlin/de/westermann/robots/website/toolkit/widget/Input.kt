@@ -30,9 +30,9 @@ class Input(
         it.addEventListener("keyup", object : EventListener {
             override fun handleEvent(event: Event) {
                 (event as? KeyboardEvent)?.let {
-                    when {
-                        it.keyCode == 13 -> submit.fire(this@Input.value)
-                        it.keyCode == 27 -> revokeFocus()
+                    when(it.keyCode) {
+                        13 -> submit.fire(this@Input.value)
+                        27 -> revokeFocus()
                         else -> change.fire(this@Input.value)
                     }
                 }

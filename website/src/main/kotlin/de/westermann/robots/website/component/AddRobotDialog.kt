@@ -28,12 +28,18 @@ fun addRobotDialog(controller: Controller) = Dialog {
         }
     }
 
+    val search = Input("") {
+        placeholder = "Search…"
+        change.on(::update)
+    }
+
     content = Box {
-        +Input("") {
-            placeholder = "Search…"
-            change.on(::update)
-        }
+        +search
         +list
     }
     update()
+
+    hook.on {
+        search.requestFocus()
+    }
 }

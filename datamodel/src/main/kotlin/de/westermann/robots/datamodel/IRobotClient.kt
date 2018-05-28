@@ -7,8 +7,8 @@ import de.westermann.robots.datamodel.util.Track
  * @author lars
  */
 interface IRobotClient {
-    fun foregroundColor(color: Color?)
-    fun backgroundColor(color: Color?)
+    fun setForegroundColor()
+    fun setBackgroundColor()
 
     fun resetMap()
 
@@ -18,4 +18,7 @@ interface IRobotClient {
     fun track(track: Track)
     fun trim(trim: Double)
     fun kick()
+
+    fun setName(name: String)
+    fun setColor(color: Color)
 }

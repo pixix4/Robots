@@ -14,6 +14,7 @@ $top-height: 10rem;
   background: $background-primary;
   box-shadow: 0 1px 2px $shadow;
   border-radius: $border-radius;
+  position: relative;
   & > div {
     height: 100%;
   }
@@ -30,12 +31,31 @@ $top-height: 10rem;
   }
 }
 
+.robot-detail-image-color {
+  line-height: 3rem;
+  width: 3rem;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: 1.3rem;
+  color: $main-icon-disabled;
+  &:hover {
+    color: $main-icon
+  }
+  div {
+    color: inherit;
+    i {
+      color: inherit;
+    }
+  }
+}
+
 .robot-detail-name {
   position: absolute;
   top: 0;
   left: $top-height;
   right: 2rem;
-  padding: 0 1rem;
   font-weight: bold;
   line-height: 3rem;
   font-size: 1.2rem;
@@ -43,6 +63,19 @@ $top-height: 10rem;
   div {
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0 1rem;
+  }
+}
+.robot-detail-power {
+  position: absolute;
+  top: 3rem;
+  left: $top-height;
+  padding-left: 0.8rem;
+  .action {
+    & > div {
+      float: left;
+      padding-right: 0.2rem
+    }
   }
 }
 

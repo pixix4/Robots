@@ -17,4 +17,8 @@ interface IRobotServer {
 
     fun energy(energy: Energy)
     fun version(version: Version)
+
+    fun name(name: String)
+    fun color(color: Color)
+    fun availableColors(colors: List<Color>)
 }

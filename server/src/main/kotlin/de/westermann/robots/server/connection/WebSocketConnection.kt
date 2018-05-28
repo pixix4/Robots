@@ -2,10 +2,7 @@ package de.westermann.robots.server.connection
 
 import de.westermann.robots.datamodel.*
 import de.westermann.robots.datamodel.observe.Library
-import de.westermann.robots.datamodel.util.Button
-import de.westermann.robots.datamodel.util.Json
-import de.westermann.robots.datamodel.util.Track
-import de.westermann.robots.datamodel.util.json
+import de.westermann.robots.datamodel.util.*
 import de.westermann.robots.server.util.Protection
 import io.javalin.embeddedserver.jetty.websocket.WsSession
 import mu.KotlinLogging
@@ -204,6 +201,14 @@ class WebSocketConnection {
                 admin = false
                 iClient.logout()
             }
+
+            override fun setName(robotId: Int, name: String) {
+                DeviceManager.robots[robotId]?.name = name
+            }
+
+            override fun setColor(robotId: Int, color: Color) {
+                DeviceManager.robots[robotId]?.color = color
+            }
         }
 
         init {
@@ -264,6 +269,24 @@ class WebSocketConnection {
                 connection.iServer.bind(
                         it["controllerId"]?.toString()?.toIntOrNull() ?: -1,
                         it["robotId"]?.toString()?.toIntOrNull() ?: -1
+                )
+            }
+            IWebServer::setName.name -> parsed?.let {
+                connection.iServer.setName(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1,
+                        it["name"]?.toString() ?: ""
+                )
+            }
+            IWebServer::setColor.name -> parsed?.let {
+                connection.iServer.setColor(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1,
+                        it["color"]?.toString()?.let {
+                            try {
+                                Color.parse(it)
+                            } catch (_: IllegalArgumentException) {
+                                null
+                            }
+                        } ?: Color.TRANSPARENT
                 )
             }
             IWebServer::login.name -> connection.iServer.login((data as? String) ?: "")

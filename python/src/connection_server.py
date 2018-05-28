@@ -1,5 +1,6 @@
 from typing import List
 
+import mqtt
 from util.color import Color
 from util.coordinate import Coordinate
 from util.energy import Energy
@@ -11,20 +12,32 @@ def map(points: List[Coordinate]):
 
 
 def current_color(color: Color):
-    pass
+    mqtt.send("currentColor|" + str(color))
 
 
 def foreground_color(color: Color):
-    pass
+    mqtt.send("foregroundColor|" + str(color))
 
 
 def background_color(color: Color):
-    pass
+    mqtt.send("backgroundColor|" + str(color))
 
 
 def energy(energy: Energy):
-    pass
+    mqtt.send("energy|" + str(energy))
 
 
 def version(version: Version):
-    pass
+    mqtt.send("version|" + str(version))
+
+
+def name(name: str):
+    mqtt.send("name|" + str(name))
+
+
+def color(color: Color):
+    mqtt.send("color|" + str(color))
+
+
+def available_colors(colors: List[Color]):
+    mqtt.send("availableColors|" + ";".join([str(it) for it in colors]))

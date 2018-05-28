@@ -1,7 +1,11 @@
 package de.westermann.robots.website.toolkit.widget
 
+import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewList
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventListener
+import org.w3c.dom.events.KeyboardEvent
 
 /**
  * @author lars
@@ -31,8 +35,66 @@ class TextView(text: String = "", placeholder: String = "", init: TextView.() ->
         }
     }
 
+    var editable: Boolean
+        get() = element.classList.contains("editable")
+        set(value) {
+            element.classList.toggle("editable", value)
+        }
+
+    var editing: Boolean
+        get() = element.getAttribute("contenteditable") == "true"
+        set(value) {
+            val submit = !value && editing
+            element.setAttribute("contenteditable", value.toString())
+
+            if (submit && text != element.textContent) {
+                text = element.textContent ?: ""
+                edit.fire(text)
+            }
+
+            if (!value) {
+                element.blur()
+            }
+        }
+
+    val edit = TimeoutEventHandler<String>()
+
     init {
         this.text = text
+
+        click.on {
+            if (editable) {
+                it.stopPropagation()
+
+                if (!editing) {
+                    editing = true
+                    element.focus()
+                }
+            }
+        }
+
+        element.addEventListener("keydown", object : EventListener {
+            override fun handleEvent(event: Event) {
+                if (editing) {
+                    (event as? KeyboardEvent)?.let {
+                        when (it.keyCode) {
+                            13 -> {
+                                it.preventDefault()
+                                it.stopPropagation()
+                                editing = false
+                            }
+                            27 -> {
+                                it.preventDefault()
+                                it.stopPropagation()
+                                update()
+                                editing = false
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
         init()
     }
 }

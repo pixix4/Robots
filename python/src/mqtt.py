@@ -2,6 +2,9 @@ import paho.mqtt.client as paho
 
 import connection_client
 
+__client: paho.Client
+__client_id: str
+
 
 def on_message(client, data, message):
     connection_client.parse(message.payload.decode('utf-8').split('|'))
@@ -20,20 +23,25 @@ def __on_disconnect(client, data, rc):
     on_disconnect()
 
 
+def send(message):
+    __client.publish(__client_id, message)
+
+
 def connect(client: paho.Client, client_id: str, address: str, port: int):
     print("Try to connect to server " + address + ":" + str(port))
-    client.on_message = on_message
-    client.on_connect = on_connect
-    client.on_disconnect = __on_disconnect
+    global __client, __client_id
+    __client_id = client_id
+    __client = client
+    __client.on_message = on_message
+    __client.on_connect = on_connect
+    __client.on_disconnect = __on_disconnect
 
-    client.connect(address, port=port, keepalive=5)
-    client.loop_start()
+    __client.connect(address, port=port, keepalive=5)
+    __client.loop_start()
 
-    client.publish(client_id, "test")
-
-    client.subscribe(client_id, qos=1)
+    __client.subscribe(client_id, qos=1)
 
 
-def stop(client: paho.Client):
-    client.loop_stop()
-    client.disconnect()
+def stop():
+    __client.loop_stop()
+    __client.disconnect()

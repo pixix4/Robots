@@ -2,10 +2,7 @@ package de.westermann.robots.website
 
 import de.westermann.robots.datamodel.*
 import de.westermann.robots.datamodel.observe.ObservableProperty
-import de.westermann.robots.datamodel.util.Button
-import de.westermann.robots.datamodel.util.Json
-import de.westermann.robots.datamodel.util.Track
-import de.westermann.robots.datamodel.util.json
+import de.westermann.robots.datamodel.util.*
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 import kotlin.browser.window
@@ -43,7 +40,7 @@ object WebSocketConnection {
         }
 
         override fun updateRobot(robot: Robot) {
-            DeviceManager.controllers[robot.id]?.fromJson(robot.toJson())
+            DeviceManager.robots[robot.id]?.fromJson(robot.toJson())
         }
 
         override fun removeRobot(robot: Robot) {
@@ -133,6 +130,20 @@ object WebSocketConnection {
         override fun logout() {
             send(IWebServer::logout.name)
         }
+
+        override fun setName(robotId: Int, name: String) {
+            send(IWebServer::setName.name, json {
+                value("robotId") { robotId }
+                value("name") { name }
+            })
+        }
+
+        override fun setColor(robotId: Int, color: Color) {
+            send(IWebServer::setColor.name, json {
+                value("robotId") { robotId }
+                value("color") { color.toString() }
+            })
+        }
     }
 
     val adminProperty = ObservableProperty(false)
@@ -179,7 +190,7 @@ object WebSocketConnection {
         ws.onmessage = { event ->
             ((event as? MessageEvent)?.data as? String)?.let { str ->
                 if (str == "pong")
-                    return@let Unit
+                    return@let null
 
                 val json = Json.fromString(str)
                 val function = json["function"] as? String
@@ -188,12 +199,13 @@ object WebSocketConnection {
 
                 when (function) {
                     IWebClient::addRobot.name -> parsed?.let { iClient.addRobot(Robot.fromJson(it)) }
-
                     IWebClient::updateRobot.name -> parsed?.let { iClient.updateRobot(Robot.fromJson(it)) }
                     IWebClient::removeRobot.name -> parsed?.let { iClient.removeRobot(Robot.fromJson(it)) }
+
                     IWebClient::addController.name -> parsed?.let { iClient.addController(Controller.fromJson(it)) }
                     IWebClient::updateController.name -> parsed?.let { iClient.updateController(Controller.fromJson(it)) }
                     IWebClient::removeController.name -> parsed?.let { iClient.removeController(Controller.fromJson(it)) }
+
                     IWebClient::bind.name -> {
                         val robotId = parsed?.get("robotId")?.toString()?.toIntOrNull()
                         val controllerId = parsed?.get("controllerId")?.toString()?.toIntOrNull()

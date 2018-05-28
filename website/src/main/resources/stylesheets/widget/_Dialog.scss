@@ -64,6 +64,13 @@ $padding: 0.7rem;
     padding: 0.5rem 0;
     overflow-y: scroll;
   }
+  .input {
+    padding: 0.5rem;
+    input {
+      line-height: 2rem;
+      height: 2rem;
+    }
+  }
 }
 
 @include tablet {

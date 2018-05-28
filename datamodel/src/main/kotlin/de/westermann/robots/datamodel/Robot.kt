@@ -30,8 +30,14 @@ class Robot(
     val versionProperty = Version.UNKNOWN.observable()
     var version by versionProperty.accessor()
 
+    val visibleColorProperty = Color.TRANSPARENT.observable()
+    var visibleColor by visibleColorProperty.accessor()
+
     val colorProperty = Color.TRANSPARENT.observable()
     var color by colorProperty.accessor()
+
+    val availableColorsProperty = emptyList<Color>().observable()
+    var availableColors by availableColorsProperty.accessor()
 
     val speedProperty = 0.5.observable()
     var speed by speedProperty.accessor()
@@ -70,7 +76,9 @@ class Robot(
         value("name") { name }
         value("type") { type }
         value("version") { version.toJson() }
+        value("visibleColor") { visibleColor.toString() }
         value("color") { color.toString() }
+        value("availableColors") { availableColors.joinToString(";") }
         value("speed") { speed }
         value("trim") { trim }
         value("track") { track.toJson() }
@@ -84,11 +92,26 @@ class Robot(
         json["name"]?.toString()?.let { name = it }
         json["type"]?.toString()?.let { type = it }
         json.json("version")?.let { version = Version.fromJson(it) }
+        json["visibleColor"]?.toString()?.let {
+            try {
+                visibleColor = Color.parse(it)
+            } catch (_: IllegalArgumentException) {
+            }
+        }
         json["color"]?.toString()?.let {
             try {
                 color = Color.parse(it)
             } catch (_: IllegalArgumentException) {
             }
+        }
+        json["availableColors"]?.toString()?.let {
+            availableColors = it.split(";").map {
+                try {
+                    Color.parse(it)
+                } catch (_: IllegalArgumentException) {
+                    null
+                }
+            }.filterNotNull()
         }
         json["speed"]?.toString()?.toDoubleOrNull()?.let { speed = it }
         json["trim"]?.toString()?.toDoubleOrNull()?.let { trim = it }

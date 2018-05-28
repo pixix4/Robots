@@ -1,6 +1,7 @@
 package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
+import de.westermann.robots.website.toolkit.view.TimeoutEventHandler
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import org.w3c.dom.HTMLElement
@@ -72,12 +73,19 @@ class Dialog(
         }
     }
 
+    val hook = TimeoutEventHandler<Unit>()
+
+    private fun fireHook() {
+        hook.fire(Unit)
+    }
+
     fun show() {
         window.addEventListener("keyup", closeListener)
         document.body?.appendChild(element)
 
         window.addEventListener("resize", resizeListener)
         window.setTimeout(this::resize, 1)
+        window.setTimeout(this::fireHook, 1)
     }
 
     fun hide() {

@@ -62,6 +62,12 @@ object MqttService : Service {
             )
         } as IRobotClient
 
+        robot.nameProperty.onChange { newValue, _ ->
+            iRobotClient.setName(newValue)
+        }
+        robot.colorProperty.onChange { newValue, _ ->
+            iRobotClient.setColor(newValue)
+        }
         robot.trackProperty.onChange { newValue, _ ->
             iRobotClient.track(newValue)
         }
@@ -74,12 +80,6 @@ object MqttService : Service {
         robot.lineFollowerPropety.onChange { newValue, oldValue ->
             if (newValue.state != oldValue.state) {
                 iRobotClient.pid(newValue.state == LineFollower.State.RUNNING)
-            }
-            if (newValue.foreground != oldValue.foreground) {
-                iRobotClient.foregroundColor(newValue.foreground)
-            }
-            if (newValue.background != oldValue.background) {
-                iRobotClient.backgroundColor(newValue.background)
             }
         }
         robot.button.on { button ->
@@ -134,7 +134,9 @@ object MqttService : Service {
                     val robot = robots[msg.clientID] ?: return
                     try {
                         val exec =
-                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList()) ?: return
+                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList().also {
+                                    println("Recv: $it")
+                                }) ?: return
                         exec.first.call(robot.iRobotServer, *exec.second)
                     } catch (e: InvocationTargetException) {
                         logger.warn(

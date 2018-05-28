@@ -1,5 +1,31 @@
 @import "../config";
 
-.text-view.placeholder {
-  color: $main-text-disabled;
+.text-view {
+  &.placeholder {
+    color: $main-text-disabled;
+  }
+  &.editable {
+    &::after {
+      font-family: 'Material Icons';
+      content: '\e3c9';
+      color: $main-icon-disabled;
+      padding-left: 0.6rem;
+      vertical-align: middle;
+      font-size: 1rem;
+    }
+    &:hover::after {
+      color: $main-icon;
+    }
+  }
+
+  &[contenteditable="true"] {
+    white-space: nowrap
+  }
+  &[contenteditable="true"] br {
+    display: none;
+  }
+  &[contenteditable="true"] * {
+    display: inline;
+    white-space: nowrap;
+  }
 }

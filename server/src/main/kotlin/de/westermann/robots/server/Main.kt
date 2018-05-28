@@ -71,7 +71,7 @@ object Main {
                     }
 
                     override fun currentColor(color: Color) {
-                        element.color = color
+                        element.visibleColor = color
                     }
 
                     override fun foregroundColor(color: Color) {
@@ -94,6 +94,18 @@ object Main {
 
                     override fun version(version: Version) {
                         element.version = version
+                    }
+
+                    override fun name(name: String) {
+                        element.name = name
+                    }
+
+                    override fun color(color: Color) {
+                        element.color = color
+                    }
+
+                    override fun availableColors(colors: List<Color>) {
+                        element.availableColors = colors
                     }
                 }
             }
