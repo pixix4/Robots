@@ -11,6 +11,7 @@ import discover
 import mqtt
 import pid_controller
 import system
+from odometry import odometry
 
 client: paho.Client = None
 
@@ -44,6 +45,9 @@ def main():
     mqtt.on_disconnect = reconnect
     mqtt.connect(client, client_id, address, port)
 
+    odometry.calibrate_gyro()
+    odometry.reset()
+
     connection_server.version(system.version())
     connection_server.name(system.name())
     connection_server.color(system.color())
@@ -59,6 +63,8 @@ def main():
 
 def send_status_thread(kill_event):
     while not kill_event.wait(1):
+        odometry.odo_update()
+        connection_server.current_position(odometry.current())
         connection_server.current_color(devices.current_color_as_obj())
         connection_server.energy(system.energy())
 

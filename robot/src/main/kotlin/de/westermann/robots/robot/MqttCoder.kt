@@ -1,7 +1,10 @@
 package de.westermann.robots.robot
 
 import de.westermann.robots.datamodel.IRobotClient
-import de.westermann.robots.datamodel.util.*
+import de.westermann.robots.datamodel.util.Color
+import de.westermann.robots.datamodel.util.Energy
+import de.westermann.robots.datamodel.util.Track
+import de.westermann.robots.datamodel.util.Version
 import java.lang.reflect.Method
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
@@ -70,7 +73,6 @@ fun decodeMqtt(clazz: KClass<*>, message: List<String>): Pair<KFunction<*>, Arra
                     Track::class -> Track.parse(value)
                     Energy::class -> Energy.parse(value)
                     Version::class -> Version.parse(value)
-                    Coordinates::class -> Coordinates.parse(value)
                     List::class -> value.split(";").map { Color.parse(it) }
                     String::class -> value
                     else -> null
@@ -88,7 +90,6 @@ fun encodeMqtt(method: Method, params: List<Any?>): List<String> = listOf(method
                 when (it::class) {
                     Track::class -> (it as Track).toMqtt()
                     Energy::class -> (it as Energy).toMqtt()
-                    Coordinates::class -> (it as Coordinates).toMqtt()
                     else -> it.toString()
                 }
             }

@@ -66,7 +66,7 @@ object Main {
         DeviceManager.robots.onChange(object : Library.Observer<Robot> {
             override fun onAdd(element: Robot) {
                 element.iRobotServer = object : IRobotServer {
-                    override fun map(points: List<Coordinate>) {
+                    override fun currentPosition(pos: Coordinate) {
                         //TODO
                     }
 

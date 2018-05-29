@@ -2,6 +2,7 @@ from typing import List
 
 import drive
 import kicker
+import odometry
 import pid_controller
 import system
 from util.color import Color
@@ -17,7 +18,8 @@ def background_color():
 
 
 def reset_map():
-    pass
+    odometry.odometry.calibrate_gyro()
+    odometry.odometry.reset()
 
 
 def pid(enable: bool):

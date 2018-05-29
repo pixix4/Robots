@@ -60,6 +60,9 @@ class Robot(
     val kickerProperty = Kicker.NONE.observable()
     var kicker by kickerProperty.accessor()
 
+    val mapProperty = emptyList<Coordinate>().observable()
+    var map by mapProperty.accessor()
+
     val button = EventHandler<Button>()
     val setForegroundColor = EventHandler<Unit>()
     val setBackgroundColor = EventHandler<Unit>()

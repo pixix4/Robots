@@ -9,7 +9,7 @@ import de.westermann.robots.datamodel.util.Version
  * @author lars
  */
 interface IRobotServer {
-    fun map(points: List<Coordinate>)
+    fun currentPosition(pos: Coordinate)
 
     fun currentColor(color: Color)
     fun foregroundColor(color: Color)

@@ -7,8 +7,8 @@ from util.energy import Energy
 from util.version import Version
 
 
-def map(points: List[Coordinate]):
-    pass
+def current_position(pos: Coordinate):
+    mqtt.send("currentPosition|" + str(pos))
 
 
 def current_color(color: Color):
