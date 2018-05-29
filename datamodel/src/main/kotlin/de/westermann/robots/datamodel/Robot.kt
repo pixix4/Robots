@@ -61,6 +61,8 @@ class Robot(
     var kicker by kickerProperty.accessor()
 
     val button = EventHandler<Button>()
+    val setForegroundColor = EventHandler<Unit>()
+    val setBackgroundColor = EventHandler<Unit>()
 
     val controllersProperty = {
         DeviceManager.getBoundControllers(this)

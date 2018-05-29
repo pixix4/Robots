@@ -12,6 +12,9 @@ interface IWebServer {
     fun setName(robotId: Int, name: String)
     fun setColor(robotId: Int, color: Color)
 
+    fun setForeground(robotId: Int)
+    fun setBackground(robotId: Int)
+
     fun login(password: String)
     fun logout()
 }

@@ -2,6 +2,7 @@ package de.westermann.robots.website.toolkit.widget
 
 import de.westermann.robots.website.toolkit.icon.Icon
 import de.westermann.robots.website.toolkit.view.View
+import de.westermann.robots.website.toolkit.view.ViewList
 import kotlin.dom.clear
 
 /**
@@ -23,4 +24,8 @@ class IconView(icon: Icon? = null, init: IconView.() -> Unit = {}) : View() {
         element.setAttribute("aria-hidden", "true")
         init()
     }
+}
+
+fun ViewList<View>.iconView(icon: Icon? = null, init: IconView.() -> Unit = {}) {
+    this += IconView(icon, init)
 }

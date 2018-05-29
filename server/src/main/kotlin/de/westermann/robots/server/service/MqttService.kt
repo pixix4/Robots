@@ -82,6 +82,12 @@ object MqttService : Service {
                 iRobotClient.pid(newValue.state == LineFollower.State.RUNNING)
             }
         }
+        robot.setForegroundColor.on {
+            iRobotClient.setForegroundColor()
+        }
+        robot.setBackgroundColor.on {
+            iRobotClient.setBackgroundColor()
+        }
         robot.button.on { button ->
             when (button.type) {
                 Button.Type.A -> {

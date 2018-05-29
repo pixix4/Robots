@@ -13,7 +13,7 @@ import kotlin.browser.window
  * @author lars
  */
 class ButtonView(
-        text: String,
+        text: String = "",
         init: ButtonView.() -> Unit = {}
 ) : View() {
 

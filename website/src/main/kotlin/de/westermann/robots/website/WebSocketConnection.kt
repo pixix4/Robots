@@ -82,6 +82,7 @@ object WebSocketConnection {
         override fun logout() {
             adminProperty.value = false
         }
+
     }
 
     val iController = object : IController {
@@ -142,6 +143,18 @@ object WebSocketConnection {
             send(IWebServer::setColor.name, json {
                 value("robotId") { robotId }
                 value("color") { color.toString() }
+            })
+        }
+
+        override fun setForeground(robotId: Int) {
+            send(IWebServer::setForeground.name, json {
+                value("robotId") { robotId }
+            })
+        }
+
+        override fun setBackground(robotId: Int) {
+            send(IWebServer::setBackground.name, json {
+                value("robotId") { robotId }
             })
         }
     }

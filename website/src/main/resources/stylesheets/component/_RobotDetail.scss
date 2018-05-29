@@ -66,6 +66,7 @@ $top-height: 10rem;
     padding: 0 1rem;
   }
 }
+
 .robot-detail-power {
   position: absolute;
   top: 3rem;
@@ -139,6 +140,32 @@ $top-height: 10rem;
           overflow: hidden;
           text-overflow: ellipsis;
         }
+      }
+    }
+  }
+}
+
+.robot-detail-line-follower {
+  padding: 0.5rem;
+  & > div {
+    float: left;
+    padding: 0.5rem 0.5rem 1rem;
+    position: relative;
+    .box {
+      .icon-view {
+        position: absolute;
+        bottom: 1rem;
+        left: 5rem;
+        color: $main-icon-disabled;
+      }
+      &:hover .icon-view {
+        color: $main-icon;
+      }
+      .view {
+        height: 3.5rem;
+        width: 6rem;
+        border: solid 1px $main-icon-disabled;
+        margin-top: 0.5rem;
       }
     }
   }

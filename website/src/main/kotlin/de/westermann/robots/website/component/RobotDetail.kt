@@ -1,7 +1,9 @@
 package de.westermann.robots.website.component
 
 import de.westermann.robots.datamodel.Robot
+import de.westermann.robots.datamodel.util.Button
 import de.westermann.robots.datamodel.util.Energy
+import de.westermann.robots.datamodel.util.LineFollower
 import de.westermann.robots.website.WebSocketConnection
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
@@ -59,15 +61,56 @@ class RobotDetail(robot: Robot) : View() {
             }
         }
     }
+
+    private val lineFollowerState = TextView {
+        click.on {
+            WebSocketConnection.iController.onButton(Button(Button.Type.B, Button.State.DOWN))
+        }
+    }
+    private val currentColorView = View()
+    private val foregroundColorView = View()
+    private val backgroundColorView = View()
+    private val lineFollowerBox = Box {
+        textView("Line follower")
+        box {
+            classes += "robot-detail-line-follower"
+            box {
+                textView("State")
+                +lineFollowerState
+            }
+            box {
+                textView("Current color")
+                +currentColorView
+            }
+            box {
+                textView("Foreground color")
+                +foregroundColorView
+                iconView(MaterialIcon.COLORIZE)
+
+                click.on {
+                    WebSocketConnection.iServer.setForeground(robot.id)
+                }
+            }
+            box {
+                textView("Background color")
+                +backgroundColorView
+                iconView(MaterialIcon.COLORIZE)
+
+                click.on {
+                    WebSocketConnection.iServer.setBackground(robot.id)
+                }
+            }
+        }
+    }
+
     private val contentBox: CardView<View> by ViewContainer(this, "content") {
         CardView<View> {
+            hoverHighlight = false
             box {
                 textView("Controllers")
                 +controllers
             }
-            box {
-                textView("Line follower")
-            }
+            +lineFollowerBox
             box {
                 textView("Map")
             }
@@ -81,6 +124,22 @@ class RobotDetail(robot: Robot) : View() {
 
         robot.availableColorsProperty.onChangeInit { list, _ ->
             imageColor.visible = list.isNotEmpty()
+        }
+
+        robot.colorProperty.onChangeInit { c, _ ->
+            currentColorView.element.style.backgroundColor = c.toString()
+        }
+
+        robot.lineFollowerPropety.onChangeInit { l, _ ->
+            lineFollowerState.text = when (l.state) {
+                LineFollower.State.RUNNING -> "Running"
+                LineFollower.State.DISABLED -> "Stopped"
+                LineFollower.State.UNAVAILABLE -> "Not available"
+            }
+            foregroundColorView.element.style.backgroundColor = l.foreground.toString()
+            backgroundColorView.element.style.backgroundColor = l.background.toString()
+
+            lineFollowerBox.visible = l.state != LineFollower.State.UNAVAILABLE
         }
 
         robot.energyProperty.onChangeInit { energy, _ ->

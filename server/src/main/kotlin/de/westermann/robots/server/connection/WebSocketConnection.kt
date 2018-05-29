@@ -209,6 +209,14 @@ class WebSocketConnection {
             override fun setColor(robotId: Int, color: Color) {
                 DeviceManager.robots[robotId]?.color = color
             }
+
+            override fun setForeground(robotId: Int) {
+                DeviceManager.robots[robotId]?.setForegroundColor?.fire(Unit)
+            }
+
+            override fun setBackground(robotId: Int) {
+                DeviceManager.robots[robotId]?.setBackgroundColor?.fire(Unit)
+            }
         }
 
         init {

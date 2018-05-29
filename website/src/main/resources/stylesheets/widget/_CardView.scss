@@ -11,8 +11,9 @@
     margin: 0.5rem;
     transition: box-shadow $animation-time;
     overflow: hidden;
-    &:hover {
-      box-shadow: 0 1px 4px 1px $shadow;
-    }
+  }
+
+  &:not(.no-highlight) > div:hover {
+    box-shadow: 0 1px 4px 1px $shadow;
   }
 }

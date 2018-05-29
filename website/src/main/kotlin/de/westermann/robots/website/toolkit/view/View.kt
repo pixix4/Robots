@@ -9,7 +9,7 @@ import kotlin.dom.addClass
  * @author lars
  */
 
-abstract class View(
+open class View(
         init: () -> Unit = {}
 ) {
 
@@ -19,6 +19,8 @@ abstract class View(
         it.addClass(this::class.simpleName.toDashCase())
         it.addEventListener("click", click::fire)
     }
+
+    val classes = CssClasses(element)
 
     var visible: Boolean
         get() = element.style.display != "none"
