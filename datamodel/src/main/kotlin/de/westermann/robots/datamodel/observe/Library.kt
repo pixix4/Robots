@@ -62,15 +62,22 @@ class Library<T : ObservableObject> : Iterable<T> {
     }
 
     operator fun minusAssign(element: T) = remove(element)
+    operator fun minusAssign(id: Int) {
+        get(id)?.let { remove(it) }
+    }
 
     override fun iterator(): Iterator<T> = list.keys.toList().iterator()
 
     operator fun get(id: Int): T? = list.keys.find { it.id == id }
 
-    val nextId: Int
+    @Suppress("UNUSED")
+    val nextUnusedId: Int
         get() = list.map { it.key.id }.toSet().let {
             ((0..(it.max() ?: 0)).toSet() - it).min() ?: it.max()?.let { it + 1 } ?: 0
         }
+    val nextId: Int
+        get() = (list.map { it.key.id }.max() ?: -1) + 1
+
 
     fun toSet(): Set<T> = list.keys
     fun toList(): List<T> = toSet().toList()

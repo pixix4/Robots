@@ -10,19 +10,23 @@ from util.track import Track
 
 
 def foreground_color():
+    print("set foreground")
     pid_controller.foreground()
 
 
 def background_color():
+    print("set background")
     pid_controller.background()
 
 
 def reset_map():
+    print("reset map")
     odometry.odometry.calibrate_gyro()
     odometry.odometry.reset()
 
 
 def pid(enable: bool):
+    print("pid {}".format(enable))
     if enable:
         pid_controller.start()
     else:
@@ -63,7 +67,7 @@ def parse(command: List[str]):
     elif command[0] == "trim":
         trim(float(command[1]))
     elif command[0] == "pid":
-        pid(bool(command[1]))
+        pid(command[1] == "true")
     elif command[0] == "setForegroundColor":
         foreground_color()
     elif command[0] == "setBackgroundColor":

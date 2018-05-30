@@ -1,11 +1,11 @@
 package de.westermann.robots.server.service
 
 import de.westermann.robots.datamodel.DeviceManager
+import de.westermann.robots.robot.Environment
+import de.westermann.robots.robot.Printer
 import de.westermann.robots.server.Main
 import de.westermann.robots.server.util.ColorScheme
 import de.westermann.robots.server.util.Configuration
-import de.westermann.robots.robot.Environment
-import de.westermann.robots.robot.Printer
 import mu.KotlinLogging
 
 /**
@@ -21,7 +21,7 @@ object ReplService : ThreadedService() {
     override val logger = KotlinLogging.logger {}
 
     private val commands: Command = Command.create {
-        command("stop", "blur", "quit", description = "Shutdown Robots server") {
+        command("stop", "exit", "quit", description = "Shutdown Robots server") {
             action {
                 Main.stop()
             }
@@ -164,7 +164,7 @@ object ReplService : ThreadedService() {
                     }
                 }
             } catch (e: Exception) {
-                println(e::class.simpleName+": "+e.message)
+                println(e::class.simpleName + ": " + e.message)
             }
         }
 
@@ -186,7 +186,9 @@ object ReplService : ThreadedService() {
             logger.warn { "Repl service is not available" }
             stop()
         } else {
-            commands.exec(raw.split(" +".toRegex()))
+            if (raw.isNotBlank()) {
+                commands.exec(raw.split(" +".toRegex()))
+            }
         }
     }
 }

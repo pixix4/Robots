@@ -73,10 +73,11 @@ class Dialog(
         }
     }
 
-    val hook = TimeoutEventHandler<Unit>()
+    val open = TimeoutEventHandler<Unit>()
+    val close = TimeoutEventHandler<Unit>()
 
-    private fun fireHook() {
-        hook.fire(Unit)
+    private fun fireOpen() {
+        open.fire(Unit)
     }
 
     fun show() {
@@ -85,13 +86,14 @@ class Dialog(
 
         window.addEventListener("resize", resizeListener)
         window.setTimeout(this::resize, 1)
-        window.setTimeout(this::fireHook, 1)
+        window.setTimeout(this::fireOpen, 1)
     }
 
     fun hide() {
         window.removeEventListener("keyup", closeListener)
         element.parentElement?.removeChild(element)
         window.removeEventListener("resize", resizeListener)
+        close.fire(Unit)
     }
 
     private val resizeListener = object : EventListener {

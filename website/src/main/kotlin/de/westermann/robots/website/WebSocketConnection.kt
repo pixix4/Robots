@@ -44,7 +44,8 @@ object WebSocketConnection {
         }
 
         override fun removeRobot(robot: Robot) {
-            DeviceManager.robots -= robot
+            println("remove")
+            DeviceManager.robots -= robot.id
         }
 
         override fun addController(controller: Controller) {
@@ -56,7 +57,7 @@ object WebSocketConnection {
         }
 
         override fun removeController(controller: Controller) {
-            DeviceManager.controllers -= controller
+            DeviceManager.controllers -= controller.id
         }
 
         override fun bind(controllerId: Int, robotId: Int) {
@@ -146,6 +147,20 @@ object WebSocketConnection {
             })
         }
 
+        override fun setWhitePoint(robotId: Int, color: Color) {
+            send(IWebServer::setWhitePoint.name, json {
+                value("robotId") { robotId }
+                value("color") { color.toString() }
+            })
+        }
+
+        override fun setBlackPoint(robotId: Int, color: Color) {
+            send(IWebServer::setBlackPoint.name, json {
+                value("robotId") { robotId }
+                value("color") { color.toString() }
+            })
+        }
+
         override fun setForeground(robotId: Int) {
             send(IWebServer::setForeground.name, json {
                 value("robotId") { robotId }
@@ -155,6 +170,13 @@ object WebSocketConnection {
         override fun setBackground(robotId: Int) {
             send(IWebServer::setBackground.name, json {
                 value("robotId") { robotId }
+            })
+        }
+
+        override fun setPid(robotId: Int, state: Boolean) {
+            send(IWebServer::setPid.name, json {
+                value("robotId") { robotId }
+                value("state") { state.toString() }
             })
         }
     }
@@ -209,6 +231,8 @@ object WebSocketConnection {
                 val function = json["function"] as? String
                 //val data = json["param"]
                 val parsed = json.json("param")
+
+                println(str)
 
                 when (function) {
                     IWebClient::addRobot.name -> parsed?.let { iClient.addRobot(Robot.fromJson(it)) }

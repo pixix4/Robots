@@ -52,6 +52,7 @@ run {
 repositories {
     mavenCentral()
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -68,6 +69,8 @@ dependencies {
     compile "com.vaadin:vaadin-sass-compiler:0.9.13"
 
     compile 'io.moquette:moquette-broker:0.10'
+
+    compile "com.github.WilliamAHartman:Jamepad:1.1"
 
     compile project(":robot")
     compile project(":website")

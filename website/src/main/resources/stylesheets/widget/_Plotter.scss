@@ -1,0 +1,10 @@
+@import "../config";
+
+.plotter {
+  height: 10rem;
+  width: 100%;
+  canvas {
+    height: 100%;
+    width: 100%;
+  }
+}

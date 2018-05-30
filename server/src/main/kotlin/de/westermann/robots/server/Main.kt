@@ -3,13 +3,12 @@ package de.westermann.robots.server
 import de.westermann.robots.datamodel.*
 import de.westermann.robots.datamodel.observe.Library
 import de.westermann.robots.datamodel.util.*
-import de.westermann.robots.server.service.DiscoveryService
-import de.westermann.robots.server.service.MqttService
-import de.westermann.robots.server.service.ReplService
-import de.westermann.robots.server.service.WebService
+import de.westermann.robots.server.service.*
 import de.westermann.robots.server.util.Configuration
 import mu.KotlinLogging
 import kotlin.concurrent.thread
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.system.exitProcess
 
 object Main {
@@ -42,7 +41,7 @@ object Main {
                     }
 
                     override fun onRelativeSpeed(deltaSpeed: Double) {
-                        element.robots.forEach { it.speed += deltaSpeed }
+                        element.robots.forEach { it.speed = min(1.0, max(0.0, it.speed + deltaSpeed)) }
                     }
 
                     override fun onButton(button: Button) {
@@ -67,7 +66,7 @@ object Main {
             override fun onAdd(element: Robot) {
                 element.iRobotServer = object : IRobotServer {
                     override fun currentPosition(pos: Coordinate) {
-                        //TODO
+                        element.map = element.map + pos
                     }
 
                     override fun currentColor(color: Color) {
@@ -119,6 +118,7 @@ object Main {
         DiscoveryService.start(Configuration.properties.discoveryPort)
         MqttService.start(Configuration.properties.robotPort)
         WebService.start(Configuration.properties.webPort)
+        GamepadService.start()
         ReplService.start()
 
         Runtime.getRuntime().addShutdownHook(thread(start = false, name = "shutdown") {
@@ -128,6 +128,7 @@ object Main {
             DiscoveryService.stop()
             ReplService.stop()
             WebService.stop()
+            GamepadService.stop()
             MqttService.stop()
         })
     }

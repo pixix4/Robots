@@ -210,12 +210,27 @@ class WebSocketConnection {
                 DeviceManager.robots[robotId]?.color = color
             }
 
+            override fun setWhitePoint(robotId: Int, color: Color) {
+                DeviceManager.robots[robotId]?.whitePoint = color
+            }
+
+            override fun setBlackPoint(robotId: Int, color: Color) {
+                DeviceManager.robots[robotId]?.blackPoint = color
+            }
+
             override fun setForeground(robotId: Int) {
                 DeviceManager.robots[robotId]?.setForegroundColor?.fire(Unit)
             }
 
             override fun setBackground(robotId: Int) {
                 DeviceManager.robots[robotId]?.setBackgroundColor?.fire(Unit)
+            }
+
+            override fun setPid(robotId: Int, state: Boolean) {
+                val robot = DeviceManager.robots[robotId] ?: return
+                robot.lineFollower = robot.lineFollower.copy(
+                        state = if (state) LineFollower.State.RUNNING else LineFollower.State.DISABLED
+                )
             }
         }
 
@@ -297,8 +312,48 @@ class WebSocketConnection {
                         } ?: Color.TRANSPARENT
                 )
             }
+            IWebServer::setWhitePoint.name -> parsed?.let {
+                connection.iServer.setWhitePoint(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1,
+                        it["color"]?.toString()?.let {
+                            try {
+                                Color.parse(it)
+                            } catch (_: IllegalArgumentException) {
+                                null
+                            }
+                        } ?: Color.WHITE
+                )
+            }
+            IWebServer::setBlackPoint.name -> parsed?.let {
+                connection.iServer.setBlackPoint(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1,
+                        it["color"]?.toString()?.let {
+                            try {
+                                Color.parse(it)
+                            } catch (_: IllegalArgumentException) {
+                                null
+                            }
+                        } ?: Color.BLACK
+                )
+            }
             IWebServer::login.name -> connection.iServer.login((data as? String) ?: "")
             IWebServer::logout.name -> connection.iServer.logout()
+            IWebServer::setForeground.name -> parsed?.let {
+                connection.iServer.setForeground(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1
+                )
+            }
+            IWebServer::setBackground.name -> parsed?.let {
+                connection.iServer.setBackground(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1
+                )
+            }
+            IWebServer::setPid.name -> parsed?.let {
+                connection.iServer.setPid(
+                        it["robotId"]?.toString()?.toIntOrNull() ?: -1,
+                        it["state"]?.toString()?.toBoolean() ?: false
+                )
+            }
             else -> logger.warn("Cannot find function '$function' of client ${socket.remoteAddress}")
         }
     }

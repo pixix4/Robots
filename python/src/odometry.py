@@ -35,10 +35,10 @@ class Odometry:
 
         self.pos_x = self.pos_x + dist * math.cos(ang * 2 * math.pi / 360)
         self.pos_y = self.pos_y + dist * math.sin(ang * 2 * math.pi / 360)
-        self.heading = ang
+        self.heading = ang % 360
 
     def current(self) -> Coordinate:
-        return Coordinate(self.pos_x, self.pos_y, self.heading)
+        return Coordinate(int(self.pos_x), int(self.pos_y), self.heading)
 
     def reset(self):
         self.last_r = 0

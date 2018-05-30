@@ -1,9 +1,6 @@
 package de.westermann.robots.datamodel.util
 
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.round
+import kotlin.math.*
 
 /**
  * @author lars
@@ -66,6 +63,7 @@ data class Color(
     private val hexArray = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
     private fun Int.toHex() = hexArray[ushr(4 * 1) and 0xF].toString() + hexArray[this and 0xF]
 
+    @Suppress("UNUSED")
     val lumincane: Double = 0.2162 * red + 0.7152 * green + 0.0722 * blue
 
     fun lighten(percent: Double): Color =
@@ -77,12 +75,26 @@ data class Color(
     fun lightness(lightness: Double): Color =
             toHsl().lightness(lightness).toColor()
 
+    fun transform(whitePoint: Color, blackPoint: Color) = Color(
+            if (whitePoint.red <= blackPoint.red) red else {
+                min(MAX_VALUE, max(0, ((red - blackPoint.red).toDouble() / (whitePoint.red - blackPoint.red).toDouble() * MAX_VALUE).roundToInt()))
+            },
+            if (whitePoint.green <= blackPoint.green) green else {
+                min(MAX_VALUE, max(0, ((green - blackPoint.green).toDouble() / (whitePoint.green - blackPoint.green).toDouble() * MAX_VALUE).roundToInt()))
+            },
+            if (whitePoint.blue <= blackPoint.blue) blue else {
+                min(MAX_VALUE, max(0, ((blue - blackPoint.blue).toDouble() / (whitePoint.blue - blackPoint.blue).toDouble() * MAX_VALUE).roundToInt()))
+            },
+            alpha
+    )
+
     override fun toString(): String {
         return if (alpha >= 1) {
             "#${red.toHex()}${green.toHex()}${blue.toHex()}"
         } else "rgba($red, $green, $blue, $alpha)"
     }
 
+    @Suppress("UNUSED")
     companion object {
 
         private const val MAX_VALUE = 255

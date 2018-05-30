@@ -59,15 +59,15 @@ def load_file():
 def __update_led():
     c: Tuple[float, float, None]
 
-    if str(__current_color) == str(color_const.CONST_RED):
+    if __current_color == color_const.CONST_RED:
         c = Leds.RED
-    elif str(__current_color) == str(color_const.CONST_GREEN):
+    elif __current_color == color_const.CONST_GREEN:
         c = Leds.GREEN
-    elif str(__current_color) == str(color_const.CONST_AMBER):
+    elif __current_color == color_const.CONST_AMBER:
         c = Leds.AMBER
-    elif str(__current_color) == str(color_const.CONST_ORANGE):
+    elif __current_color == color_const.CONST_ORANGE:
         c = Leds.ORANGE
-    elif str(__current_color) == str(color_const.CONST_YELLOW):
+    elif __current_color == color_const.CONST_YELLOW:
         c = Leds.YELLOW
     else:
         c = Leds.BLACK
@@ -86,7 +86,7 @@ def color() -> Color:
 
 def set_color(value: Color):
     global __current_color
-    if str(value) not in [str(it) for it in __color_list]:
+    if value not in __color_list:
         __current_color = color_const.CONST_TRANSPARENT
         Leds.all_off()
     else:
@@ -133,4 +133,4 @@ def energy() -> Energy:
     elif p < __power.min_voltage:
         p = __power.min_voltage
     value = (p - __power.min_voltage) / (__power.max_voltage - __power.min_voltage)
-    return Energy(value, EnergyState.DISCHARGING)
+    return Energy(round(value, 3), EnergyState.DISCHARGING)

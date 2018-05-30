@@ -63,6 +63,12 @@ class Robot(
     val mapProperty = emptyList<Coordinate>().observable()
     var map by mapProperty.accessor()
 
+    val whitePointPropety = Color.WHITE.observable()
+    var whitePoint by whitePointPropety.accessor()
+
+    val blackPointPropety = Color.BLACK.observable()
+    var blackPoint by blackPointPropety.accessor()
+
     val button = EventHandler<Button>()
     val setForegroundColor = EventHandler<Unit>()
     val setBackgroundColor = EventHandler<Unit>()
@@ -83,6 +89,8 @@ class Robot(
         value("version") { version.toJson() }
         value("visibleColor") { visibleColor.toString() }
         value("color") { color.toString() }
+        value("whitePoint") { whitePoint.toString() }
+        value("blackPoint") { blackPoint.toString() }
         value("availableColors") { availableColors.joinToString(";") }
         value("speed") { speed }
         value("trim") { trim }
@@ -106,6 +114,18 @@ class Robot(
         json["color"]?.toString()?.let {
             try {
                 color = Color.parse(it)
+            } catch (_: IllegalArgumentException) {
+            }
+        }
+        json["whitePoint"]?.toString()?.let {
+            try {
+                whitePoint = Color.parse(it)
+            } catch (_: IllegalArgumentException) {
+            }
+        }
+        json["blackPoint"]?.toString()?.let {
+            try {
+                blackPoint = Color.parse(it)
             } catch (_: IllegalArgumentException) {
             }
         }

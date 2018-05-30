@@ -79,7 +79,13 @@ object MqttService : Service {
         }
         robot.lineFollowerPropety.onChange { newValue, oldValue ->
             if (newValue.state != oldValue.state) {
-                iRobotClient.pid(newValue.state == LineFollower.State.RUNNING)
+                when (newValue.state) {
+                    LineFollower.State.RUNNING -> iRobotClient.pid(true)
+                    LineFollower.State.DISABLED -> iRobotClient.pid(false)
+                    LineFollower.State.UNAVAILABLE -> {
+                        //NOTHING
+                    }
+                }
             }
         }
         robot.setForegroundColor.on {
@@ -140,9 +146,7 @@ object MqttService : Service {
                     val robot = robots[msg.clientID] ?: return
                     try {
                         val exec =
-                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList().also {
-                                    println("Recv: $it")
-                                }) ?: return
+                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList()) ?: return
                         exec.first.call(robot.iRobotServer, *exec.second)
                     } catch (e: InvocationTargetException) {
                         logger.warn(

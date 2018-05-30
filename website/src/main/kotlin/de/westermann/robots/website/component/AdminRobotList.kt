@@ -24,6 +24,7 @@ fun Router.adminRobotList() {
                 }
 
                 override fun onRemove(element: Robot) {
+                    println("remove robot")
                     reload()
                 }
             })

@@ -2,7 +2,7 @@ import paho.mqtt.client as paho
 
 import connection_client
 
-__client: paho.Client
+__client: paho.Client = None
 __client_id: str
 
 
@@ -43,5 +43,9 @@ def connect(client: paho.Client, client_id: str, address: str, port: int):
 
 
 def stop():
-    __client.loop_stop()
-    __client.disconnect()
+    global __client
+    if __client is not None:
+        __client.loop_stop()
+        __client.disconnect()
+        
+        __client = None

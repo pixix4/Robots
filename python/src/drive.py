@@ -33,7 +33,6 @@ def update():
 def speed(value: float):
     global __speed
     __speed = value
-    print("speed is called!")
     update()
 
 
@@ -105,5 +104,7 @@ def relative(s: float, left: float, right: float):
 
 
 def stop():
+    global __last_drive_mode
+    __last_drive_mode = -1
     devices.left_motor.stop()
     devices.right_motor.stop()

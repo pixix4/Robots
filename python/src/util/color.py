@@ -12,10 +12,13 @@ class Color:
             return "rgba({},{},{},{})".format(self.red, self.green, self.blue, self.alpha)
 
     def __eq__(self, other: "Color"):
-        if not (other is Color):
+        if (not isinstance(other, Color)) or (other is None):
             return False
 
         return self.red == other.red and self.green == other.green and self.blue == other.blue and self.alpha == other.alpha
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     @staticmethod
     def parse(value: str) -> "Color":

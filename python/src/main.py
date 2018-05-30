@@ -27,9 +27,11 @@ def run():
         main()
     finally:
         print("Cleaning up")
+        system.set_active(False)
         mqtt.stop()
         pid_controller.stop()
-        if not __status_kill is None:
+
+        if __status_kill is not None:
             __status_kill.set()
             __status_thread.join()
         print("Exit")
@@ -52,6 +54,8 @@ def main():
     connection_server.name(system.name())
     connection_server.color(system.color())
     connection_server.available_colors(system.available_color())
+    pid_controller.send_foreground()
+    pid_controller.send_background()
 
     __status_kill = threading.Event()
     __status_thread = threading.Thread(target=send_status_thread, args=(__status_kill,))
@@ -62,11 +66,25 @@ def main():
 
 
 def send_status_thread(kill_event):
+    last_pos = None
+    last_energy = None
+    last_color = None
     while not kill_event.wait(1):
         odometry.odo_update()
-        connection_server.current_position(odometry.current())
-        connection_server.current_color(devices.current_color_as_obj())
-        connection_server.energy(system.energy())
+        pos = odometry.current()
+        if pos != last_pos:
+            last_pos = pos
+            connection_server.current_position(pos)
+
+        color = devices.current_color_as_obj()
+        if color != last_color:
+            last_color = color
+            connection_server.current_color(color)
+
+        energy = system.energy()
+        if energy != last_energy:
+            last_energy = energy
+            connection_server.energy(energy)
 
 
 def print_color():

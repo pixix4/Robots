@@ -1,21 +1,33 @@
 import threading
 from typing import Tuple
 
+import connection_server
 import devices
 import drive
+from util.color import Color
 
 __foreground: Tuple[int, int, int] = (20, 20, 20)
 __background: Tuple[int, int, int] = (180, 170, 130)
 
 
+def send_foreground():
+    connection_server.foreground_color(Color(__foreground[0], __foreground[1], __foreground[2]))
+
+
+def send_background():
+    connection_server.background_color(Color(__background[0], __background[1], __background[2]))
+
+
 def foreground():
     global __foreground
     __foreground = devices.current_color()
+    send_foreground()
 
 
 def background():
     global __background
     __background = devices.current_color()
+    send_background()
 
 
 __pid_kill: threading.Event = None
@@ -54,7 +66,7 @@ def calc_error() -> float:
     return (max(min((red + green + blue) / 1.5, 2.0), 0.0) - 1.0) * DRIVE_MULTIPLIER
 
 
-def thread(kill_event, arg):
+def thread(kill_event):
     history_error: float = 0.0
     last_error: float = 0.0
     integral: float = 0.0
@@ -77,7 +89,7 @@ def thread(kill_event, arg):
             last_error = 0
             lost_line = 0
 
-            while calc_error() * DRIVE_MULTIPLIER > -0.5:
+            while calc_error() * DRIVE_MULTIPLIER > -0.5 and not kill_event.wait(0):
                 drive.direct(SPEED_SLOW * DRIVE_MULTIPLIER, -SPEED_SLOW * DRIVE_MULTIPLIER)
 
             drive_slow = 20
@@ -110,7 +122,7 @@ def thread(kill_event, arg):
 
         drive.direct((speed + (COUNTERMEASURE * output)), (speed - (COUNTERMEASURE * output)))
 
-    drive.stop()
+    drive.direct(0.0, 0.0)
 
 
 def stop():
@@ -118,8 +130,11 @@ def stop():
     if not running():
         return
 
-    __pid_kill.set()
-    __pid_thread.join()
+    if __pid_kill is not None:
+        __pid_kill.set()
+
+    if __pid_thread is not None:
+        __pid_thread.join()
 
     __pid_kill = None
     __pid_thread = None

@@ -1,15 +1,19 @@
 package de.westermann.robots.website.component
 
+import de.westermann.robots.datamodel.DeviceManager
 import de.westermann.robots.datamodel.Robot
-import de.westermann.robots.datamodel.util.Button
+import de.westermann.robots.datamodel.observe.Library
+import de.westermann.robots.datamodel.util.Color
 import de.westermann.robots.datamodel.util.Energy
 import de.westermann.robots.datamodel.util.LineFollower
 import de.westermann.robots.website.WebSocketConnection
+import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.view.View
 import de.westermann.robots.website.toolkit.view.ViewContainer
 import de.westermann.robots.website.toolkit.view.ViewList
 import de.westermann.robots.website.toolkit.widget.*
+import org.w3c.dom.events.MouseEvent
 import kotlin.math.roundToInt
 
 /**
@@ -20,6 +24,8 @@ class RobotDetail(robot: Robot) : View() {
     private val topBox: Box by ViewContainer(this, "top") {
         Box {}
     }
+
+    @Suppress("UNUSED")
     private val image: ImageView by ViewContainer(this, "image", topBox.element) {
         robot.colorProperty.onChangeInit { newValue, _ ->
             it.style.backgroundColor = newValue.lightness(0.8).toString()
@@ -64,7 +70,12 @@ class RobotDetail(robot: Robot) : View() {
 
     private val lineFollowerState = TextView {
         click.on {
-            WebSocketConnection.iController.onButton(Button(Button.Type.B, Button.State.DOWN))
+            when (robot.lineFollower.state) {
+                LineFollower.State.RUNNING -> WebSocketConnection.iServer.setPid(robot.id, false)
+                LineFollower.State.DISABLED -> WebSocketConnection.iServer.setPid(robot.id, true)
+                LineFollower.State.UNAVAILABLE -> {
+                }
+            }
         }
     }
     private val currentColorView = View()
@@ -81,6 +92,23 @@ class RobotDetail(robot: Robot) : View() {
             box {
                 textView("Current color")
                 +currentColorView
+
+                click.on {
+                    (it as? MouseEvent)?.let {
+                        ContextMenu(it.clientX to it.clientY) {
+                            item("Set as white") {
+                                WebSocketConnection.iServer.setWhitePoint(robot.id, robot.visibleColor)
+                            }
+                            item("Set as black") {
+                                WebSocketConnection.iServer.setBlackPoint(robot.id, robot.visibleColor)
+                            }
+                            item("Reset calibration") {
+                                WebSocketConnection.iServer.setWhitePoint(robot.id, Color.WHITE)
+                                WebSocketConnection.iServer.setBlackPoint(robot.id, Color.BLACK)
+                            }
+                        }.open()
+                    }
+                }
             }
             box {
                 textView("Foreground color")
@@ -102,7 +130,13 @@ class RobotDetail(robot: Robot) : View() {
             }
         }
     }
+    private val plotter = Plotter()
+    private val mapBox = Box {
+        textView("Map")
+        +plotter
+    }
 
+    @Suppress("UNUSED")
     private val contentBox: CardView<View> by ViewContainer(this, "content") {
         CardView<View> {
             hoverHighlight = false
@@ -111,10 +145,22 @@ class RobotDetail(robot: Robot) : View() {
                 +controllers
             }
             +lineFollowerBox
-            box {
-                textView("Map")
+            +mapBox
+        }
+    }
+
+
+    private val removeListener = object : Library.Observer<Robot> {
+        override fun onRemove(element: Robot) {
+            if (element == robot) {
+                remove()
             }
         }
+    }
+
+    private fun remove() {
+        Router.routeUp()
+        DeviceManager.robots.onChange(removeListener)
     }
 
     init {
@@ -126,8 +172,14 @@ class RobotDetail(robot: Robot) : View() {
             imageColor.visible = list.isNotEmpty()
         }
 
-        robot.colorProperty.onChangeInit { c, _ ->
-            currentColorView.element.style.backgroundColor = c.toString()
+        robot.visibleColorProperty.onChangeInit { c, _ ->
+            currentColorView.element.style.backgroundColor = c.transform(robot.whitePoint, robot.blackPoint).toString()
+        }
+
+        robot.mapProperty.onChangeInit { m, _ ->
+            mapBox.visible = m.isNotEmpty()
+            plotter.plot(m)
+            plotter.resetZoom()
         }
 
         robot.lineFollowerPropety.onChangeInit { l, _ ->
@@ -136,8 +188,8 @@ class RobotDetail(robot: Robot) : View() {
                 LineFollower.State.DISABLED -> "Stopped"
                 LineFollower.State.UNAVAILABLE -> "Not available"
             }
-            foregroundColorView.element.style.backgroundColor = l.foreground.toString()
-            backgroundColorView.element.style.backgroundColor = l.background.toString()
+            foregroundColorView.element.style.backgroundColor = l.foreground.transform(robot.whitePoint, robot.blackPoint).toString()
+            backgroundColorView.element.style.backgroundColor = l.background.transform(robot.whitePoint, robot.blackPoint).toString()
 
             lineFollowerBox.visible = l.state != LineFollower.State.UNAVAILABLE
         }
@@ -161,5 +213,16 @@ class RobotDetail(robot: Robot) : View() {
                 controllers += ControllerListItem(it, robot)
             }
         }
+
+        val colorPointChange = { _: Color, _: Color ->
+            currentColorView.element.style.backgroundColor = robot.visibleColor.transform(robot.whitePoint, robot.blackPoint).toString()
+            foregroundColorView.element.style.backgroundColor = robot.lineFollower.foreground.transform(robot.whitePoint, robot.blackPoint).toString()
+            backgroundColorView.element.style.backgroundColor = robot.lineFollower.background.transform(robot.whitePoint, robot.blackPoint).toString()
+        }
+
+        robot.whitePointPropety.onChange(colorPointChange)
+        robot.blackPointPropety.onChange(colorPointChange)
+
+        DeviceManager.robots.onChange(removeListener)
     }
 }
