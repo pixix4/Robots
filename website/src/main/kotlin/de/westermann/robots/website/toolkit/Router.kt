@@ -48,12 +48,6 @@ open class Router(
     }
 
     private fun perform(path: List<String>): List<String>? {
-        forward.forEach {
-            it.perform(path)?.let {
-                return listOf(this.path) + it
-            }
-        }
-
         val first = path.getOrNull(0) ?: ""
         routes[first]?.let {
             it.perform(path.drop(1))?.let {
@@ -69,6 +63,12 @@ open class Router(
 
         routes[""]?.let {
             it.perform(path.drop(1))?.let {
+                return listOf(this.path) + it
+            }
+        }
+
+        forward.forEach {
+            it.perform(path)?.let {
                 return listOf(this.path) + it
             }
         }
@@ -141,9 +141,10 @@ open class Router(
 
     companion object {
         private val root = Router()
-
+        private var canRoute = false
         fun init(init: Router.() -> Unit) {
             root.init()
+            canRoute = true
             routeTo()
 
             window.onpopstate = {
@@ -153,22 +154,33 @@ open class Router(
             }
         }
 
-        fun updateRoute() = routeTo(window.location.pathname)
+        val currentRoute: String
+            get() = window.location.pathname
 
-        fun routeTo(route: String? = null) {
-            val toPos = route ?: window.location.pathname
-            root.perform(toPos.split("/").filter(String::isNotBlank))?.let {
-                val url = "/"+it.filter(String::isNotBlank).joinToString("/")
-                if (route == null) {
-                    window.history.replaceState(null, "", url)
-                } else {
-                    window.history.pushState(null, "", url)
-                }
-            } ?: println("Error")
+        fun updateRoute(route: String? = null) {
+            routeTo(route ?: currentRoute)
+        }
+
+        fun routeTo(route: String? = null, inplace: Boolean = false) {
+            if (canRoute) {
+                val toPos = route ?: currentRoute
+                root.perform(toPos.split("/").filter(String::isNotBlank))?.let {
+                    val url = "/" + it.filter(String::isNotBlank).joinToString("/")
+                    if (route == null || inplace) {
+                        window.history.replaceState(null, "", url)
+                    } else {
+                        window.history.pushState(null, "", url)
+                    }
+                } ?: println("Error")
+            }
         }
 
         fun routeUp() {
-            routeTo(window.location.pathname.split("/").dropLast(1).joinToString("/"))
+            routeTo(currentRoute.split("/").dropLast(1).joinToString("/"))
+        }
+
+        fun stopRouting() {
+            canRoute = false
         }
     }
 }

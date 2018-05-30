@@ -1,0 +1,63 @@
+@import "../config";
+@import "../mixins";
+
+.registration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $primary-color;
+  color: $primary-color-text-primary;
+  .registration-name {
+    position: absolute;
+    left: 50%;
+    margin-left: -10rem;
+    top: 50%;
+    line-height: 3rem;
+    margin-top: -2rem;
+    font-size: 1.6rem;
+  }
+  .registration-hint {
+    position: absolute;
+    left: 50%;
+    margin-left: -10rem;
+    top: 50%;
+    line-height: 3rem;
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+  .registration-code {
+    position: absolute;
+    left: 50%;
+    width: 10rem;
+    top: 50%;
+    line-height: 4.4rem;
+    margin-top: -2rem;
+    font-size: 2rem;
+    text-align: right;
+    font-weight: bold;
+  }
+}
+
+@include portrait {
+  .registration {
+    .registration-name {
+      left: 2rem;
+      margin-left: 0;
+      top: 40%;
+    }
+    .registration-hint {
+      left: 2rem;
+      margin-left: 0;
+      top: 40%;
+    }
+    .registration-code {
+      left: 2rem;
+      width: auto;
+      top: 60%;
+      line-height: 3rem;
+      margin-top: -2rem;
+    }
+  }
+}

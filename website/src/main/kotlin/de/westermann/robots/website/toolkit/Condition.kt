@@ -12,8 +12,12 @@ class Condition(
     private var routerTrue: Router? = null
     private var routerFalse: Router? = null
 
+    private var trueRoute: String? = null
+    private var falseRoute: String? = null
+
     fun onTrue(init: Router.() -> Unit) {
         routerTrue = Router(parent).also(init)
+        trueRoute = Router.currentRoute
     }
 
     fun onFalse(init: Router.() -> Unit) {
@@ -29,8 +33,13 @@ class Condition(
         set(value) {}
 
     init {
-        observable.onChange { _, _ ->
-            updateRoute()
+        observable.onChange { newValue, oldValue ->
+            if (oldValue) {
+                trueRoute = Router.currentRoute
+            } else {
+                falseRoute = Router.currentRoute
+            }
+            updateRoute(if (newValue) trueRoute else falseRoute)
         }
     }
 }

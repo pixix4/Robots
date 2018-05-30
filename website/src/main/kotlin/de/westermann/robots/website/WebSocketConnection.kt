@@ -17,17 +17,16 @@ object WebSocketConnection {
                 if (it.isEmpty()) "" else ":$it"
             } + "/ws"
             )
-    private var firstConnect = true
-    private var closed = false
-    private var connection: WebSocket = createWebSocket()
+
+    private var connection: WebSocket? = null
 
     private fun send(function: String, data: Any? = null) {
         try {
-            connection.send(
+            connection?.send(
                     json {
                         value("function") { function }
                         value("param") { data }
-                    }.stringify().also { println(it) }
+                    }.stringify()
             )
         } catch (_: Throwable) {
             println("Problem in web socket connection")
@@ -44,7 +43,6 @@ object WebSocketConnection {
         }
 
         override fun removeRobot(robot: Robot) {
-            println("remove")
             DeviceManager.robots -= robot.id
         }
 
@@ -182,21 +180,12 @@ object WebSocketConnection {
     }
 
     val adminProperty = ObservableProperty(false)
+    val connectedProperty = ObservableProperty(false)
+    val registeredProperty = ObservableProperty(false)
 
-    private var onOpen: () -> Unit = {}
-
-    fun connect(onOpen: (() -> Unit)? = null) {
-        if (onOpen != null) {
-            if (firstConnect) {
-                this.onOpen = onOpen
-            } else {
-                onOpen()
-            }
-        }
-
-        if (closed) {
+    fun connect() {
+        if (connection == null) {
             connection = createWebSocket()
-            closed = false
         }
     }
 
@@ -204,10 +193,7 @@ object WebSocketConnection {
 
     private fun createWebSocket() = WebSocket(url).also { ws ->
         ws.onopen = {
-            if (firstConnect) {
-                onOpen()
-                firstConnect = false
-            }
+            connectedProperty.value = true
             intervalId = window.setInterval({
                 ws.send("ping")
             }, 5000)
@@ -215,7 +201,8 @@ object WebSocketConnection {
             Unit //This is weird
         }
         ws.onclose = {
-            closed = true
+            connectedProperty.value = false
+            connection = null
             intervalId?.let {
                 window.clearInterval(it)
                 intervalId = null
@@ -231,8 +218,6 @@ object WebSocketConnection {
                 val function = json["function"] as? String
                 //val data = json["param"]
                 val parsed = json.json("param")
-
-                println(str)
 
                 when (function) {
                     IWebClient::addRobot.name -> parsed?.let { iClient.addRobot(Robot.fromJson(it)) }

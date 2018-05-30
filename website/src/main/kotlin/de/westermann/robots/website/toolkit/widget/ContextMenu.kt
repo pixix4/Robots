@@ -8,6 +8,7 @@ import org.w3c.dom.events.EventListener
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
 import kotlin.browser.window
+import kotlin.math.min
 
 /**
  * @author lars
@@ -45,9 +46,10 @@ class ContextMenu(
 
     fun open() {
         window.addEventListener("keyup", closeListener)
-        list.element.style.left = "${position.first}px"
-        list.element.style.top = "${position.second}px"
         document.body?.appendChild(element)
+
+        resize()
+        window.setTimeout(this::resize, 5)
     }
 
     fun close() {
@@ -55,10 +57,22 @@ class ContextMenu(
         element.parentElement?.removeChild(element)
     }
 
+    private fun resize(@Suppress("UNUSED_PARAMETER") event: Event? = null) {
+        val left = min(position.first, window.innerWidth - list.element.clientWidth - 10)
+        val top = min(position.second, window.innerHeight - list.element.clientHeight - 10)
+
+        list.element.style.left = "${left}px"
+        list.element.style.top = "${top}px"
+    }
+
     init {
         click.on {
             close()
         }
         init()
+
+        resize()
+        window.addEventListener("resize", this::resize)
+        window.setTimeout(this::resize, 5)
     }
 }

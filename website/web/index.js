@@ -13,6 +13,7 @@ app.use(require('node-sass-middleware')({
 
 app.use('/public', express.static(path.join(__dirname, 'website')));
 
+
 app.ws('/ws', function (ws, req) {
     ws.send("{\"function\":\"login\",\"param\":\"\"}");
     ws.send("{\"function\":\"addRobot\",\"param\":{\"id\":0,\"name\":\"Demo robot 1\",\"type\":\"Demobot\",\"version\":{\"major\":0,\"minor\":4,\"patch\":3,\"qualifier\":4,\"qualifierNumber\":0},\"color\":\"rgba(0, 0, 0, 0.0)\",\"speed\":-1.0,\"trim\":0.0,\"track\":{\"x\":0.0,\"y\":0.0},\"lineFollower\":{\"state\":\"UNAVAILABLE\",\"foreground\":\"rgba(0, 0, 0, 0.0)\",\"background\":\"rgba(0, 0, 0, 0.0)\"},\"energy\":{\"value\":0.8,\"state\":\"DISCHARGING\"},\"camera\":{\"available\":false,\"stream\":\"\"},\"kicker\":{\"available\":true}}}");
@@ -37,6 +38,7 @@ app.ws('/ws', function (ws, req) {
         console.log(msg)
     });
 });
+
 
 app.use(function (req, res) {
     res.status(200);
