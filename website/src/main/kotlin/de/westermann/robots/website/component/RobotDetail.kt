@@ -46,7 +46,7 @@ class RobotDetail(robot: Robot) : View() {
         TextView(robot.name, "Unnamed") {
             editable = true
             edit.on {
-                WebSocketConnection.iServer.setName(robot.id, it)
+                WebSocketConnection.iServer.setRobotName(robot.id, it)
             }
         }
     }

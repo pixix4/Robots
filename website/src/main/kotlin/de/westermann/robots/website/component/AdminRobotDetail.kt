@@ -9,8 +9,7 @@ import de.westermann.robots.website.toolkit.view.View
  */
 class AdminRobotDetail(
         val id: Int
-) : View() {
-}
+) : View()
 
 fun Router.adminRobotDetail(id: Int) {
     view {

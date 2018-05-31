@@ -149,8 +149,15 @@ object WebSocketConnection {
             send(IWebServer::logout.name)
         }
 
-        override fun setName(robotId: Int, name: String) {
-            send(IWebServer::setName.name, json {
+        override fun setControllerName(controllerId: Int, name: String) {
+            send(IWebServer::setControllerName.name, json {
+                value("controllerId") { controllerId }
+                value("name") { name }
+            })
+        }
+
+        override fun setRobotName(robotId: Int, name: String) {
+            send(IWebServer::setRobotName.name, json {
                 value("robotId") { robotId }
                 value("name") { name }
             })

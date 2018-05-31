@@ -207,7 +207,11 @@ class WebSocketConnection {
                 iClient.logout()
             }
 
-            override fun setName(robotId: Int, name: String) {
+            override fun setControllerName(controllerId: Int, name: String) {
+                DeviceManager.controllers[controllerId]?.name = name
+            }
+
+            override fun setRobotName(robotId: Int, name: String) {
                 DeviceManager.robots[robotId]?.name = name
             }
 
@@ -299,8 +303,14 @@ class WebSocketConnection {
                         it["robotId"]?.toString()?.toIntOrNull() ?: -1
                 )
             }
-            IWebServer::setName.name -> parsed?.let {
-                connection.iServer.setName(
+            IWebServer::setControllerName.name -> parsed?.let {
+                connection.iServer.setControllerName(
+                        it["controllerId"]?.toString()?.toIntOrNull() ?: -1,
+                        it["name"]?.toString() ?: ""
+                )
+            }
+            IWebServer::setRobotName.name -> parsed?.let {
+                connection.iServer.setRobotName(
                         it["robotId"]?.toString()?.toIntOrNull() ?: -1,
                         it["name"]?.toString() ?: ""
                 )
