@@ -12,9 +12,9 @@ import kotlin.js.Date
 
 @Suppress("UNUSED")
 fun main(args: Array<String>) {
-    Router.stopRouting()
     window.onunload = {
-        Router.stopRouting()
+        Router.stop()
+        WebSocketConnection.stop()
     }
     window.onload = {
         Router.init {

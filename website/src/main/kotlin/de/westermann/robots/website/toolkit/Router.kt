@@ -179,7 +179,7 @@ open class Router(
             routeTo(currentRoute.split("/").dropLast(1).joinToString("/"))
         }
 
-        fun stopRouting() {
+        fun stop() {
             canRoute = false
         }
     }

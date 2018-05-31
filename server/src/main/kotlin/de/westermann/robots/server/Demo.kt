@@ -6,6 +6,9 @@ import de.westermann.robots.datamodel.Robot
 import de.westermann.robots.datamodel.util.*
 import de.westermann.robots.server.util.Charsets
 import de.westermann.robots.server.util.Configuration
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+
 
 /**
  * @author lars
@@ -71,6 +74,13 @@ object Demo {
         bind(DeviceManager.controllers[1], DeviceManager.robots[0])
         bind(DeviceManager.controllers[3], DeviceManager.robots[0])
         bind(DeviceManager.controllers[2], DeviceManager.robots[3])
+
+        DeviceManager.robots[2]?.let { robot ->
+            val exec = Executors.newSingleThreadScheduledExecutor()
+            exec.scheduleWithFixedDelay({
+                robot.iRobotServer?.currentPosition(Coordinate(Random.int(2000) - 1000, Random.int(2000) - 1000, 0))
+            }, 0, 1, TimeUnit.SECONDS)
+        }
     }
 
     private fun bind(controller: Controller?, robot: Robot?) {

@@ -44,6 +44,9 @@ class ControllerCard(controller: Controller) : View() {
         controller.nameProperty.onChangeInit { newValue, _ ->
             name.text = newValue
         }
+        controller.adminProperty.onChangeInit { newValue, _ ->
+            name.bold = newValue
+        }
         controller.codeProperty.onChangeInit { newValue, _ ->
             code.text = newValue
         }

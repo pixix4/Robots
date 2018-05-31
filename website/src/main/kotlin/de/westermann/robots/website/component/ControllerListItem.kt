@@ -31,6 +31,9 @@ class ControllerListItem(controller: Controller, robot: Robot, onClickListener: 
         controller.nameProperty.onChange { newValue, _ ->
             name.text = newValue
         }
+        controller.adminProperty.onChangeInit { newValue, _ ->
+            name.bold = newValue
+        }
         controller.codeProperty.onChange { newValue, _ ->
             code.text = newValue
         }

@@ -26,6 +26,8 @@ object WebSocketConnection {
                     json {
                         value("function") { function }
                         value("param") { data }
+                    }.also {
+                        console.log("send", it)
                     }.stringify()
             )
         } catch (_: Throwable) {
@@ -36,14 +38,25 @@ object WebSocketConnection {
     private val iClient = object : IWebClient {
         override fun addRobot(robot: Robot) {
             DeviceManager.robots += robot
+
+            registeredProperty.value = DeviceManager.robots.toSet().isNotEmpty()
         }
 
         override fun updateRobot(robot: Robot) {
-            DeviceManager.robots[robot.id]?.fromJson(robot.toJson())
+            val r = DeviceManager.robots[robot.id]
+            if (r == null) {
+                DeviceManager.robots += robot
+            } else {
+                r.fromJson(robot.toJson())
+            }
+
+            registeredProperty.value = DeviceManager.robots.toSet().isNotEmpty()
         }
 
         override fun removeRobot(robot: Robot) {
             DeviceManager.robots -= robot.id
+
+            registeredProperty.value = DeviceManager.robots.toSet().isNotEmpty()
         }
 
         override fun addController(controller: Controller) {
@@ -51,7 +64,12 @@ object WebSocketConnection {
         }
 
         override fun updateController(controller: Controller) {
-            DeviceManager.controllers[controller.id]?.fromJson(controller.toJson())
+            val c = DeviceManager.controllers[controller.id]
+            if (c == null) {
+                DeviceManager.controllers += controller
+            } else {
+                c.fromJson(controller.toJson())
+            }
         }
 
         override fun removeController(controller: Controller) {
@@ -183,10 +201,19 @@ object WebSocketConnection {
     val connectedProperty = ObservableProperty(false)
     val registeredProperty = ObservableProperty(false)
 
+    var connectTimeout: Int? = -1
+
     fun connect() {
-        if (connection == null) {
+        if (connection == null && connectTimeout != null) {
             connection = createWebSocket()
         }
+    }
+
+    fun stop() {
+        connectTimeout?.let {
+            window.clearTimeout(it)
+        }
+        connectTimeout = null
     }
 
     private var intervalId: Int? = null
@@ -207,14 +234,21 @@ object WebSocketConnection {
                 window.clearInterval(it)
                 intervalId = null
             }
-            connect()
+
+            if (connectTimeout != null) {
+                connectTimeout = window.setTimeout({
+                    connect()
+                }, 1000)
+            }
         }
         ws.onmessage = { event ->
             ((event as? MessageEvent)?.data as? String)?.let { str ->
                 if (str == "pong")
                     return@let null
 
-                val json = Json.fromString(str)
+                val json = Json.fromString(str).also {
+                    console.log("receive", it)
+                }
                 val function = json["function"] as? String
                 //val data = json["param"]
                 val parsed = json.json("param")

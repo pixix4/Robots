@@ -31,6 +31,9 @@ class ControllerCardMinimal(controller: Controller, robot: Robot) : View() {
         controller.nameProperty.onChange { newValue, _ ->
             name.text = newValue
         }
+        controller.adminProperty.onChangeInit { newValue, _ ->
+            name.bold = newValue
+        }
         controller.codeProperty.onChange { newValue, _ ->
             code.text = newValue
         }

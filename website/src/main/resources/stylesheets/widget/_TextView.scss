@@ -4,6 +4,9 @@
   &.placeholder {
     color: $main-text-disabled;
   }
+  &.placeholder {
+    font-weight: bold;
+  }
   &.editable {
     &::after {
       font-family: 'Material Icons';

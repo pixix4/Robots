@@ -38,6 +38,9 @@ class Controller(
     val colorProperty = Color.TRANSPARENT.observable()
     var color by colorProperty.accessor()
 
+    val adminProperty = false.observable()
+    var admin by adminProperty.accessor()
+
     var iController: IController? = null
 
     fun generateCode(length: Int, chars: List<Char>) {

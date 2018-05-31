@@ -41,6 +41,12 @@ class TextView(text: String = "", placeholder: String = "", init: TextView.() ->
             element.classList.toggle("editable", value)
         }
 
+    var bold: Boolean
+        get() = element.classList.contains("bold")
+        set(value) {
+            element.classList.toggle("bold", value)
+        }
+
     var editing: Boolean
         get() = element.getAttribute("contenteditable") == "true"
         set(value) {

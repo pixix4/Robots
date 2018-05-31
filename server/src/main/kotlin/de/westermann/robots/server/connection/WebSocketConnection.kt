@@ -24,6 +24,7 @@ class WebSocketConnection {
             set(value) {
                 val init = value && !field
                 field = value
+                controller.admin = value
                 if (init) initAdmin()
             }
 
@@ -138,14 +139,18 @@ class WebSocketConnection {
 
         val bindObserver = object : DeviceManager.OnBindChange {
             override fun onBind(controller: Controller, robot: Robot) {
-                if (admin || controller == this@Connection.controller || robot in this@Connection.controller.robots) {
+                if (admin) {
                     iClient.bind(controller.id, robot.id)
+                } else if (controller == this@Connection.controller || robot in this@Connection.controller.robots) {
+                    iClient.addRobot(robot)
                 }
             }
 
             override fun onUnbind(controller: Controller, robot: Robot) {
-                if (admin || controller == this@Connection.controller || robot in this@Connection.controller.robots) {
+                if (admin) {
                     iClient.bind(controller.id, robot.id)
+                } else if (controller == this@Connection.controller || robot in this@Connection.controller.robots) {
+                    iClient.removeRobot(robot)
                 }
             }
 
@@ -289,7 +294,7 @@ class WebSocketConnection {
                 )
             }
             IWebServer::unbind.name -> parsed?.let {
-                connection.iServer.bind(
+                connection.iServer.unbind(
                         it["controllerId"]?.toString()?.toIntOrNull() ?: -1,
                         it["robotId"]?.toString()?.toIntOrNull() ?: -1
                 )
