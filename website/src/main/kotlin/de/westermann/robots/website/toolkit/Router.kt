@@ -87,10 +87,11 @@ open class Router(
     private var viewCreators = emptyList<() -> View>()
     private var views = emptyList<View>()
         get() {
-            viewCreators.forEach {
-                field += it()
+            if (field.isEmpty()) {
+                viewCreators.forEach {
+                    field += it()
+                }
             }
-            viewCreators = emptyList()
             return field
         }
 
@@ -139,6 +140,12 @@ open class Router(
         viewCreators += init
     }
 
+    open fun clear() {
+        views = emptyList()
+        routes.values.forEach { clear() }
+        forward.forEach { clear() }
+    }
+
     companion object {
         private val root = Router()
         private var canRoute = false
@@ -181,6 +188,10 @@ open class Router(
 
         fun stop() {
             canRoute = false
+        }
+
+        fun clear() {
+            root.clear()
         }
     }
 }

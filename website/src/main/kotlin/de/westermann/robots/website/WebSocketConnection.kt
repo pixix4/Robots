@@ -237,6 +237,10 @@ object WebSocketConnection {
         ws.onclose = {
             connectedProperty.value = false
             connection = null
+
+            DeviceManager.clear()
+            //Router.clear()
+
             intervalId?.let {
                 window.clearInterval(it)
                 intervalId = null

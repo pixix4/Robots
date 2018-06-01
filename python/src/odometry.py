@@ -18,13 +18,11 @@ class Odometry:
         self.pos_y = 0  # Y-Position in mm
         self.heading = 0  # Angle in degrees
 
-        self.gyro_offset = 0
-
     def odo_update(self):
         now_r = devices.right_motor.position
         now_l = devices.right_motor.position
 
-        ang = devices.gyro_sensor.angle + self.gyro_offset
+        ang = devices.gyro_sensor.angle
 
         dif_r = now_r - self.last_r
         dif_l = now_l - self.last_l

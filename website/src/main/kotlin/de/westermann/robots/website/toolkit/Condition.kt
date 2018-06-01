@@ -32,6 +32,13 @@ class Condition(
         }.filterNotNull()
         set(value) {}
 
+    override fun clear() {
+        super.clear()
+
+        routerTrue?.clear()
+        routerFalse?.clear()
+    }
+
     init {
         observable.onChange { newValue, oldValue ->
             if (oldValue) {

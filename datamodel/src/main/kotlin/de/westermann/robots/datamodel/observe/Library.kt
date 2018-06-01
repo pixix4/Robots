@@ -66,6 +66,10 @@ class Library<T : ObservableObject> : Iterable<T> {
         get(id)?.let { remove(it) }
     }
 
+    fun clear() {
+        list = emptyMap()
+    }
+
     override fun iterator(): Iterator<T> = list.keys.toList().iterator()
 
     operator fun get(id: Int): T? = list.keys.find { it.id == id }

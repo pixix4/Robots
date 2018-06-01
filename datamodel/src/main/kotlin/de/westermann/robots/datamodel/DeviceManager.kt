@@ -75,6 +75,12 @@ object DeviceManager {
         bindChangeListeners -= onBindChange
     }
 
+    fun clear() {
+        robots.clear()
+        controllers.clear()
+        controllerToRobots = emptyMap()
+    }
+
     interface OnBindChange {
         fun onBind(controller: Controller, robot: Robot)
         fun onUnbind(controller: Controller, robot: Robot)
