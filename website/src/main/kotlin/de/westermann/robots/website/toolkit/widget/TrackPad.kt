@@ -29,7 +29,6 @@ class TrackPad(
                 event.stopPropagation()
                 event.preventDefault()
             }
-
         })
     }
     private val track = (document.createElement("div") as HTMLElement).also {

@@ -94,6 +94,7 @@ class Robot(
         value("availableColors") { availableColors.joinToString(";") }
         value("speed") { speed }
         value("trim") { trim }
+        value("map") { map.joinToString(";") { it.toMqtt() } }
         value("track") { track.toJson() }
         value("lineFollower") { lineFollower.toJson() }
         value("energy") { energy.toJson() }
@@ -145,6 +146,14 @@ class Robot(
         json.json("energy")?.let { energy = Energy.fromJson(it) }
         json.json("camera")?.let { camera = Camera.fromJson(it) }
         json.json("kicker")?.let { kicker = Kicker.fromJson(it) }
+        json["map"]?.toString()?.let {
+            map = if (it.isEmpty())
+                emptyList()
+            else
+                it.split(";").map {
+                    Coordinate.parse(it)
+                }
+        }
     }
 
     override fun probability(search: String): Double = StringSimilarity.check(

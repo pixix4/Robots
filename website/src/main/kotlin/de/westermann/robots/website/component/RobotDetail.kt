@@ -179,7 +179,7 @@ class RobotDetail(robot: Robot) : View() {
         robot.mapProperty.onChangeInit { m, _ ->
             mapBox.visible = m.isNotEmpty()
             plotter.plot(m)
-            plotter.resetZoom()
+            plotter.resetZoom(false)
         }
 
         robot.lineFollowerPropety.onChangeInit { l, _ ->

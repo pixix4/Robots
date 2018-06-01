@@ -26,8 +26,8 @@ object WebSocketConnection {
                     json {
                         value("function") { function }
                         value("param") { data }
-                    }.also {
-                        console.log("send", it)
+                    }.also { it: Json ->
+                        console.log("send", it.obj)
                     }.stringify()
             )
         } catch (_: Throwable) {
@@ -254,7 +254,7 @@ object WebSocketConnection {
                     return@let null
 
                 val json = Json.fromString(str).also {
-                    console.log("receive", it)
+                    console.log("receive", it.obj)
                 }
                 val function = json["function"] as? String
                 //val data = json["param"]

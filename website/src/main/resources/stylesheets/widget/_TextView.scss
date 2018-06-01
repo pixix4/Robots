@@ -40,17 +40,17 @@
 
   &[contenteditable="true"] {
     white-space: nowrap;
-
+    outline: none;
     &::before {
       transform-origin: left center;
       transform: scaleX(1);
     }
-  }
-  &[contenteditable="true"] br {
-    display: none;
-  }
-  &[contenteditable="true"] * {
-    display: inline;
-    white-space: nowrap;
+    br {
+      display: none;
+    }
+    * {
+      display: inline;
+      white-space: nowrap;
+    }
   }
 }
