@@ -24,7 +24,8 @@ def __on_disconnect(client, data, rc):
 
 
 def send(message):
-    __client.publish(__client_id, message)
+    if __client is not None:
+        __client.publish(__client_id, message)
 
 
 def connect(client: paho.Client, client_id: str, address: str, port: int):
@@ -47,5 +48,5 @@ def stop():
     if __client is not None:
         __client.loop_stop()
         __client.disconnect()
-        
+
         __client = None

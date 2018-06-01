@@ -75,8 +75,13 @@ class Library<T : ObservableObject> : Iterable<T> {
         get() = list.map { it.key.id }.toSet().let {
             ((0..(it.max() ?: 0)).toSet() - it).min() ?: it.max()?.let { it + 1 } ?: 0
         }
+
+    private var lastIndex = -1
     val nextId: Int
-        get() = (list.map { it.key.id }.max() ?: -1) + 1
+        get() {
+            lastIndex += 1
+            return lastIndex
+        }
 
 
     fun toSet(): Set<T> = list.keys

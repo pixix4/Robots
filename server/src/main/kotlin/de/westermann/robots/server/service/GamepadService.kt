@@ -47,10 +47,10 @@ object GamepadService : ThreadedService() {
                 if (state.guideJustPressed || state.startJustPressed) {
                     controller.iController?.onButton(Button(Button.Type.B, Button.State.DOWN))
                 }
-                if (state.rb) {
+                if (state.rb || state.dpadRight) {
                     controller.iController?.onRelativeSpeed(0.05)
                 }
-                if (state.lb) {
+                if (state.lb || state.dpadLeft) {
                     controller.iController?.onRelativeSpeed(-0.05)
                 }
             }

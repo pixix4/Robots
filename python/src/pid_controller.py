@@ -48,7 +48,7 @@ DRIVE_MULTIPLIER: float = -1
 
 def start():
     print("Start pid")
-    global __pid_kill
+    global __pid_kill, __pid_thread
     if running():
         return
 

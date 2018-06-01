@@ -3,6 +3,8 @@ package de.westermann.robots.server.connection
 import de.westermann.robots.datamodel.*
 import de.westermann.robots.datamodel.observe.Library
 import de.westermann.robots.datamodel.util.*
+import de.westermann.robots.server.util.Charsets
+import de.westermann.robots.server.util.Configuration
 import de.westermann.robots.server.util.Protection
 import io.javalin.embeddedserver.jetty.websocket.WsSession
 import mu.KotlinLogging
@@ -254,6 +256,10 @@ class WebSocketConnection {
 
     operator fun plusAssign(socket: WsSession) {
         Controller(DeviceManager.controllers.nextId).let { controller ->
+            controller.generateCode(
+                    Configuration.properties.controllerCodeLength,
+                    Charsets.charsetsToList(Configuration.properties.controllerCodeCharset).toList()
+            )
             DeviceManager.controllers += controller
             connections += socket to Connection(socket, controller).also {
                 it.initListeners()

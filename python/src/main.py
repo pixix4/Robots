@@ -8,6 +8,8 @@ import paho.mqtt.client as paho
 import connection_server
 import devices
 import discover
+import drive
+import kicker
 import mqtt
 import pid_controller
 import system
@@ -39,6 +41,11 @@ def run():
 
 def main():
     global client, __status_kill, __status_thread
+
+    kicker.start()
+    drive.reset()
+    pid_controller.stop()
+
     client_id = str(uuid.uuid4())
     client = paho.Client(client_id=client_id, clean_session=True)
 
@@ -98,7 +105,7 @@ def reconnect():
     __status_kill.set()
     __status_thread.join()
 
-    run()
+    main()
 
 
 if __name__ == '__main__':

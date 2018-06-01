@@ -37,7 +37,7 @@ class TimeoutEventHandler<Event : Any>(
                 if (!pendingTimeout) {
                     pendingTimeout = true
                     window.setTimeout({
-                        super.fire(event)
+                        super.fire(lastEvent)
 
                         pendingTimeout = false
                     }, minChangeTimeout - elapsed)

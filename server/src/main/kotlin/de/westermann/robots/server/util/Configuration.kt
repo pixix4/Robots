@@ -54,9 +54,9 @@ object Configuration {
         val tmpDirectory: Path
             get() = Paths.get("tmp")
 
-        @Description("Enables demo modus to load dummy data for roobts and controllers")
+        @Description("Enables demo mode to load dummy data for robts and controllers")
         val demo: Boolean
-            get() = true
+            get() = false
 
         val controllerCodeLength: Int
             get() = 4

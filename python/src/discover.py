@@ -36,6 +36,7 @@ def find(port: int) -> Tuple[str, int]:
     print("Try to find server in " + str(addresses))
 
     while True:
+        addresses = [(it, port) for it in get_broadcasts()]
         for address in addresses:
             sock.sendto(__int_to_data(0), address)
             try:

@@ -28,7 +28,6 @@ class Color:
             red, green, blue = tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
             return Color(red, green, blue)
         else:
-            print("parse color {}".format(value[value.find("(") + 1:value.rfind(")")]))
             r, g, b, a = value[value.find("(") + 1:value.rfind(")")].split(",")
             return Color(int(r), int(g), int(b), float(a))
 

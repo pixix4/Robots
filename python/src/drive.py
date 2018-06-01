@@ -10,8 +10,8 @@ DEG1 = pi / 2
 DEG2 = pi
 DEG3 = pi * 3 / 2
 
-__speed = 0.5
-__trim = 0.0
+__speed: float = 0.5
+__trim: float = 0.0
 
 __pid_left_speed: float = 0
 __pid_right_speed: float = 0
@@ -19,7 +19,24 @@ __pid_right_speed: float = 0
 __left_speed: float = 0
 __right_speed: float = 0
 
-__last_drive_mode = -1
+__last_drive_mode: int = -1
+
+
+def reset():
+    global __speed, __trim, __pid_left_speed, __pid_right_speed, __left_speed, __right_speed, __last_drive_mode
+    __speed = 0.5
+    __trim = 0.0
+
+    __pid_left_speed = 0
+    __pid_right_speed = 0
+
+    __left_speed = 0
+    __right_speed = 0
+
+    __last_drive_mode = -1
+
+    devices.left_motor.stop()
+    devices.right_motor.stop()
 
 
 def update():
@@ -39,7 +56,6 @@ def speed(value: float):
 def trim(value: float):
     global __trim
     __trim = value
-    print("trim is called!")
     update()
 
 
