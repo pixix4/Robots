@@ -40,7 +40,7 @@ def connect(client: paho.Client, client_id: str, address: str, port: int):
     __client.connect(address, port=port, keepalive=5)
     __client.loop_start()
 
-    __client.subscribe(client_id, qos=1)
+    __client.subscribe(client_id, qos=0)
 
 
 def stop():

@@ -29,6 +29,7 @@ object GamepadService : ThreadedService() {
                 controllers = (0 until controllerManager.numControllers).map { controllerManager.getState(it) }.map {
                     Controller(DeviceManager.controllers.nextId) {
                         name = it.controllerType ?: "Unknown controller"
+                        type = Controller.Type.PHYSICAL
                         DeviceManager.controllers += this
                     }
                 }
