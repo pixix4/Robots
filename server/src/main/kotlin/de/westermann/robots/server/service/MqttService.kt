@@ -6,10 +6,10 @@ import de.westermann.robots.datamodel.IRobotServer
 import de.westermann.robots.datamodel.Robot
 import de.westermann.robots.datamodel.util.Button
 import de.westermann.robots.datamodel.util.LineFollower
-import de.westermann.robots.robot.decodeMqtt
-import de.westermann.robots.robot.encodeMqtt
-import de.westermann.robots.robot.toByteArray
-import de.westermann.robots.robot.toStringList
+import de.westermann.robots.server.connection.decodeMqtt
+import de.westermann.robots.server.connection.encodeMqtt
+import de.westermann.robots.server.connection.toByteArray
+import de.westermann.robots.server.connection.toStringList
 import de.westermann.robots.server.util.Configuration
 import io.moquette.interception.AbstractInterceptHandler
 import io.moquette.interception.messages.*
@@ -55,7 +55,8 @@ object MqttService : Service {
                             .topicName(id)
                             .qos(MqttQoS.AT_LEAST_ONCE)
                             .payload(Unpooled.copiedBuffer(
-                                    encodeMqtt(method, params?.toList() ?: emptyList()).toByteArray()
+                                    encodeMqtt(method, params?.toList()
+                                            ?: emptyList()).toByteArray()
                             ))
                             .build(),
                     id
@@ -146,7 +147,8 @@ object MqttService : Service {
                     val robot = robots[msg.clientID] ?: return
                     try {
                         val exec =
-                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList()) ?: return
+                                decodeMqtt(IRobotServer::class, msg.payload.toByteArraySafe().toStringList())
+                                        ?: return
                         exec.first.call(robot.iRobotServer, *exec.second)
                     } catch (e: InvocationTargetException) {
                         logger.warn(

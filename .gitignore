@@ -9,3 +9,10 @@ build
 **/tmp/*
 **/temp/*
 **/out/*
+**/.vscode/*
+**/.settings/*
+**/.project
+.project
+**/.classpath
+**/bin/
+

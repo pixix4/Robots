@@ -1,7 +1,7 @@
 package de.westermann.robots.server.service
 
-import de.westermann.robots.robot.toByteArray
-import de.westermann.robots.robot.toInt
+import de.westermann.robots.server.connection.toByteArray
+import de.westermann.robots.server.connection.toInt
 import de.westermann.robots.server.util.Configuration
 import de.westermann.robots.server.util.WhoBlocks
 import mu.KotlinLogging

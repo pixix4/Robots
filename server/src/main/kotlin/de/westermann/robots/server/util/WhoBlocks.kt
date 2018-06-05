@@ -1,6 +1,5 @@
 package de.westermann.robots.server.util
 
-import de.westermann.robots.robot.Environment
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader

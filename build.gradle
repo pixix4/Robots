@@ -12,8 +12,15 @@ allprojects {
 
 task copyArtefacts(type: Copy) {
     from tasks.getByPath(':server:jar')
-    //from tasks.getByPath(':lego:jar')
+    from tasks.getByPath(':ev3:build')
+
+    rename { stripVersion(it) }
+
     into "$buildDir"
+}
+
+static String stripVersion(String filename) {
+    return filename.replaceAll("-([0-9]+\\.)+[0-9]+(-[a-zA-Z]+)*", "")
 }
 
 build.dependsOn copyArtefacts

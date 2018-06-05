@@ -1,9 +1,10 @@
 import java.text.SimpleDateFormat
 
 group = 'de.westermann.robots.server'
-version = '0.0.1-alpha'
+version = '0.8.0-alpha'
 
 apply plugin: "kotlin"
+apply plugin: "kotlin-platform-jvm"
 apply plugin: "application"
 
 buildscript {
@@ -18,7 +19,7 @@ buildscript {
 
 mainClassName = 'de.westermann.robots.server.Main'
 
-static def buildTime() {
+static String buildTime() {
     def format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z")
     format.setTimeZone(TimeZone.getTimeZone("UTC"))
     return format.format(new Date())
@@ -72,7 +73,9 @@ dependencies {
 
     compile "com.github.WilliamAHartman:Jamepad:1.1"
 
-    compile project(":robot")
+    compile 'com.beust:klaxon:3.0.1'
+    expectedBy project(":datamodel")
+
     compile project(":website")
 
     //compile fileTree(dir: 'libs', include: ['*.jar'])

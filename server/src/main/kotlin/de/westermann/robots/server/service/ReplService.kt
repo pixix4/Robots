@@ -1,8 +1,8 @@
 package de.westermann.robots.server.service
 
 import de.westermann.robots.datamodel.DeviceManager
-import de.westermann.robots.robot.Environment
-import de.westermann.robots.robot.Printer
+import de.westermann.robots.server.util.Environment
+import de.westermann.robots.server.util.Printer
 import de.westermann.robots.server.Main
 import de.westermann.robots.server.util.ColorScheme
 import de.westermann.robots.server.util.Configuration

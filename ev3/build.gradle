@@ -1,0 +1,79 @@
+group = 'de.westermann.robots.ev3'
+version = '0.0.1-alpha'
+
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:3.3.1'
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.image.DockerPullImage
+
+task retrieveImage(type: DockerPullImage) {
+    repository = "ev3dev/debian-jessie-cross"
+    tag = "latest"
+}
+
+task createContainer(type: DockerCreateContainer) {
+    dependsOn retrieveImage
+    targetImageId { retrieveImage.getImageId() }
+
+    doFirst {
+        mkdir "build"
+    }
+
+    binds = ["${file('.').absolutePath}": "/ev3"]
+    stdinOpen = true
+    tty = true
+    workingDir = "/ev3"
+}
+
+task startContainer(type: DockerStartContainer) {
+    dependsOn createContainer
+    targetContainerId { createContainer.getContainerId() }
+}
+
+task removeContainer(type: DockerRemoveContainer) {
+    targetContainerId { createContainer.getContainerId() }
+}
+
+task stopContainer(type: DockerStopContainer) {
+    finalizedBy removeContainer
+    targetContainerId { createContainer.getContainerId() }
+    onError { exception ->
+        if (exception.message != null && exception.message.contains('No such container')) {
+            println 'Container not running'
+        } else {
+            throw exception
+        }
+    }
+}
+
+task build(type: DockerExecContainer) {
+    dependsOn startContainer
+    finalizedBy stopContainer
+
+    String filename = "ev3-armel-$version"
+
+    targetContainerId { createContainer.getContainerId() }
+    cmd = ["make", "CXX=/usr/bin/arm-linux-gnueabi-g++", "BINARY=$filename"]
+
+    outputs.file(file("build/$filename"))
+}
+
+
+task clean {
+    delete("build")
+}
