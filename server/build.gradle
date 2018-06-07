@@ -50,6 +50,10 @@ run {
     standardInput = System.in
 }
 
+clean.doFirst {
+    delete("tmp/")
+}
+
 repositories {
     mavenCentral()
     jcenter()
