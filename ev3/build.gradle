@@ -48,13 +48,12 @@ time = "0.1.40"
 
 task createDockerfile(type: Dockerfile) {
     destFile = project.file('build/docker/Dockerfile')
-    from "ev3dev/debian-jessie-cross"
+    from "ubuntu:18.04"
 
-    instruction "RUN sudo apt update"
-    instruction "RUN sudo apt --yes install curl"
-    instruction "RUN curl https://sh.rustup.rs -sSf | sh -s -- -y"
-    instruction "RUN ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabi"
-    instruction "RUN  sudo ln -s /usr/bin/arm-linux-gnueabi-gcc /usr/bin/cc"
+    runCommand "apt update"
+    runCommand "apt --yes install curl g++ g++-arm-linux-gnueabi"
+    runCommand "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+    runCommand "/root/.cargo/bin/rustup target add arm-unknown-linux-gnueabi"
 }
 
 task buildImage(type: DockerBuildImage) {
@@ -101,10 +100,10 @@ task runContainer(type: DockerExecContainer) {
     finalizedBy stopContainer
 
     targetContainerId { createContainer.getContainerId() }
-    cmd = ["/home/compiler/.cargo/bin/cargo", "build", "--target", "arm-unknown-linux-gnueabi"]
+    cmd = ["/root/.cargo/bin/cargo", "build", "--target", "arm-unknown-linux-gnueabi"]
     successOnExitCodes = [0]
 
-    outputs.file(file("target/arm-unknown-linux-gnueabi/debug/ev3"))
+    outputs.file(file("build/arm-unknown-linux-gnueabi/debug/ev3"))
 }
 
 task nativeBuild(type: Exec) {
@@ -114,7 +113,7 @@ task nativeBuild(type: Exec) {
 
     ignoreExitValue = true
 
-    outputs.file(file("target/debug/ev3"))
+    outputs.file(file("build/debug/ev3"))
 }
 
 task build() {
@@ -150,7 +149,6 @@ task run(type: Exec) {
 
 task clean {
     delete("build")
-    delete("target")
     delete("Cargo.lock")
     delete("Cargo.toml")
 }

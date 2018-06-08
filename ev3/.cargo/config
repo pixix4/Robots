@@ -1,0 +1,5 @@
+[target.arm-unknown-linux-gnueabi]
+linker = "/usr/bin/arm-linux-gnueabi-gcc"
+
+[build]
+target-dir = "build"
