@@ -25,7 +25,7 @@ class Track:
     def normalize(self) -> "Track":
         r = self.radius()
         if r > 1.0:
-            return Track(self.x / r, self.y / 4)
+            return Track(self.x / r, self.y / r)
         return self
 
     def is_zero(self) -> bool:

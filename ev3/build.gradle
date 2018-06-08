@@ -27,7 +27,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 
-task createCargoToml {
+task cargo {
     doLast {
         file("Cargo.toml").text = """[package]
 name = "ev3"
@@ -39,6 +39,8 @@ name = "ev3"
 path = "src/main/rust/main.rs"
 
 [dependencies]
+rand = "0.5.1"
+time = "0.1.40"
 """
     }
 }
@@ -52,6 +54,7 @@ task createDockerfile(type: Dockerfile) {
     instruction "RUN sudo apt --yes install curl"
     instruction "RUN curl https://sh.rustup.rs -sSf | sh -s -- -y"
     instruction "RUN ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabi"
+    instruction "RUN  sudo ln -s /usr/bin/arm-linux-gnueabi-gcc /usr/bin/cc"
 }
 
 task buildImage(type: DockerBuildImage) {
@@ -93,7 +96,7 @@ task stopContainer(type: DockerStopContainer) {
 }
 
 task runContainer(type: DockerExecContainer) {
-    dependsOn createCargoToml
+    dependsOn cargo
     dependsOn startContainer
     finalizedBy stopContainer
 
@@ -105,7 +108,7 @@ task runContainer(type: DockerExecContainer) {
 }
 
 task nativeBuild(type: Exec) {
-    dependsOn createCargoToml
+    dependsOn cargo
     executable = "cargo"
     args = ["build"]
 
@@ -116,7 +119,7 @@ task nativeBuild(type: Exec) {
 
 task build() {
     dependsOn runContainer
-    dependsOn nativeBuild
+    //dependsOn nativeBuild
 
     doLast {
         copy {
@@ -136,6 +139,14 @@ task build() {
     outputs.file(file("build/ev3-robot"))
     outputs.file(file("build/ev3-host"))
 }
+
+
+task run(type: Exec) {
+    dependsOn cargo
+    executable = "cargo"
+    args = ["run"]
+}
+
 
 task clean {
     delete("build")

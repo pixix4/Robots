@@ -22,7 +22,6 @@ data class Version(
         companion object {
             fun find(value: Int?): Qualifier =
                     Qualifier.values().find { it.value == value } ?: NONE
-
         }
     }
 
@@ -39,7 +38,7 @@ data class Version(
     }.find { it != 0 } ?: 0
 
     override fun toString(): String = if (unknown)
-        "TRANSPARENT"
+        "UNKNOWN"
     else
         "$major.$minor.$patch" + if (qualifier != Qualifier.NONE) {
             "-"+qualifier.name.toLowerCase() + if (qualifierNumber != 0) ".$qualifierNumber" else ""
