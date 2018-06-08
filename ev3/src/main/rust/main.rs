@@ -33,6 +33,6 @@ fn main() {
 
     let sum:i64 = times.iter().sum();
     let av = sum / times.len() as i64;
-    println!("Average time: {}", sum);
-    println!("Total time: {}", start_outer.to(stop_outer).num_milliseconds());
+    println!("Average time: {}ms", av);
+    println!("Total time: {}ms", start_outer.to(stop_outer).num_milliseconds());
 }

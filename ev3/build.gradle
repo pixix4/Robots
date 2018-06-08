@@ -1,12 +1,16 @@
 group = 'de.westermann.robots.ev3'
 version = '0.0.1-alpha'
 
-
-
-
 apply plugin: 'com.bmuschko.docker-remote-api'
 
 buildscript {
+    ext.target = 'armv5te-unknown-linux-gnueabi'
+    ext.isRelease = false
+    ext.type = "debug"
+    if (ext.isRelease) {
+        ext.type = "release"
+    }
+
     repositories {
         jcenter()
     }
@@ -39,6 +43,7 @@ name = "ev3"
 path = "src/main/rust/main.rs"
 
 [dependencies]
+regex = "1.0.0"
 rand = "0.5.1"
 time = "0.1.40"
 """
@@ -53,7 +58,7 @@ task createDockerfile(type: Dockerfile) {
     runCommand "apt update"
     runCommand "apt --yes install curl g++ g++-arm-linux-gnueabi"
     runCommand "curl https://sh.rustup.rs -sSf | sh -s -- -y"
-    runCommand "/root/.cargo/bin/rustup target add arm-unknown-linux-gnueabi"
+    runCommand "/root/.cargo/bin/rustup target add ${target}"
 }
 
 task buildImage(type: DockerBuildImage) {
@@ -100,20 +105,28 @@ task runContainer(type: DockerExecContainer) {
     finalizedBy stopContainer
 
     targetContainerId { createContainer.getContainerId() }
-    cmd = ["/root/.cargo/bin/cargo", "build", "--target", "arm-unknown-linux-gnueabi"]
+    if (isRelease) {
+        cmd = ["/root/.cargo/bin/cargo", "build", "--release", "--target", "${target}"]
+    } else {
+        cmd = ["/root/.cargo/bin/cargo", "build", "--target", "${target}"]
+    }
     successOnExitCodes = [0]
 
-    outputs.file(file("build/arm-unknown-linux-gnueabi/debug/ev3"))
+    outputs.file(file("build/${target}/${type}/ev3"))
 }
 
 task nativeBuild(type: Exec) {
     dependsOn cargo
     executable = "cargo"
-    args = ["build"]
+    if (isRelease) {
+        args = ["build", "--release"]
+    } else {
+        args = ["build"]
+    }
 
     ignoreExitValue = true
 
-    outputs.file(file("build/debug/ev3"))
+    outputs.file(file("build/${type}/ev3"))
 }
 
 task build() {

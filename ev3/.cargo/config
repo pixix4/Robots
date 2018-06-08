@@ -1,4 +1,4 @@
-[target.arm-unknown-linux-gnueabi]
+[target.armv5te-unknown-linux-gnueabi]
 linker = "/usr/bin/arm-linux-gnueabi-gcc"
 
 [build]
