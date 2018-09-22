@@ -69,7 +69,9 @@ class Robot(
     val blackPointPropety = Color.BLACK.observable()
     var blackPoint by blackPointPropety.accessor()
 
-    val button = EventHandler<Button>()
+    val kick = EventHandler<Unit>()
+    val pid = EventHandler<Unit>()
+
     val setForegroundColor = EventHandler<Unit>()
     val setBackgroundColor = EventHandler<Unit>()
 
@@ -130,8 +132,8 @@ class Robot(
             } catch (_: IllegalArgumentException) {
             }
         }
-        json["availableColors"]?.toString()?.let {
-            availableColors = it.split(";").map {
+        json["availableColors"]?.toString()?.let { a ->
+            availableColors = a.split(";").map {
                 try {
                     Color.parse(it)
                 } catch (_: IllegalArgumentException) {
@@ -146,11 +148,11 @@ class Robot(
         json.json("energy")?.let { energy = Energy.fromJson(it) }
         json.json("camera")?.let { camera = Camera.fromJson(it) }
         json.json("kicker")?.let { kicker = Kicker.fromJson(it) }
-        json["map"]?.toString()?.let {
-            map = if (it.isEmpty())
+        json["map"]?.toString()?.let { m ->
+            map = if (m.isEmpty())
                 emptyList()
             else
-                it.split(";").map {
+                m.split(";").map {
                     Coordinate.parse(it)
                 }
         }

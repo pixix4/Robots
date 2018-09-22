@@ -103,21 +103,19 @@ object WebSocketConnection {
     }
 
     val iController = object : IController {
-
-        override fun onTrack(track: Track) {
-            send(IController::onTrack.name, track.toJson())
+        override fun drive(left: Double, right: Double) {
+            send(IController::drive.name, json {
+                value("left") { left }
+                value("right") { right }
+            })
         }
 
-        override fun onAbsoluteSpeed(speed: Double) {
-            send(IController::onAbsoluteSpeed.name, speed)
+        override fun kick() {
+            send(IController::kick.name)
         }
 
-        override fun onRelativeSpeed(deltaSpeed: Double) {
-            send(IController::onRelativeSpeed.name, deltaSpeed)
-        }
-
-        override fun onButton(button: Button) {
-            send(IController::onButton.name, button.toJson())
+        override fun pid() {
+            send(IController::pid.name)
         }
 
         override fun name(name: String) {

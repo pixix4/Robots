@@ -26,6 +26,7 @@ object ReplService : ThreadedService() {
                 Main.stop()
             }
         }
+        /*
         command("config", "configuration", description = "Print current configuration") {
             command("help") {
                 action {
@@ -40,6 +41,7 @@ object ReplService : ThreadedService() {
                 }
             }
         }
+        */
         command("env", "environment", description = "Print current environment specs") {
             action {
                 Environment.log {

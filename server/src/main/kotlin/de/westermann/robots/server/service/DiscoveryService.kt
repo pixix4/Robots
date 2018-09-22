@@ -14,7 +14,7 @@ import kotlin.jvm.Volatile
 /**
  * @author lars
  */
-object DiscoveryService : ThreadedService(false) {
+object DiscoveryService : ThreadedService(false), Service1<Int> {
 
     override val logger = KotlinLogging.logger {}
 
@@ -22,28 +22,26 @@ object DiscoveryService : ThreadedService(false) {
     private var server: DatagramSocket? = null
 
     override fun start() {
-        start(Configuration.properties.discoveryPort)
+        start(Configuration.Network.discoveryPort)
     }
 
-    fun start(port: Int): Boolean {
-        logger.info { "Start discovery server on port $port..." }
+    override fun start(arg: Int) {
+        logger.info { "Start discovery server on port $arg..." }
 
         try {
-            server = DatagramSocket(port).also {
+            server = DatagramSocket(arg).also {
                 it.reuseAddress = true
             }
         } catch (_: BindException) {
             logger.error {
-                "Cannot start discovery server cause port $port is already in use!" + (WhoBlocks.port(port)?.let {
+                "Cannot start discovery server cause port $arg is already in use!" + (WhoBlocks.port(arg)?.let {
                     " (by '${it.name}': ${it.id})"
                 } ?: "")
             }
-            return false
+            return
         }
 
         super.start()
-
-        return true
     }
 
     override fun run() {
@@ -51,9 +49,19 @@ object DiscoveryService : ThreadedService(false) {
             server?.let { server ->
                 val packet = DatagramPacket(ByteArray(4), 4)
                 server.receive(packet)
-                if (packet.data.toInt() == 0) {
-                    Configuration.properties.robotPort.toByteArray().let {
-                        server.send(DatagramPacket(it, it.size, packet.address, packet.port))
+                when (packet.data.toInt()) {
+                    0 -> {
+                        0.toByteArray().let {
+                            server.send(DatagramPacket(it, it.size, packet.address, packet.port))
+                        }
+                    }
+                    1 -> {
+                        Configuration.Network.robotUdpPort.toByteArray().let {
+                            server.send(DatagramPacket(it, it.size, packet.address, packet.port))
+                        }
+                    }
+                    else -> {
+                        logger.warn { "Unsupported discovery ${packet.data.toInt()}" }
                     }
                 }
             }

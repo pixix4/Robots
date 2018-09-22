@@ -73,9 +73,8 @@ dependencies {
     compile "commons-io:commons-io:2.6"
     compile "com.vaadin:vaadin-sass-compiler:0.9.13"
 
-    compile 'io.moquette:moquette-broker:0.10'
-
     compile "com.github.WilliamAHartman:Jamepad:1.1"
+    compile 'com.uchuhimo:konf:0.11'
 
     compile 'com.beust:klaxon:3.0.1'
     expectedBy project(":datamodel")

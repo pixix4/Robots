@@ -34,18 +34,13 @@ import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 task cargo {
     doLast {
         file("Cargo.toml").text = """[package]
-name = "ev3"
-version = "$version"
+name = "robots-rust"
+version = "0.1.0"
 authors = ["Lars Westermann <lars-westermann@live.de>"]
 
-[[bin]]
-name = "ev3"
-path = "src/main/rust/main.rs"
-
 [dependencies]
-regex = "1.0.0"
-rand = "0.5.1"
-time = "0.1.40"
+byteorder = "1.2.6"
+ev3dev-lang-rust = "0.2.0"
 """
     }
 }
@@ -58,7 +53,10 @@ task createDockerfile(type: Dockerfile) {
     runCommand "apt update"
     runCommand "apt --yes install curl g++ g++-arm-linux-gnueabi"
     runCommand "curl https://sh.rustup.rs -sSf | sh -s -- -y"
-    runCommand "/root/.cargo/bin/rustup target add ${target}"
+
+    environmentVariable("PATH", "\$PATH:/root/.cargo/bin")
+
+    runCommand "rustup target add ${target}"
 }
 
 task buildImage(type: DockerBuildImage) {

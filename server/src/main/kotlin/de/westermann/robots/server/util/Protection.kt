@@ -10,12 +10,12 @@ object Protection {
     private val logger = KotlinLogging.logger {}
 
     val loginRequired: Boolean
-        get() = Configuration.properties.protection == Type.NONE
+        get() = Configuration.Security.protection == Type.NONE
 
     fun login(password: String): Boolean = checkPassword(
             password,
-            Configuration.properties.protection,
-            Configuration.properties.passphrase
+            Configuration.Security.protection,
+            Configuration.Security.passphrase
     )
 
     private fun checkPassword(password: String?, type: Type, passphrase: String?): Boolean = try {

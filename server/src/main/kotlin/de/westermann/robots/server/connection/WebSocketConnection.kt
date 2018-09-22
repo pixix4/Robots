@@ -257,8 +257,8 @@ class WebSocketConnection {
     operator fun plusAssign(socket: WsSession) {
         Controller(DeviceManager.controllers.nextId).let { controller ->
             controller.generateCode(
-                    Configuration.properties.controllerCodeLength,
-                    Charsets.charsetsToList(Configuration.properties.controllerCodeCharset).toList()
+                    Configuration.Security.controllerCodeLength,
+                    Charsets.charsetsToList(Configuration.Security.controllerCodeCharset).toList()
             )
             DeviceManager.controllers += controller
             connections += socket to Connection(socket, controller).also {
@@ -282,17 +282,18 @@ class WebSocketConnection {
         val parsed = json.json("param")
 
         when (function) {
-            IController::onTrack.name -> parsed?.let {
-                connection.controller.iController?.onTrack(Track.fromJson(it))
+            IController::drive.name -> parsed?.let {
+                val left = it["left"]?.toString()?.toDoubleOrNull()
+                val right = it["right"]?.toString()?.toDoubleOrNull()
+                if (left != null && right != null) {
+                    connection.controller.iController?.drive(left, right)
+                }
             }
-            IController::onAbsoluteSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
-                connection.controller.iController?.onAbsoluteSpeed(it)
+            IController::kick.name -> {
+                connection.controller.iController?.kick()
             }
-            IController::onRelativeSpeed.name -> data?.toString()?.toDoubleOrNull()?.let {
-                connection.controller.iController?.onRelativeSpeed(it)
-            }
-            IController::onButton.name -> parsed?.let {
-                connection.controller.iController?.onButton(Button.fromJson(it))
+            IController::pid.name -> {
+                connection.controller.iController?.pid()
             }
             IController::name.name -> data?.toString()?.let {
                 connection.controller.iController?.name(it)

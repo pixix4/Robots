@@ -6,13 +6,13 @@ apply plugin: "distribution"
 
 allprojects {
     buildscript {
-        ext.kotlin_version = '1.2.41'
+        ext.kotlin_version = '1.2.60'
     }
 }
 
 task copyArtefacts(type: Copy) {
     from tasks.getByPath(':server:jar')
-    from tasks.getByPath(':ev3:build')
+    //from tasks.getByPath(':ev3:build')
 
     rename { stripVersion(it) }
 

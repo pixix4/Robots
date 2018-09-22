@@ -88,6 +88,9 @@ data class Color(
             alpha
     )
 
+    val name: String?
+        get() = COLORS.filterValues { it == this }.keys.firstOrNull()
+
     override fun toString(): String {
         return if (alpha >= 1) {
             "#${red.toHex()}${green.toHex()}${blue.toHex()}"
@@ -136,24 +139,29 @@ data class Color(
             }
             val trim = color.trim()
 
-            return if (trim.startsWith("#")) {
-                Color(
+            return when {
+                trim.startsWith("#") -> Color(
                         trim.substring(1, 3).toInt(16),
                         trim.substring(3, 5).toInt(16),
                         trim.substring(5, 7).toInt(16),
                         1.0
                 )
-            } else {
-                val param = parseFunction(trim)
-                val methodName = param[0]
-                param.removeAt(0)
+                COLORS.containsKey(trim.toLowerCase()) -> {
+                    COLORS[trim.toLowerCase()]!!
+                }
+                else -> {
+                    println("${trim.toLowerCase()}==red ${trim.toLowerCase() == "red"}")
+                    val param = parseFunction(trim)
+                    val methodName = param[0]
+                    param.removeAt(0)
 
-                when (methodName) {
-                    FUNCTION_RGBA -> parseRgba(param)
-                    FUNCTION_RGB -> parseRgb(param)
-                    FUNCTION_LIGHTEN -> parseLighten(param)
-                    FUNCTION_DARKEN -> parseDarken(param)
-                    else -> throw IllegalArgumentException("Cannot parse color function '$methodName'")
+                    when (methodName) {
+                        FUNCTION_RGBA -> parseRgba(param)
+                        FUNCTION_RGB -> parseRgb(param)
+                        FUNCTION_LIGHTEN -> parseLighten(param)
+                        FUNCTION_DARKEN -> parseDarken(param)
+                        else -> throw IllegalArgumentException("Cannot parse color function '$methodName'")
+                    }
                 }
             }
         }
@@ -229,6 +237,31 @@ data class Color(
         val BROWN = Color.parse("#795548")
         val GREY = Color.parse("#9E9E9E")
         val BLUE_GREY = Color.parse("#607D8B")
+
+        val COLORS: Map<String, Color> = mapOf(
+                "transparent" to TRANSPARENT,
+                "white" to WHITE,
+                "black" to BLACK,
+                "red" to RED,
+                "pink" to PINK,
+                "purple" to PURPLE,
+                "deep_purple" to DEEP_PURPLE,
+                "indigo" to INDIGO,
+                "blue" to BLUE,
+                "light_blue" to LIGHT_BLUE,
+                "cyan" to CYAN,
+                "teal" to TEAL,
+                "green" to GREEN,
+                "light_green" to LIGHT_GREEN,
+                "lime" to LIME,
+                "yellow" to YELLOW,
+                "amber" to AMBER,
+                "orange" to ORANGE,
+                "deep_orange" to DEEP_ORANGE,
+                "brown" to BROWN,
+                "grey" to GREY,
+                "blue_grey" to BLUE_GREY
+        )
 
     }
 }

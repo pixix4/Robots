@@ -45,16 +45,16 @@ object Demo {
         DeviceManager.controllers += Controller() {
             name = "Demo controller 1"
             generateCode(
-                    Configuration.properties.controllerCodeLength,
-                    Charsets.charsetsToList(Configuration.properties.controllerCodeCharset).toList()
+                    Configuration.Security.controllerCodeLength,
+                    Charsets.charsetsToList(Configuration.Security.controllerCodeCharset).toList()
             )
             type = Controller.Type.DESKTOP
         }
         DeviceManager.controllers += Controller() {
             name = "Demo controller 2"
             generateCode(
-                    Configuration.properties.controllerCodeLength,
-                    Charsets.charsetsToList(Configuration.properties.controllerCodeCharset).toList()
+                    Configuration.Security.controllerCodeLength,
+                    Charsets.charsetsToList(Configuration.Security.controllerCodeCharset).toList()
             )
             description = "A random browser identifier"
             type = Controller.Type.MOBIL

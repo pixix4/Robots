@@ -26,36 +26,36 @@ object ColorScheme {
     val textColor: Brightness
 
     init {
-        var map = ColorDefaults[Configuration.properties.colorScheme]
+        var map = ColorDefaults[Configuration.Style.colorScheme]
 
-        Configuration.properties.primaryColor?.let {
-            map = map.copy(primaryColor = it)
+        Configuration.Style.primaryColor?.let {
+            map = map.copy(primaryColor = Color.parse(it))
         }
-        Configuration.properties.primaryColorText?.let {
+        Configuration.Style.primaryColorText?.let {
             map = map.copy(primaryColorText = it)
         }
 
-        Configuration.properties.primaryColorDark?.let {
-            map = map.copy(primaryColorDark = it)
+        Configuration.Style.primaryColorDark?.let {
+            map = map.copy(primaryColorDark = Color.parse(it))
         }
-        Configuration.properties.primaryColorDarkText?.let {
+        Configuration.Style.primaryColorDarkText?.let {
             map = map.copy(primaryColorDarkText = it)
         }
 
-        Configuration.properties.primaryColorLight?.let {
-            map = map.copy(primaryColorLight = it)
+        Configuration.Style.primaryColorLight?.let {
+            map = map.copy(primaryColorLight = Color.parse(it))
         }
-        Configuration.properties.primaryColorLightText?.let {
+        Configuration.Style.primaryColorLightText?.let {
             map = map.copy(primaryColorLightText = it)
         }
 
-        Configuration.properties.backgroundColorPrimary?.let {
-            map = map.copy(backgroundColorPrimary = it)
+        Configuration.Style.backgroundColorPrimary?.let {
+            map = map.copy(backgroundColorPrimary = Color.parse(it))
         }
-        Configuration.properties.backgroundColorSecondary?.let {
-            map = map.copy(backgroundColorSecondary = it)
+        Configuration.Style.backgroundColorSecondary?.let {
+            map = map.copy(backgroundColorSecondary = Color.parse(it))
         }
-        Configuration.properties.textColor?.let {
+        Configuration.Style.textColor?.let {
             map = map.copy(textColor = it)
         }
 
@@ -131,7 +131,7 @@ object ColorScheme {
     fun log(l: (String) -> Unit = {
         logger.info { it }
     }) = Printer.Table(
-            "Color Scheme '${Configuration.properties.colorScheme}'",
+            "Color Scheme '${Configuration.Style.colorScheme}'",
             colorMap.map {
                 Printer.Line("${it.key}:", it.value)
             }

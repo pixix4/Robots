@@ -30,4 +30,6 @@ open class EventHandler<Event : Any>() {
             it(event)
         }
     }
+
+    operator fun invoke(event: Event) = fire(event)
 }

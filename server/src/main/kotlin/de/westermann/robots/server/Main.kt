@@ -7,8 +7,6 @@ import de.westermann.robots.server.service.*
 import de.westermann.robots.server.util.Configuration
 import mu.KotlinLogging
 import kotlin.concurrent.thread
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.system.exitProcess
 
 object Main {
@@ -16,36 +14,34 @@ object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        /**
         if ("--help" in args) {
             Configuration.help {
                 println(it)
             }
             exitProcess(0)
         }
+        */
 
-        Configuration.load(args.toList())
+        Configuration.load()
 
         Configuration.tmpClear()
-        logger.info { "Temp folder is ${Configuration.properties.tmpDirectory.toAbsolutePath()}" }
+        logger.info { "Temp folder is ${Configuration.General.tmpDirectory.toAbsolutePath()}" }
 
         DeviceManager.controllers.onChange(object : Library.Observer<Controller> {
             override fun onAdd(element: Controller) {
                 element.iController = object : IController {
 
-                    override fun onTrack(track: Track) {
-                        element.robots.forEach { it.track = track }
+                    override fun drive(left: Double, right: Double) {
+                        element.robots.forEach { it.track = Track(left, right) }
                     }
 
-                    override fun onAbsoluteSpeed(speed: Double) {
-                        element.robots.forEach { it.speed = speed }
+                    override fun kick() {
+                        element.robots.forEach { it.kick(Unit) }
                     }
 
-                    override fun onRelativeSpeed(deltaSpeed: Double) {
-                        element.robots.forEach { it.speed = min(1.0, max(0.0, it.speed + deltaSpeed)) }
-                    }
-
-                    override fun onButton(button: Button) {
-                        element.robots.forEach { it.button.fire(button) }
+                    override fun pid() {
+                        element.robots.forEach { it.pid(Unit) }
                     }
 
                     override fun name(name: String) {
@@ -110,26 +106,22 @@ object Main {
             }
         })
 
-        if (Configuration.properties.demo) {
+        if (Configuration.General.demo) {
             logger.warn { "Enter demo mode" }
             Demo.load()
         }
 
-        DiscoveryService.start(Configuration.properties.discoveryPort)
-        MqttService.start(Configuration.properties.robotPort)
-        WebService.start(Configuration.properties.webPort)
-        GamepadService.start()
-        ReplService.start()
+        ServiceManager.start(DiscoveryService, Configuration.Network.discoveryPort)
+        ServiceManager.start(RobotUdpService, Configuration.Network.robotUdpPort)
+        ServiceManager.start(WebService, Configuration.Network.webPort)
+        ServiceManager.start(GamepadService)
+        ServiceManager.start(ReplService)
 
         Runtime.getRuntime().addShutdownHook(thread(start = false, name = "shutdown") {
             logger.info { "Stopping..." }
 
+            ServiceManager.stopAll()
             Configuration.tmpClear()
-            DiscoveryService.stop()
-            ReplService.stop()
-            WebService.stop()
-            GamepadService.stop()
-            MqttService.stop()
         })
     }
 

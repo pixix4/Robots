@@ -13,13 +13,13 @@ import java.nio.file.Files
 /**
  * @author lars
  */
-object WebService : Service {
+object WebService : Service1<Int> {
     override val running: Boolean
         get() = server != null
     var server: Javalin? = null
 
     override fun start() {
-        start(Configuration.properties.webPort)
+        start(Configuration.Network.webPort)
     }
 
     private val logger = KotlinLogging.logger {}
@@ -29,17 +29,17 @@ object WebService : Service {
 
     private val connection = WebSocketConnection()
 
-    fun start(port: Int) {
+    override fun start(arg: Int) {
         if (running) return
-        logger.info { "Start web server on port $port... (http://localhost:$port)" }
+        logger.info { "Start web server on port $arg... (http://localhost:$arg)" }
 
         updateColors()
 
         server = Javalin.create().apply {
-            port(port)
+            port(arg)
             event(EventType.SERVER_START_FAILED) {
                 logger.error {
-                    "Cannot start discovery server, cause port $port is already in use!" + (WhoBlocks.port(port)?.let {
+                    "Cannot start discovery server, cause port $arg is already in use!" + (WhoBlocks.port(arg)?.let {
                         " (by '${it.name}': ${it.id})"
                     } ?: "")
                 }

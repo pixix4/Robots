@@ -5,6 +5,7 @@ import de.westermann.robots.website.toolkit.Router
 import de.westermann.robots.website.toolkit.condition
 import de.westermann.robots.website.toolkit.icon.MaterialIcon
 import de.westermann.robots.website.toolkit.navigation
+import de.westermann.robots.website.toolkit.view.TouchEvent
 import de.westermann.robots.website.toolkit.widget.box
 import de.westermann.robots.website.toolkit.widget.textView
 import kotlin.browser.window
@@ -16,6 +17,7 @@ fun main(args: Array<String>) {
         Router.stop()
         WebSocketConnection.stop()
     }
+
     window.onload = {
         Router.init {
             condition(WebSocketConnection.connectedProperty) {
