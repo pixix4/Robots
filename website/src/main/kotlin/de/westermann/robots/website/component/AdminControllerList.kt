@@ -12,22 +12,31 @@ import de.westermann.robots.website.toolkit.widget.CardView
 fun Router.adminControllerList() {
     view {
         CardView<ControllerCard> {
-            fun reload() {
-                clear()
-                DeviceManager.controllers.forEach {
-                    this += ControllerCard(it)
+            var controllers: Map<Controller, ControllerCard> = emptyMap()
+
+            fun addController(controller: Controller) {
+                val card = ControllerCard(controller)
+                controllers += controller to card
+                this += card
+            }
+
+            fun removeController(controller: Controller) {
+                controllers[controller]?.let { card ->
+                    this -= card
                 }
             }
+
             DeviceManager.controllers.onChange(object : Library.Observer<Controller> {
                 override fun onAdd(element: Controller) {
-                    this@CardView += ControllerCard(element)
+                    addController(element)
                 }
 
                 override fun onRemove(element: Controller) {
-                    reload()
+                    removeController(element)
                 }
             })
-            reload()
+
+            DeviceManager.controllers.forEach(::addController)
         }
     }
 }

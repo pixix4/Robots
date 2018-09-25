@@ -92,13 +92,13 @@ class Library<T : ObservableObject> : Iterable<T> {
     fun toList(): List<T> = toSet().toList()
 
     fun find(search: List<String>, minimalProbability: Double = 0.0, limit: Int = 0): List<Match<T>> =
-            toSet().map { elem ->
+            toSet().asSequence().map { elem ->
                 Match(elem, search.map {
                     it to elem.probability(it)
                 }.toMap().filterValues { it > minimalProbability })
             }.filter {
                 it.probability > minimalProbability
-            }.sortedDescending().let {
+            }.sortedDescending().toList().let {
                 if (limit > 0) {
                     it.take(limit)
                 } else it

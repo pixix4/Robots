@@ -239,8 +239,8 @@ object WebSocketConnection {
             DeviceManager.clear()
             //Router.clear()
 
-            intervalId?.let {
-                window.clearInterval(it)
+            intervalId?.let { id ->
+                window.clearInterval(id)
                 intervalId = null
             }
 

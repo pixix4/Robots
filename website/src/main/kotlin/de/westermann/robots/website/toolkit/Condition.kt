@@ -30,7 +30,7 @@ class Condition(
         } else {
             listOf(routerFalse)
         }.filterNotNull()
-        set(value) {}
+        set(@Suppress("UNUSED_PARAMETER") value) {}
 
     override fun clear() {
         super.clear()

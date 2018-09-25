@@ -36,6 +36,10 @@
     overflow-y: scroll;
     z-index: 0;
     transition: left $animation-time;
+    .box {
+      max-width: 60rem;
+      margin: 0 auto;
+    }
   }
 
   &.toggled {

@@ -4,14 +4,10 @@ import com.studiohartman.jamepad.ControllerManager
 import com.studiohartman.jamepad.ControllerState
 import de.westermann.robots.datamodel.Controller
 import de.westermann.robots.datamodel.DeviceManager
-import de.westermann.robots.datamodel.Robot
 import de.westermann.robots.datamodel.util.Track
 import de.westermann.robots.server.util.Configuration
 import mu.KotlinLogging
-import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -70,32 +66,6 @@ object GamepadService : ThreadedService() {
     override fun start() {
         super.start()
         controllerManager.initSDLGamepad()
-
-        DeviceManager.onBindChange(object : DeviceManager.OnBindChange {
-            override fun onBind(controller: Controller, robot: Robot) {
-                logger.info { "bind ${controllers.size}" }
-                controllers.filterValues { it.controller == controller }.keys.forEach { index ->
-                    logger.info { "vibrate $index!" }
-                    logger.info { controllerManager.startVibration(index, 1.0.toFloat(), 1.0.toFloat()); }
-
-                    Timer().schedule(500) {
-                        logger.info { "vibrate stop!" }
-                        controllerManager.stopVibration(index)
-                    }
-                }
-            }
-
-            override fun onUnbind(controller: Controller, robot: Robot) {
-                controllers.filterValues { it.controller == controller }.keys.forEach { index ->
-                    controllerManager.startVibration(index, 1.0.toFloat(), 1.0.toFloat());
-                    Timer().schedule(500) {
-                        controllerManager.stopVibration(index)
-                    }
-                }
-            }
-
-        })
-
     }
 
     override fun stop() {
@@ -105,7 +75,7 @@ object GamepadService : ThreadedService() {
 
     class Gamepad(
             val controller: Controller,
-            var adapter: GamepadAdapter = GamepadAdapter.MarioKart(controller)
+            var adapter: GamepadAdapter = GamepadAdapter.RobertsAdapter(controller)
     )
 
     sealed class GamepadAdapter(
@@ -120,9 +90,14 @@ object GamepadService : ThreadedService() {
             val DEG3 = PI * 1.5
         }
 
-        class MarioKart(controller: Controller) : GamepadAdapter(controller) {
+        class RobertsAdapter(controller: Controller) : GamepadAdapter(controller) {
             override fun perform(state: ControllerState) {
                 controller.iController?.let { sender ->
+
+                    if (state.aJustPressed || state.bJustPressed || state.xJustPressed || state.yJustPressed) {
+                        sender.kick()
+                    }
+
                     val accelerate = min(1.0, max(0.0, state.rightTrigger.toDouble()))
                     val decelerate = min(1.0, max(0.0, state.leftTrigger.toDouble()))
 
@@ -199,6 +174,7 @@ object GamepadService : ThreadedService() {
             }
         }
 
+        /*
         class DefaultAdapter(controller: Controller) : GamepadAdapter(controller) {
 
             private var speed = 0.5
@@ -259,5 +235,6 @@ object GamepadService : ThreadedService() {
                 }
             }
         }
+        */
     }
 }

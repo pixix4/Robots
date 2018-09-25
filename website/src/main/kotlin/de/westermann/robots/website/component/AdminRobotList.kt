@@ -12,23 +12,31 @@ import de.westermann.robots.website.toolkit.widget.CardView
 fun Router.adminRobotList() {
     view {
         CardView<RobotCard> {
-            fun reload() {
-                clear()
-                DeviceManager.robots.forEach {
-                    this += RobotCard(it)
+            var robots: Map<Robot, RobotCard> = emptyMap()
+
+            fun addRobot(robot: Robot) {
+                val card = RobotCard(robot)
+                robots += robot to card
+                this += card
+            }
+
+            fun removeRobot(robot: Robot) {
+                robots[robot]?.let { card ->
+                    this -= card
                 }
             }
+
             DeviceManager.robots.onChange(object : Library.Observer<Robot> {
                 override fun onAdd(element: Robot) {
-                    this@CardView += RobotCard(element)
+                    addRobot(element)
                 }
 
                 override fun onRemove(element: Robot) {
-                    println("remove robot")
-                    reload()
+                    removeRobot(element)
                 }
             })
-            reload()
+
+            DeviceManager.robots.forEach(::addRobot)
         }
     }
 }

@@ -20,7 +20,7 @@ fun addRobotDialog(controller: Controller) = Dialog {
 
     fun update(search: String = "") {
         list.clear()
-        (DeviceManager.robots.find(listOf(search), 0.2, 10).map { it.element }.distinct() - controller.robots).forEach { robot ->
+        (DeviceManager.robots.find(listOf(search), 0.0, 10).asSequence().map { it.element }.distinct().toList() - controller.robots).forEach { robot ->
             list += RobotListItem(robot, controller) {
                 WebSocketConnection.iServer.bind(controller.id, robot.id)
                 hide()
