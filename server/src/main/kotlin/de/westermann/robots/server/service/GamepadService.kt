@@ -91,6 +91,12 @@ object GamepadService : ThreadedService() {
         }
 
         class RobertsAdapter(controller: Controller) : GamepadAdapter(controller) {
+
+            var leftTriggerMin = 0.2
+            var leftTriggerMax = 0.2
+            var rightTriggerMin = 0.8
+            var rightTriggerMax = 0.8
+
             override fun perform(state: ControllerState) {
                 controller.iController?.let { sender ->
 
@@ -98,8 +104,26 @@ object GamepadService : ThreadedService() {
                         sender.kick()
                     }
 
-                    val accelerate = min(1.0, max(0.0, state.rightTrigger.toDouble()))
-                    val decelerate = min(1.0, max(0.0, state.leftTrigger.toDouble()))
+                    val leftTrigger = state.leftTrigger.toDouble()
+                    if (leftTrigger < leftTriggerMin) {
+                        leftTriggerMin = leftTrigger
+                    }
+                    if (leftTrigger > leftTriggerMax) {
+                        leftTriggerMax = leftTrigger
+                    }
+                    val left = (leftTrigger-leftTriggerMin) * leftTriggerMax
+
+                    val rightTrigger = state.rightTrigger.toDouble()
+                    if (rightTrigger < rightTriggerMin) {
+                        rightTriggerMin = rightTrigger
+                    }
+                    if (rightTrigger > rightTriggerMax) {
+                        rightTriggerMax = rightTrigger
+                    }
+                    val right = (rightTrigger-rightTriggerMin) * rightTriggerMax
+
+                    val accelerate = min(1.0, max(0.0, right))
+                    val decelerate = min(1.0, max(0.0, left))
 
                     val stickX = min(1.0, max(-1.0, state.leftStickX.toDouble()))
                     val stickY = min(1.0, max(-1.0, state.leftStickY.toDouble()))
@@ -158,16 +182,16 @@ object GamepadService : ThreadedService() {
 
                             val speed = accelerate - decelerate
 
-                            var left = speed
-                            var right = speed
+                            var left1 = speed
+                            var right1 = speed
 
                             if (stickX < 0.0) {
-                                left *= 1.0 + stickX
+                                left1 *= 1.0 + stickX
                             } else if (stickX > 0.0) {
-                                right *= 1.0 - stickX
+                                right1 *= 1.0 - stickX
                             }
 
-                            sender.drive(left, right)
+                            sender.drive(left1, right1)
                         }
                     }
                 }

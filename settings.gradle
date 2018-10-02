@@ -1,9 +1,6 @@
 rootProject.name = 'Robots'
 
-//Server modules
 include 'datamodel'
 include 'website'
 include 'server'
 
-//Client modules
-//include 'ev3'
